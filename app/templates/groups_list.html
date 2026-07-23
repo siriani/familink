@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Groups — familink{% endblock %}
+{% block content %}
+<div class="tcard">
+<table>
+  <thead><tr><th>Name</th><th>Hotspot required?</th><th>Description</th><th>Devices</th></tr></thead>
+  <tbody>
+    {% for g in groups %}
+    <tr>
+      <td><strong>{{ g.name }}</strong>{% if g.is_default %} <span class="badge b-free">default</span>{% endif %}</td>
+      <td><span class="badge {{ 'b-hotspot' if g.hotspot_required else 'b-free' }}">{{ 'Yes' if g.hotspot_required else 'No' }}</span></td>
+      <td>{{ g.description or '—' }}</td>
+      <td><a href="/devices?group_id={{ g.id }}">{{ g.device_count }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">Group management (create/edit/delete) isn't built yet — see SPEC.md roadmap.</p>
+{% endblock %}

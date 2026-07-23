@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    image: familink:local
+    container_name: familink-app
+    restart: unless-stopped
+    ports:
+      - "8190:8190"
+    env_file: .env   # MIKROTIK_PASSWORD, DB_HOST, DB_PASSWORD — never commit
+    environment:
+      TZ: America/Sao_Paulo

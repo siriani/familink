@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Devices — familink{% endblock %}
+{% block content %}
+<form class="topbar2" method="get" action="/devices">
+  <input class="search" type="text" name="q" value="{{ q }}" placeholder="Search by hostname, IP or MAC...">
+  <select name="group_id" onchange="this.form.submit()">
+    <option value="">All groups</option>
+    {% for g in groups %}
+    <option value="{{ g.id }}" {% if group_id == g.id %}selected{% endif %}>{{ g.name }}</option>
+    {% endfor %}
+  </select>
+  <button class="rbtn" type="submit">Filter</button>
+</form>
+
+<div class="tcard">
+<table>
+  <thead>
+    <tr><th>Status</th><th>Hostname</th><th>IP</th><th>MAC</th><th>Group</th><th>User</th><th>Last seen</th></tr>
+  </thead>
+  <tbody>
+    {% for d in devices %}
+    <tr class="clickable" onclick="location.href='/devices/{{ d.mac }}'">
+      <td><span class="dot {{ 'on' if d.is_online else 'off' }}"></span>{{ 'Online' if d.is_online else 'Offline' }}</td>
+      <td><strong>{{ d.hostname or '—' }}</strong></td>
+      <td class="mono">{{ d.current_ip or '—' }}</td>
+      <td class="mono small">{{ d.mac }}</td>
+      <td><span class="badge {{ 'b-hotspot' if d.group.hotspot_required else 'b-free' }}">{{ d.group.name }}</span></td>
+      <td>{{ d.user.name if d.user else '—' }}</td>
+      <td class="small">{{ d.last_seen.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="empty">No devices yet — waiting for the first MikroTik discovery cycle.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

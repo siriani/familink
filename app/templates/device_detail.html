@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ device.hostname or device.mac }} — familink{% endblock %}
+{% block content %}
+<a class="back-btn" href="/devices">&larr; Back</a>
+
+<div class="detail-card">
+  <div class="card-head">
+    <span class="kname">{{ device.hostname or device.mac }}</span>
+    <span class="badge {{ 'b-online' if device.is_online else 'b-offline' }}">{{ 'Online' if device.is_online else 'Offline' }}</span>
+  </div>
+  <div class="detail-grid">
+    <div><div class="detail-label">MAC</div><div class="detail-value mono">{{ device.mac }}</div></div>
+    <div><div class="detail-label">IP</div><div class="detail-value mono">{{ device.current_ip or '—' }}</div></div>
+    <div><div class="detail-label">First seen</div><div class="detail-value">{{ device.first_seen.strftime('%Y-%m-%d %H:%M') }}</div></div>
+    <div><div class="detail-label">Last seen</div><div class="detail-value">{{ device.last_seen.strftime('%Y-%m-%d %H:%M') }}</div></div>
+    <div><div class="detail-label">MikroTik ip-binding</div><div class="detail-value">{{ 'bound, bypassed' if device.mikrotik_bypassed else ('bound, not bypassed' if device.mikrotik_bound else 'no binding') }}</div></div>
+  </div>
+
+  <div class="assoc-section">
+    <h3>Group</h3>
+    <form method="post" action="/devices/{{ device.mac }}/group" class="inline-form">
+      <select name="group_id">
+        {% for g in groups %}
+        <option value="{{ g.id }}" {% if g.id == device.group_id %}selected{% endif %}>{{ g.name }}{% if g.hotspot_required %} (hotspot required){% endif %}</option>
+        {% endfor %}
+      </select>
+      <button class="save-btn" type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="assoc-section">
+    <h3>Owner</h3>
+    <form method="post" action="/devices/{{ device.mac }}/user" class="inline-form">
+      <select name="user_id">
+        <option value="">— unassigned —</option>
+        {% for u in users %}
+        <option value="{{ u.id }}" {% if device.user_id == u.id %}selected{% endif %}>{{ u.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="save-btn" type="submit">Save</button>
+    </form>
+  </div>
+
+  <div class="assoc-section">
+    <h3>Notes</h3>
+    <form method="post" action="/devices/{{ device.mac }}/notes" class="inline-form">
+      <textarea name="notes" rows="3" style="width:100%">{{ device.notes or '' }}</textarea>
+      <button class="save-btn" type="submit">Save</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
