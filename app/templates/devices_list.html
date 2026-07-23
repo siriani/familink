@@ -26,7 +26,7 @@
       <td class="mono small">{{ d.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if d.group.hotspot_required else 'b-free' }}">{{ d.group.name }}</span></td>
       <td>{{ d.user.name if d.user else '—' }}</td>
-      <td class="small">{{ d.last_seen.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td class="small">{{ d.last_seen | localtime }}</td>
     </tr>
     {% else %}
     <tr><td colspan="7" class="empty">No devices yet — waiting for the first MikroTik discovery cycle.</td></tr>

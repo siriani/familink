@@ -11,8 +11,8 @@
   <div class="detail-grid">
     <div><div class="detail-label">MAC</div><div class="detail-value mono">{{ device.mac }}</div></div>
     <div><div class="detail-label">IP</div><div class="detail-value mono">{{ device.current_ip or '—' }}</div></div>
-    <div><div class="detail-label">First seen</div><div class="detail-value">{{ device.first_seen.strftime('%Y-%m-%d %H:%M') }}</div></div>
-    <div><div class="detail-label">Last seen</div><div class="detail-value">{{ device.last_seen.strftime('%Y-%m-%d %H:%M') }}</div></div>
+    <div><div class="detail-label">First seen</div><div class="detail-value">{{ device.first_seen | localtime }}</div></div>
+    <div><div class="detail-label">Last seen</div><div class="detail-value">{{ device.last_seen | localtime }}</div></div>
     <div><div class="detail-label">MikroTik ip-binding</div><div class="detail-value">{{ 'bound, bypassed' if device.mikrotik_bypassed else ('bound, not bypassed' if device.mikrotik_bound else 'no binding') }}</div></div>
   </div>
 
@@ -44,7 +44,7 @@
       <div class="detail-label">Recent MikroTik apply attempts</div>
       {% for l in enforcement_logs %}
       <div class="log-row {{ 'ok' if l.success else 'fail' }}">
-        <span class="small">{{ l.applied_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span class="small">{{ l.applied_at | localtime }}</span>
         <span class="small">{{ l.action }}</span>
         <span class="small">{{ 'OK' if l.success else 'FAILED' }} — {{ l.detail }}</span>
       </div>

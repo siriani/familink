@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy import desc, or_, select
 from sqlalchemy.orm import Session
 
@@ -19,9 +18,9 @@ from app.mikrotik_enforce import apply_device
 from app.models import Device, EnforcementLog, Group, User
 from app.schemas import DeviceOut, DeviceUpdate
 from app.sync import get_mikrotik_client
+from app.templating import templates
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
 
 
 def _get_device_or_404(db: Session, mac: str) -> Device:

@@ -33,3 +33,10 @@ SYNC_INTERVAL_S = float(os.environ.get("SYNC_INTERVAL_S", "60"))
 # loudly at startup instead of just silently being open.
 ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+
+# All timestamps are stored in UTC (server_default=now() on the DB side,
+# datetime.now(timezone.utc) on the app side) regardless of what timezone
+# the database server itself happens to be running in -- don't assume the
+# DB's NOW() is local time, it usually isn't (see app/templating.py).
+# DISPLAY_TIMEZONE only affects how they're rendered in the admin UI.
+DISPLAY_TIMEZONE = os.environ.get("DISPLAY_TIMEZONE", "America/Sao_Paulo")

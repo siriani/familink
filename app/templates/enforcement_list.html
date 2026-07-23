@@ -15,7 +15,7 @@ No bulk apply on purpose — open a device to review and apply it individually.<
       <td class="mono small">{{ p.device.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if p.device.group.hotspot_required else 'b-free' }}">{{ p.device.group.name }}</span></td>
       <td>{{ p.label }}</td>
-      <td class="small">{{ p.device.last_seen.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td class="small">{{ p.device.last_seen | localtime }}</td>
     </tr>
     {% else %}
     <tr><td colspan="6" class="empty">Nothing pending — every device's group matches what's enforced on MikroTik.</td></tr>
