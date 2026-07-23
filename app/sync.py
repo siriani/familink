@@ -22,6 +22,7 @@ from sqlalchemy import select
 from app.config import MIKROTIK_PASSWORD, MIKROTIK_URL, MIKROTIK_USER, SYNC_INTERVAL_S
 from app.db import session_scope
 from app.mikrotik import MikroTikClient
+from app.mikrotik_enforce import BINDING_COMMENT
 from app.models import Device, Group
 
 logger = logging.getLogger("familink.sync")
@@ -100,8 +101,15 @@ def merge_mikrotik_views(
         e = entry(mac)
         e["mikrotik_bound"] = True
         e["mikrotik_bypassed"] = binding.get("type") == "bypassed"
-        if not e["hostname"]:
-            e["hostname"] = binding.get("comment") or None
+        comment = binding.get("comment") or None
+        # BUG found live (22/jul/2026): app/mikrotik_enforce.py tags every
+        # binding IT creates with comment=BINDING_COMMENT ("familink") --
+        # that's ownership metadata, not a device name. Treating it as a
+        # hostname fallback overwrote a real device's displayed name with
+        # the literal string "familink" the moment enforcement was applied
+        # to it (caught via a bogus "familink" entity in Home Assistant).
+        if not e["hostname"] and comment != BINDING_COMMENT:
+            e["hostname"] = comment
 
     return merged
 
