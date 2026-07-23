@@ -6,17 +6,19 @@ No bulk apply on purpose — open a device to review and apply it individually.<
 
 <div class="tcard">
 <table>
-  <thead><tr><th>Device</th><th>MAC</th><th>Current group</th><th>What would change</th></tr></thead>
+  <thead><tr><th>Device</th><th>IP</th><th>MAC</th><th>Current group</th><th>What would change</th><th>Last seen</th></tr></thead>
   <tbody>
     {% for p in pending %}
     <tr class="clickable" onclick="location.href='/devices/{{ p.device.mac }}'">
       <td><strong>{{ p.device.hostname or '—' }}</strong></td>
+      <td class="mono small">{{ p.device.current_ip or '—' }}</td>
       <td class="mono small">{{ p.device.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if p.device.group.hotspot_required else 'b-free' }}">{{ p.device.group.name }}</span></td>
       <td>{{ p.label }}</td>
+      <td class="small">{{ p.device.last_seen.strftime('%Y-%m-%d %H:%M') }}</td>
     </tr>
     {% else %}
-    <tr><td colspan="4" class="empty">Nothing pending — every device's group matches what's enforced on MikroTik.</td></tr>
+    <tr><td colspan="6" class="empty">Nothing pending — every device's group matches what's enforced on MikroTik.</td></tr>
     {% endfor %}
   </tbody>
 </table>
