@@ -25,3 +25,11 @@ DATABASE_URL = (
 
 # Discovery sync loop
 SYNC_INTERVAL_S = float(os.environ.get("SYNC_INTERVAL_S", "60"))
+
+# Admin panel auth (HTTP Basic). Empty ADMIN_PASSWORD = no auth enforced —
+# fine for local dev, NOT recommended for anything reachable beyond your
+# own machine. Same "empty = disabled, not a hard requirement" shape as
+# CAM_GATEWAY_TOKEN elsewhere in this ecosystem, so app/auth.py can warn
+# loudly at startup instead of just silently being open.
+ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")

@@ -1,17 +1,19 @@
 # familink
 
 A device registry for home networks with a MikroTik router. It watches your
-router (read-only), keeps a database of every device that's ever shown up,
-and gives you a simple admin UI to see who's online and decide whether each
-device is free ("Liberado") or should have to log in through the hotspot
-("Hotspot"). New devices always default to free, so IoT/sensor gear never
-gets accidentally locked out.
+router, keeps a database of every device that's ever shown up, and gives
+you a simple admin UI to see who's online and decide whether each device is
+free ("Liberado") or should have to log in through the hotspot ("Hotspot").
+New devices always default to free, so IoT/sensor gear never gets
+accidentally locked out.
 
-This is the **foundation phase** — see [SPEC.md](SPEC.md) for the full
-vision and what's on the roadmap (port scanning, MQTT/Home Assistant
-presence publishing, a captive-portal self-registration flow, and pushing
-group assignments back to MikroTik as real enforcement). Today, familink
-only *reads* from your router — it never changes anything on it.
+The background sync that discovers devices is always read-only. Changing
+what's actually enforced on your router is a separate, deliberate step: the
+device page shows whether MikroTik matches the assigned group, and an
+**Apply to MikroTik** button applies it — one explicit click at a time,
+logged, never automatic. See [SPEC.md](SPEC.md) for the full vision and
+what's still on the roadmap (port scanning, MQTT/Home Assistant presence
+publishing, a captive-portal self-registration flow).
 
 ## Requirements
 
@@ -26,7 +28,9 @@ only *reads* from your router — it never changes anything on it.
 git clone https://github.com/siriani/familink.git
 cd familink
 cp .env.example .env
-# edit .env: MIKROTIK_URL/USER/PASSWORD and DB_HOST/PORT/NAME/USER/PASSWORD
+# edit .env: MIKROTIK_URL/USER/PASSWORD, DB_HOST/PORT/NAME/USER/PASSWORD,
+# and ADMIN_USER/ADMIN_PASSWORD (leave ADMIN_PASSWORD empty to disable
+# auth for local dev only -- see SPEC.md for why that matters here)
 docker compose up --build
 ```
 
@@ -36,8 +40,8 @@ SQL) — familink runs its migrations automatically on container start, but
 it won't create the database or user itself.
 
 Once it's up:
-- Admin panel: `http://localhost:8190/devices`
-- Health check: `http://localhost:8190/health`
+- Admin panel: `http://localhost:8190/devices` (prompts for `ADMIN_USER`/`ADMIN_PASSWORD`)
+- Health check: `http://localhost:8190/health` (no auth, safe for uptime monitors)
 
 Within one `SYNC_INTERVAL_S` (60s by default), devices already known to
 your router (DHCP leases, hotspot sessions) should start appearing.
@@ -47,7 +51,7 @@ your router (DHCP leases, hotspot sessions) should start appearing.
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install fastapi "uvicorn[standard]" httpx sqlalchemy alembic pymysql jinja2 python-multipart
-export MIKROTIK_PASSWORD=... DB_PASSWORD=... DB_HOST=... DB_USER=... DB_NAME=...
+export MIKROTIK_PASSWORD=... DB_PASSWORD=... DB_HOST=... DB_USER=... DB_NAME=... ADMIN_PASSWORD=...
 alembic upgrade head
 uvicorn app.main:app --reload --port 8190
 ```

@@ -66,6 +66,15 @@ already used.
 important** — anyone on the LAN can now flip a device's actual internet
 access, not just a database label.
 
+## Admin panel auth (shipped)
+
+HTTP Basic Auth (`app/auth.py`), applied to every route except `/health`
+(so uptime monitors keep working unauthenticated) and `/static/*`. Set
+`ADMIN_USER`/`ADMIN_PASSWORD` in `.env`; leaving `ADMIN_PASSWORD` empty
+disables enforcement entirely (fine for local dev) but logs a loud warning
+at startup every time so an operator can't accidentally ship it open
+without noticing.
+
 ## Roadmap — not built yet
 
 ### Port scanner
@@ -93,14 +102,6 @@ Express quota rules (e.g. "3h on weekdays, 8h on weekends, blocked 11pm–5am")
 per-group in familink's database and push them to MikroTik hotspot user
 profiles, instead of hand-coding them against specific usernames on the
 router.
-
-### Admin panel auth
-Still no authentication (LAN-only assumption) — now the highest-priority
-item on this list, since the enforcement feature above means an
-unauthenticated visitor on the LAN can change what a device's internet
-access actually is, not just relabel it in a database. Add at minimum a
-shared admin credential (Basic Auth via env var) before running this on
-anything less trusted than a home LAN.
 
 ### Bulk-apply on the /enforcement page
 Today every change requires opening the device and clicking Apply
