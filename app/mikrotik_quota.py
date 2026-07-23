@@ -73,6 +73,10 @@ async def block_device(client: MikroTikClient, device: Device) -> ApplyResult:
     )
     if status not in (200, 201):
         return ApplyResult(False, f"block failed (HTTP {status}): {body}")
+    # A freshly created binding lands at the end of the list -- an earlier,
+    # broader rule (e.g. a subnet-wide bypass) would otherwise silently win
+    # over this block. See MikroTikClient.move_to_top's docstring.
+    await client.move_to_top("ip/hotspot/ip-binding", body[".id"])
     return ApplyResult(True, f"blocked (binding {body.get('.id', '?')})")
 
 

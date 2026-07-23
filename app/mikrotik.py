@@ -53,6 +53,24 @@ class MikroTikClient:
     async def delete(self, path: str) -> tuple[int, list | dict]:
         return await self._request("DELETE", path)
 
+    async def move_to_top(self, path: str, item_id: str) -> tuple[int, list | dict]:
+        """RouterOS evaluates ip-binding (and similarly ordered lists)
+        top-to-bottom, first match wins -- verified live (23/jul/2026): a
+        freshly created MAC-specific binding lands at the *end* of the
+        list by default, and a pre-existing broad rule earlier in the list
+        (e.g. a subnet-wide `bypassed` catch-all) silently wins over it,
+        even though the MAC-specific entry is obviously the more specific
+        match. Moves `item_id` to sit before whatever is currently first in
+        `path`, so it's always evaluated ahead of anything else there.
+        """
+        status, body = await self.get(path)
+        if status != 200 or not isinstance(body, list) or not body:
+            return status, body
+        first_id = body[0][".id"]
+        if first_id == item_id:
+            return 200, {}
+        return await self.post(f"{path}/move", {"numbers": item_id, "destination": first_id})
+
     async def _request(
         self, method: str, path: str, body: dict | None = None
     ) -> tuple[int, list | dict]:

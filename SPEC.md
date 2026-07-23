@@ -62,6 +62,24 @@ bypass); `Hotspot` devices get a MAC-keyed `ip-binding` with no `type`
 (comment `familink`), the same shape the pre-existing hand-managed entries
 already used.
 
+**Real bug found live (23/jul/2026): RouterOS evaluates `ip-binding`
+top-to-bottom, first match wins — like an ordered firewall chain, not a
+set matched by specificity.** A freshly created MAC-specific binding lands
+at the *end* of the list by default. If a broad catch-all bypass rule
+(e.g. a subnet-wide `192.168.1.0/24` bypass predating familink) sits
+earlier in the list, it silently wins over the new, more specific
+MAC binding — the device stays bypassed even though familink correctly
+set it to require login. This made every `Hotspot`-group enforcement
+familink had applied so far a no-op in practice, without any error
+surfacing anywhere (the write succeeded; RouterOS just never consulted
+it). Fixed with `MikroTikClient.move_to_top()` — after creating or fixing
+a binding, it's moved to sit before whatever is currently first in the
+list, so it's always evaluated ahead of any pre-existing catch-all.
+Called from both `app/mikrotik_enforce.py`'s `_create_or_fix_binding` and
+`app/mikrotik_quota.py`'s `block_device` — the same class of bug would
+otherwise make a quota block equally silent. Retroactively re-applied to
+the bindings already created before this fix shipped.
+
 **This makes the missing admin-panel auth (below) materially more
 important** — anyone on the LAN can now flip a device's actual internet
 access, not just a database label.

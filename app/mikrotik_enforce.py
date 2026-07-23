@@ -53,12 +53,15 @@ async def _create_or_fix_binding(client: MikroTikClient, mac_upper: str) -> Appl
         )
         if status not in (200, 201):
             return ApplyResult("create_or_fix_binding", False, f"create failed (HTTP {status}): {body}")
+        await client.move_to_top("ip/hotspot/ip-binding", body[".id"])
         return ApplyResult("create_or_fix_binding", True, f"created binding {body.get('.id', '?')}")
 
     if existing.get("type") != "bypassed":
         # Already the correct shape (bound, not bypassed) — nothing to do,
         # but this shouldn't normally be reached since pending_action()
-        # would have returned "none". Treat as a successful no-op.
+        # would have returned "none". Still make sure it's not shadowed by
+        # an earlier catch-all rule (see move_to_top) before calling it done.
+        await client.move_to_top("ip/hotspot/ip-binding", existing[".id"])
         return ApplyResult("create_or_fix_binding", True, "binding already correct, no-op")
 
     # ARMADILHA verified live: PATCHing type="" to unset it fails with
@@ -67,6 +70,7 @@ async def _create_or_fix_binding(client: MikroTikClient, mac_upper: str) -> Appl
     binding_id = existing[".id"]
     status, body = await client.patch(f"ip/hotspot/ip-binding/{binding_id}", {"type": "regular"})
     if status == 200:
+        await client.move_to_top("ip/hotspot/ip-binding", binding_id)
         return ApplyResult("create_or_fix_binding", True, f"cleared bypass on binding {binding_id}")
 
     # Belt-and-suspenders in case a future RouterOS version changes this
@@ -91,6 +95,7 @@ async def _create_or_fix_binding(client: MikroTikClient, mac_upper: str) -> Appl
             "create_or_fix_binding", False,
             f"fallback recreate failed (HTTP {status2}): {body2} (old bypassed binding was already deleted!)",
         )
+    await client.move_to_top("ip/hotspot/ip-binding", body2[".id"])
     return ApplyResult("create_or_fix_binding", True, "recreated binding without bypass (fallback path)")
 
 
