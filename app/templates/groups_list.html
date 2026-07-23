@@ -1,20 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Groups — familink{% endblock %}
 {% block content %}
+<div class="topbar2">
+  <span></span>
+  <a class="rbtn" href="/groups/new">+ New group</a>
+</div>
 <div class="tcard">
 <table>
-  <thead><tr><th>Name</th><th>Hotspot required?</th><th>Description</th><th>Devices</th></tr></thead>
+  <thead><tr><th>Name</th><th>Hotspot?</th><th>Quota (weekday/weekend)</th><th>Night block</th><th>Devices</th><th></th></tr></thead>
   <tbody>
     {% for g in groups %}
     <tr>
       <td><strong>{{ g.name }}</strong>{% if g.is_default %} <span class="badge b-free">default</span>{% endif %}</td>
       <td><span class="badge {{ 'b-hotspot' if g.hotspot_required else 'b-free' }}">{{ 'Yes' if g.hotspot_required else 'No' }}</span></td>
-      <td>{{ g.description or '—' }}</td>
+      <td class="small">
+        {% if g.daily_limit_weekday_s or g.daily_limit_weekend_s %}
+          {{ (g.daily_limit_weekday_s / 3600) | round(1) if g.daily_limit_weekday_s else '—' }}h /
+          {{ (g.daily_limit_weekend_s / 3600) | round(1) if g.daily_limit_weekend_s else '—' }}h
+        {% else %}—{% endif %}
+      </td>
+      <td class="small">
+        {% if g.night_block_start %}{{ g.night_block_start }}–{{ g.night_block_end }} ({{ g.night_block_address_list }}){% else %}—{% endif %}
+      </td>
       <td><a href="/devices?group_id={{ g.id }}">{{ g.device_count }}</a></td>
+      <td><a href="/groups/{{ g.id }}/edit">Edit</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 </div>
-<p class="hint">Group management (create/edit/delete) isn't built yet — see SPEC.md roadmap.</p>
 {% endblock %}

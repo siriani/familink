@@ -14,6 +14,11 @@ class GroupOut(BaseModel):
     hotspot_required: bool
     description: str | None
     is_default: bool
+    daily_limit_weekday_s: int | None
+    daily_limit_weekend_s: int | None
+    night_block_start: str | None
+    night_block_end: str | None
+    night_block_address_list: str | None
 
 
 class GroupWithCount(GroupOut):
@@ -27,6 +32,10 @@ class UserOut(BaseModel):
     name: str
     email: str | None
     birthdate: date | None
+    daily_limit_weekday_s: int | None
+    daily_limit_weekend_s: int | None
+    seconds_used_today: int
+    blocked: bool
 
 
 class DeviceOut(BaseModel):

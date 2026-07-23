@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Users — familink{% endblock %}
+{% block content %}
+<div class="topbar2">
+  <span></span>
+  <a class="rbtn" href="/users/new">+ New user</a>
+</div>
+<div class="tcard">
+<table>
+  <thead><tr><th>Name</th><th>Quota override</th><th>Today's usage</th><th>Status</th><th>Devices</th><th></th></tr></thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td><strong>{{ u.name }}</strong></td>
+      <td class="small">
+        {% if u.daily_limit_weekday_s or u.daily_limit_weekend_s %}
+          {{ (u.daily_limit_weekday_s / 3600) | round(1) if u.daily_limit_weekday_s else '—' }}h /
+          {{ (u.daily_limit_weekend_s / 3600) | round(1) if u.daily_limit_weekend_s else '—' }}h
+        {% else %}— (uses group default){% endif %}
+      </td>
+      <td class="small">{{ (u.seconds_used_today / 3600) | round(1) }}h</td>
+      <td><span class="badge {{ 'b-hotspot' if u.blocked else 'b-free' }}">{{ 'Blocked' if u.blocked else 'OK' }}</span></td>
+      <td>{{ u.devices | length }}</td>
+      <td><a href="/users/{{ u.id }}/edit">Edit</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty">No users yet. Link a device to a user from the device detail page.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

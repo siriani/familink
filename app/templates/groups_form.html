@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit group' if group else 'New group' }} — familink{% endblock %}
+{% block content %}
+<a class="back-btn" href="/groups">&larr; Back</a>
+
+<div class="detail-card">
+  <form method="post" action="{{ '/groups/%d' % group.id if group else '/groups' }}">
+    <div class="assoc-section" style="margin-top:0;padding-top:0;border-top:none">
+      <h3>Basics</h3>
+      <div class="detail-grid" style="grid-template-columns:1fr">
+        <div>
+          <div class="detail-label">Name</div>
+          <input class="search" style="margin-top:4px" type="text" name="name" required value="{{ group.name if group else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Description</div>
+          <input class="search" style="margin-top:4px" type="text" name="description" value="{{ group.description if group else '' }}">
+        </div>
+        <div>
+          <label><input type="checkbox" name="hotspot_required" {% if group and group.hotspot_required %}checked{% endif %}>
+          Requires MikroTik hotspot login</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="assoc-section">
+      <h3>Quota (independent of "requires hotspot login" — no login needed)</h3>
+      <p class="hint" style="margin-top:0">Hours per day. familink tracks each person's online time
+        itself and blocks their devices directly on MikroTik once they hit the limit — leave blank for
+        no quota. A person's own override (set on their <a href="/users">user</a> record) wins over
+        this default. Only applies to devices linked to a person (device detail page → Owner).</p>
+      <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <div class="detail-label">Weekday limit (seconds)</div>
+          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekday_s"
+            value="{{ group.daily_limit_weekday_s if group and group.daily_limit_weekday_s is not none else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Weekend limit (seconds)</div>
+          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekend_s"
+            value="{{ group.daily_limit_weekend_s if group and group.daily_limit_weekend_s is not none else '' }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="assoc-section">
+      <h3>Night block (independent of quota/hotspot -- works for device-only groups too, e.g. TV/Playstation)</h3>
+      <p class="hint" style="margin-top:0">familink only keeps this MikroTik address-list's membership
+        in sync with the group's devices' current IPs (comment=familink entries only) -- it does NOT
+        create the firewall rule that actually drops traffic during this window. Create that rule on
+        the router once, then point it here (e.g. reuse the existing "RESTRITO" list).</p>
+      <div class="detail-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div>
+          <div class="detail-label">Block start (HH:MM)</div>
+          <input class="search" style="margin-top:4px" type="text" placeholder="23:00" name="night_block_start"
+            value="{{ group.night_block_start if group else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Block end (HH:MM)</div>
+          <input class="search" style="margin-top:4px" type="text" placeholder="05:00" name="night_block_end"
+            value="{{ group.night_block_end if group else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">MikroTik address-list name</div>
+          <input class="search" style="margin-top:4px" type="text" placeholder="RESTRITO" name="night_block_address_list"
+            value="{{ group.night_block_address_list if group else '' }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="assoc-section">
+      <button class="save-btn" type="submit">{{ 'Save' if group else 'Create group' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

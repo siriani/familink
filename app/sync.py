@@ -156,6 +156,29 @@ def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str]]:
     return newly_created
 
 
+def _load_night_block_groups() -> list[tuple[Group, set[str]]]:
+    """Every group with a night_block_address_list configured, paired
+    with the current_ip of every device in it (regardless of user
+    linkage or hotspot_required -- see app/mikrotik_quota.py module
+    docstring for why night-block is independent of quota).
+    """
+    with session_scope() as session:
+        groups = list(
+            session.scalars(select(Group).where(Group.night_block_address_list.is_not(None)))
+        )
+        result = []
+        for group in groups:
+            ips = set(
+                session.scalars(
+                    select(Device.current_ip).where(
+                        Device.group_id == group.id, Device.current_ip.is_not(None)
+                    )
+                )
+            )
+            result.append((group, ips))
+        return result
+
+
 async def run_discovery_cycle(client: MikroTikClient) -> None:
     _, leases = await client.get("ip/dhcp-server/lease")
     _, active = await client.get("ip/hotspot/active")
@@ -186,6 +209,18 @@ async def run_discovery_cycle(client: MikroTikClient) -> None:
     from app.mqtt_publish import publish_all  # local import, same reason as above
 
     await publish_all()  # no-op if MQTT_HOST isn't configured
+
+    from app.mikrotik_quota import sync_night_block  # local import, same reason as above
+
+    night_block_groups = await asyncio.to_thread(_load_night_block_groups)
+    for group, ips in night_block_groups:
+        result = await sync_night_block(client, group, ips)
+        if not result.success:
+            logger.warning("night-block sync failed for group '%s': %s", group.name, result.detail)
+
+    from app.quota import tick_and_enforce  # local import, same reason as above
+
+    await tick_and_enforce()
 
 
 _last_cycle_at: datetime | None = None

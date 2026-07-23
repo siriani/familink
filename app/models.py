@@ -32,6 +32,27 @@ class Group(Base):
     is_default: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
+    # Quota default for members of this group (app/quota.py) -- fully
+    # independent of hotspot_required (no MikroTik login involved at all).
+    # familink accumulates each user's online seconds itself every
+    # discovery cycle and, once the daily total is reached, blocks their
+    # devices directly (a simple type=blocked ip-binding, same shape as
+    # app/mikrotik_enforce.py's bindings but tagged separately -- see
+    # app/mikrotik_quota.py). A user's own override (see User below) wins
+    # over this when set.
+    daily_limit_weekday_s: Mapped[int | None] = mapped_column(Integer)
+    daily_limit_weekend_s: Mapped[int | None] = mapped_column(Integer)
+
+    # Night block: deliberately independent of hotspot_required/quota --
+    # a group can curfew devices (e.g. "TV/Playstation") with no login
+    # involved at all. familink only ever syncs address-list *membership*
+    # into an existing list (comment=familink entries only); it never
+    # creates the firewall filter rule that actually matches this list
+    # during night_block_start-night_block_end, see SPEC.md.
+    night_block_start: Mapped[str | None] = mapped_column(String(5))  # "HH:MM"
+    night_block_end: Mapped[str | None] = mapped_column(String(5))
+    night_block_address_list: Mapped[str | None] = mapped_column(String(64))
+
 
 class User(Base):
     """A family member / registered person. NOT an app-login account — no
@@ -47,6 +68,22 @@ class User(Base):
     email: Mapped[str | None] = mapped_column(String(255), unique=True)
     birthdate: Mapped[date | None] = mapped_column(Date)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    # Personal quota override -- wins over the applicable group's default
+    # (app/quota.py:todays_limit_s) when set. Leave both null to just
+    # inherit whatever group the person's devices put them in.
+    daily_limit_weekday_s: Mapped[int | None] = mapped_column(Integer)
+    daily_limit_weekend_s: Mapped[int | None] = mapped_column(Integer)
+
+    # familink's own accounting -- no MikroTik login/limit-uptime involved
+    # at all (see app/quota.py, app/mikrotik_quota.py). Incremented by
+    # SYNC_INTERVAL_S every discovery cycle any of this person's devices
+    # is online, up to todays_limit_s(); once reached, `blocked` flips to
+    # True and every linked device gets a direct MikroTik block. The
+    # nightly reset zeroes seconds_used_today and clears `blocked`
+    # (unblocking on MikroTik) for the new day.
+    seconds_used_today: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    blocked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     devices: Mapped[list["Device"]] = relationship(back_populates="user")
 
@@ -141,6 +178,28 @@ class EnforcementLog(Base):
     applied_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     device: Mapped["Device"] = relationship()
+
+
+class QuotaLog(Base):
+    """Audit trail for quota-driven MikroTik writes (app/quota.py,
+    app/mikrotik_quota.py) -- one row every time a user gets blocked for
+    hitting their daily limit, unblocked at the nightly reset, or
+    unblocked via a manual `/users/{id}/reset-today`. Same reasoning as
+    EnforcementLog: "what has familink actually changed on my router"
+    needs to stay answerable, especially since most of this runs
+    unattended rather than on an explicit click.
+    """
+
+    __tablename__ = "quota_log"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    limit_s: Mapped[int | None] = mapped_column(Integer)
+    success: Mapped[bool] = mapped_column(Boolean)
+    detail: Mapped[str | None] = mapped_column(Text)
+    applied_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    user: Mapped["User"] = relationship()
 
 
 class RegistrationToken(Base):

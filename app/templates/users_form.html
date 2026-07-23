@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit user' if user else 'New user' }} — familink{% endblock %}
+{% block content %}
+<a class="back-btn" href="/users">&larr; Back</a>
+
+<div class="detail-card">
+  <form method="post" action="{{ '/users/%d' % user.id if user else '/users' }}">
+    <div class="assoc-section" style="margin-top:0;padding-top:0;border-top:none">
+      <h3>Basics</h3>
+      <div class="detail-grid" style="grid-template-columns:1fr">
+        <div>
+          <div class="detail-label">Name</div>
+          <input class="search" style="margin-top:4px" type="text" name="name" required value="{{ user.name if user else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Email</div>
+          <input class="search" style="margin-top:4px" type="email" name="email" value="{{ user.email if user else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Birthdate</div>
+          <input class="search" style="margin-top:4px" type="date" name="birthdate" value="{{ user.birthdate if user else '' }}">
+        </div>
+      </div>
+    </div>
+
+    {% if user %}
+    <div class="assoc-section">
+      <h3>Today's usage (familink-tracked, no MikroTik login involved)</h3>
+      <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+        <div><div class="detail-label">Used today</div><div class="detail-value">{{ (user.seconds_used_today / 3600) | round(2) }}h</div></div>
+        <div><div class="detail-label">Status</div><div class="detail-value">
+          <span class="badge {{ 'b-hotspot' if user.blocked else 'b-free' }}">{{ 'Blocked' if user.blocked else 'OK' }}</span>
+        </div></div>
+      </div>
+      <form method="post" action="/users/{{ user.id }}/reset-today" style="margin-top:10px">
+        <button class="save-btn apply-btn" type="submit"
+          onclick="return confirm('Zero today\'s usage and unblock this person right now?')">
+          Reset today's usage now
+        </button>
+      </form>
+    </div>
+
+    {% if quota_logs %}
+    <div class="assoc-section">
+      <h3>Recent quota events</h3>
+      <table>
+        <thead><tr><th>When</th><th>Limit</th><th>Result</th><th>Detail</th></tr></thead>
+        <tbody>
+          {% for log in quota_logs %}
+          <tr>
+            <td class="small">{{ log.applied_at | localtime }}</td>
+            <td class="small">{{ (log.limit_s / 3600) | round(1) ~ 'h' if log.limit_s else '—' }}</td>
+            <td><span class="badge {{ 'b-free' if log.success else 'b-hotspot' }}">{{ 'OK' if log.success else 'Failed' }}</span></td>
+            <td class="small">{{ log.detail }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <div class="assoc-section">
+      <h3>Personal quota override</h3>
+      <p class="hint" style="margin-top:0">Leave blank to just use whatever their devices'
+        <a href="/groups">group</a> specifies. Fill in to override it for this person specifically.</p>
+      <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <div class="detail-label">Weekday limit (seconds)</div>
+          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekday_s"
+            value="{{ user.daily_limit_weekday_s if user and user.daily_limit_weekday_s is not none else '' }}">
+        </div>
+        <div>
+          <div class="detail-label">Weekend limit (seconds)</div>
+          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekend_s"
+            value="{{ user.daily_limit_weekend_s if user and user.daily_limit_weekend_s is not none else '' }}">
+        </div>
+      </div>
+    </div>
+
+    <div class="assoc-section">
+      <button class="save-btn" type="submit">{{ 'Save' if user else 'Create user' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

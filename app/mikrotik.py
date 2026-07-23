@@ -6,16 +6,22 @@ a (status, body) tuple), just made httpx-async to match this project's
 FastAPI style.
 
 `.get()` is used by the read-only discovery loop (app/sync.py) — that loop
-must never call a write verb. `.put()`/`.patch()`/`.delete()` are used by
-app/mikrotik_enforce.py, which only ever runs from an explicit,
-admin-triggered request (POST /devices/{mac}/apply-mikrotik) — never from
-a background loop. Keep it that way: writes to a real router should always
-be a deliberate action, not something a timer does.
+must never call a write verb. `.put()`/`.patch()`/`.delete()`/`.post()`
+are used by app/mikrotik_enforce.py (admin-click-triggered) and
+app/mikrotik_quota.py (legitimately *scheduled* automation — see that
+module's docstring for why that's a different class of write than
+enforcement's). Keep writes deliberate either way: an explicit click or a
+documented schedule, never an incidental side effect of a read loop.
 
 ARMADILHA verified live against RouterOS 7.23: the REST API is NOT plain
-REST-conventional — creating a new entry is **PUT**, not POST (POST on a
-collection path returns `{"detail": "no such command", "error": 400}`).
-GET/PATCH/DELETE behave as expected.
+REST-conventional.
+- Creating a new *resource* (an ip-binding, an address-list entry, ...) is
+  **PUT**, not POST (POST on a collection path returns
+  `{"detail": "no such command", "error": 400}`).
+- Triggering an *action* that isn't resource creation (e.g.
+  `ip/hotspot/user/reset-counters`) genuinely IS **POST** — verified live,
+  returns 200. Don't conflate the two just because both write.
+- GET/PATCH/DELETE behave as expected.
 """
 from __future__ import annotations
 
@@ -35,6 +41,11 @@ class MikroTikClient:
         """Create a new entry. MikroTik's REST API uses PUT for this, not
         POST — see the module docstring."""
         return await self._request("PUT", path, body)
+
+    async def post(self, path: str, body: dict | None = None) -> tuple[int, list | dict]:
+        """Trigger an action endpoint (e.g. reset-counters) -- NOT for
+        creating a resource, that's .put(). See the module docstring."""
+        return await self._request("POST", path, body)
 
     async def patch(self, path: str, body: dict | None = None) -> tuple[int, list | dict]:
         return await self._request("PATCH", path, body)

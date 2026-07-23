@@ -117,18 +117,70 @@ Verified live end-to-end against the real EMQX broker (dedicated
 retained discovery config and state both landed correctly and matched
 HA's expected schema.
 
+## Quota / schedule engine (shipped)
+
+Replaces the hand-written MikroTik scripts entirely — investigated the
+live router before designing this: quota (`limit-uptime`/`uptime` on a
+MikroTik hotspot **user**, reset nightly) and night block (a firewall rule
+matching a **static** address-list, completely independent of hotspot
+login) turned out to be two unrelated mechanisms, and the night-block list
+was already stale for any device whose MAC had rotated (phones do this
+periodically for privacy) since it was IP-keyed and never updated.
+
+**Quota accounting lives entirely in familink, not MikroTik** (a
+deliberate design choice, not the first draft — the first version pushed
+`limit-uptime` to a MikroTik hotspot user like the retired script did;
+switched after building and testing that version, because it required
+every quota-tracked person to have an existing MikroTik hotspot login and
+only worked for `hotspot_required` groups). MikroTik's role is reduced to
+a plain block/unblock per device — no login, no session, no counter on the
+router at all:
+
+- **Quota**: fully independent of `hotspot_required`. Every discovery
+  cycle (`app/quota.py:tick_and_enforce`), for each `users` row with an
+  applicable quota (group default via `app/quota.py:applicable_group`, or
+  a personal override on the `users` row itself — override wins), if any
+  of their linked devices is online, `seconds_used_today` gets
+  `SYNC_INTERVAL_S` added. The moment it reaches `todays_limit_s(user)`,
+  every device linked to that person gets a `type=blocked` MikroTik
+  ip-binding (`app/mikrotik_quota.py:block_device`, comment
+  `familink-quota` — a different tag than `app/mikrotik_enforce.py`'s
+  `familink`, so the two systems never touch each other's bindings; don't
+  mix a quota group with a `hotspot_required` group for the same device,
+  see `block_device`'s docstring for what happens if you do). Once daily
+  at 00:01 `DISPLAY_TIMEZONE` (`app/quota.py:nightly_reset_loop`), every
+  user's counter zeroes and anyone blocked gets unblocked
+  (`unblock_device`) — logged either way. `/users/{id}/reset-today` is a
+  manual early-unblock for "give them extra time today" without waiting
+  for midnight, same idea as the retired hotspot-admin panel's old "Reset"
+  button.
+- **Night block**: deliberately independent of quota too — operates on
+  every device in a group directly, by `current_ip`, so a group like
+  "TV/Playstation" can curfew at a fixed hour with zero login or quota
+  involved. Every discovery cycle, familink reconciles `comment=familink`
+  entries in the group's `night_block_address_list` to match current
+  device IPs (`app/mikrotik_quota.py:sync_night_block`) — never touches
+  entries with any other comment, so a reused list (e.g. the original
+  `RESTRITO`) keeps whatever else was already in it. familink never
+  creates the firewall filter rule that actually drops traffic during the
+  window — that's set up once on the router, same shape as the
+  pre-existing rules, and familink is just told which address-list to keep
+  in sync.
+
+Groups aren't limited to the 2 seeded ones — full CRUD at `/groups`
+(`daily_limit_weekday_s`/`daily_limit_weekend_s`/`night_block_start`/
+`night_block_end`/`night_block_address_list`). People are managed at
+`/users` (name/email/birthdate, personal quota override, read-only
+today's-usage/blocked status).
+
+## Roadmap — not built yet
+
 ### Captive portal self-registration
 User connects to Wi-Fi, hits a MikroTik hotspot walled-garden landing page
 that talks to familink instead of (or in addition to) MikroTik's built-in
 login, registers name/email/birthdate into `users`, links the connecting
 device's MAC. Uses the already-provisioned `registration_tokens` table for
 the linking handshake.
-
-### Quota / schedule engine, generalized per-group
-Express quota rules (e.g. "3h on weekdays, 8h on weekends, blocked 11pm–5am")
-per-group in familink's database and push them to MikroTik hotspot user
-profiles, instead of hand-coding them against specific usernames on the
-router.
 
 ### Bulk-apply on the /enforcement page
 Today every change requires opening the device and clicking Apply
