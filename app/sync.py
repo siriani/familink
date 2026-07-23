@@ -48,7 +48,15 @@ def merge_mikrotik_views(
 ) -> dict[str, dict]:
     """One row per normalized MAC, merged from all four MikroTik views.
 
-    - hostname/ip: from DHCP lease (fallback: ip-binding comment)
+    - hostname: from DHCP lease (fallback: ip-binding comment)
+    - ip: from DHCP lease if there is one, but ALSO from `active`/`hosts` —
+      those two reflect whatever MikroTik currently sees on the wire (ARP-
+      level, via the hotspot host table) regardless of whether the device
+      ever took a DHCP lease at all. This matters for devices with a
+      manually-configured static IP outside the DHCP pool (seen live: a
+      camera with `NetWork.NetDHCP=false` and a hand-set address) — those
+      never appear in `lease` but do show up in `hosts` with a real
+      `address` field, so relying on `lease` alone silently drops their IP.
     - is_online: MAC present in `active` (authenticated hotspot session) OR
       `hosts` (broader "seen on network", covers bypassed devices too,
       since those never show up in `active`)
@@ -77,13 +85,13 @@ def merge_mikrotik_views(
         e["ip"] = lease.get("address") or e["ip"]
         e["hostname"] = lease.get("host-name") or lease.get("comment") or e["hostname"]
 
-    online_macs: set[str] = set()
     for row in (active or []) + (hosts or []):
         mac = normalize_mac(row.get("mac-address", ""))
-        if mac:
-            online_macs.add(mac)
-    for mac in online_macs:
-        entry(mac)["is_online"] = True
+        if not mac:
+            continue
+        e = entry(mac)
+        e["is_online"] = True
+        e["ip"] = row.get("address") or e["ip"]
 
     for binding in bindings or []:
         mac = normalize_mac(binding.get("mac-address", ""))
@@ -108,15 +116,22 @@ def _default_group_id(session) -> int:
     return group_id
 
 
-def upsert_devices(merged: dict[str, dict]) -> None:
+def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str]]:
     """Sync DB write, run off the event loop via asyncio.to_thread by the
     caller. Opens its own session so it's safe to call from a worker thread.
+
+    Returns (device_id, ip) for every device INSERTED this cycle (not
+    updated) that has a known IP — the caller uses this to kick off an
+    automatic port scan for newly-discovered devices only, see
+    app/portscan.py.
     """
+    newly_created: list[tuple[int, str]] = []
     with session_scope() as session:
         default_group_id = _default_group_id(session)
         now = datetime.now(timezone.utc)
         for mac, info in merged.items():
             device = session.scalar(select(Device).where(Device.mac == mac))
+            is_new = device is None
             if device is None:
                 device = Device(mac=mac, group_id=default_group_id)
                 session.add(device)
@@ -126,7 +141,11 @@ def upsert_devices(merged: dict[str, dict]) -> None:
             device.mikrotik_bound = info["mikrotik_bound"]
             device.mikrotik_bypassed = info["mikrotik_bypassed"]
             device.last_seen = now
+            if is_new and device.current_ip:
+                session.flush()  # need device.id before commit
+                newly_created.append((device.id, device.current_ip))
         session.commit()
+    return newly_created
 
 
 async def run_discovery_cycle(client: MikroTikClient) -> None:
@@ -145,8 +164,16 @@ async def run_discovery_cycle(client: MikroTikClient) -> None:
         hosts if isinstance(hosts, list) else [],
         bindings if isinstance(bindings, list) else [],
     )
-    await asyncio.to_thread(upsert_devices, merged)
-    logger.info("discovery cycle: %d devices merged", len(merged))
+    newly_created = await asyncio.to_thread(upsert_devices, merged)
+    logger.info("discovery cycle: %d devices merged, %d new", len(merged), len(newly_created))
+
+    if newly_created:
+        from app.portscan import scan_and_store  # local import: avoids a
+        # hard dependency from the read-only discovery loop on the scanner
+        # module unless a new device actually triggers it.
+
+        for device_id, ip in newly_created:
+            asyncio.create_task(scan_and_store(device_id, ip))
 
 
 _last_cycle_at: datetime | None = None

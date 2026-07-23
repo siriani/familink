@@ -75,13 +75,30 @@ disables enforcement entirely (fine for local dev) but logs a loud warning
 at startup every time so an operator can't accidentally ship it open
 without noticing.
 
-## Roadmap — not built yet
+## Port scanner (shipped)
 
-### Port scanner
-Background/on-demand nmap scan per device IP, writing rows into the
-already-provisioned `device_scan_results` table, to help identify "mystery"
-devices in the admin UI (service guess/banner surfaced on the device detail
-page).
+`app/portscan.py` runs an nmap TCP-connect scan (`-sT`, no special
+capabilities needed in a container) against a curated port list — cameras
+(554/8899/34567/37777), printers (9100/631), common web/IoT ports, a few
+well-known services — the first time the discovery loop sees a brand new
+device (never re-triggered automatically after that). Results land in
+`device_scan_results`; a simple first-match heuristic
+(`app/portscan.py:guess_type`) turns the open-port set into a human label
+(e.g. "Camera (ONVIF)", "Printer (JetDirect)") stored on
+`device.vendor_guess` if it's still empty. The device detail page shows the
+scan table and a manual **Rescan** button for anyone who wants a fresh read
+without waiting for a device to look "new" again.
+
+As part of this, fixed a real gap in IP discovery: `current_ip` used to
+come only from MikroTik's DHCP lease table, which misses any device with a
+manually-configured static IP outside the DHCP pool (confirmed live — a
+camera with DHCP disabled on its network config never appears in `lease` at
+all). `merge_mikrotik_views` now also takes `address` from
+`/ip/hotspot/active` and `/ip/hotspot/host`, which reflect whatever
+MikroTik currently sees on the wire (ARP-level) regardless of whether the
+device ever requested a DHCP lease.
+
+## Roadmap — not built yet
 
 ### MQTT presence publisher / Home Assistant discovery
 Publish [Home Assistant MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery)

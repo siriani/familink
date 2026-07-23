@@ -9,13 +9,14 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy import desc, or_, select
+from sqlalchemy import delete, desc, or_, select
 from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
 from app.mikrotik_enforce import apply_device
-from app.models import Device, EnforcementLog, Group, User
+from app.models import Device, DeviceScanResult, EnforcementLog, Group, User
+from app.portscan import scan_and_store
 from app.schemas import DeviceOut, DeviceUpdate
 from app.sync import get_mikrotik_client
 from app.templating import templates
@@ -112,6 +113,14 @@ def page_device_detail(request: Request, mac: str, db: Session = Depends(get_db)
             .limit(5)
         )
     )
+    scan_results = list(
+        db.scalars(
+            select(DeviceScanResult)
+            .where(DeviceScanResult.device_id == device.id)
+            .order_by(DeviceScanResult.port)
+        )
+    )
+    last_scanned_at = max((r.scanned_at for r in scan_results), default=None)
     return templates.TemplateResponse(
         request,
         "device_detail.html",
@@ -122,8 +131,20 @@ def page_device_detail(request: Request, mac: str, db: Session = Depends(get_db)
             "pending_action": action,
             "pending_action_label": pending_action_label(action),
             "enforcement_logs": logs,
+            "scan_results": scan_results,
+            "last_scanned_at": last_scanned_at,
         },
     )
+
+
+@router.post("/devices/{mac}/scan")
+async def post_scan_device(mac: str, db: Session = Depends(get_db)):
+    device = _get_device_or_404(db, mac)
+    if device.current_ip:
+        db.execute(delete(DeviceScanResult).where(DeviceScanResult.device_id == device.id))
+        db.commit()
+        await scan_and_store(device.id, device.current_ip)
+    return RedirectResponse(f"/devices/{mac}", status_code=303)
 
 
 @router.post("/devices/{mac}/apply-mikrotik")

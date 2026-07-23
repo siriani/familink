@@ -14,6 +14,7 @@
     <div><div class="detail-label">First seen</div><div class="detail-value">{{ device.first_seen | localtime }}</div></div>
     <div><div class="detail-label">Last seen</div><div class="detail-value">{{ device.last_seen | localtime }}</div></div>
     <div><div class="detail-label">MikroTik ip-binding</div><div class="detail-value">{{ 'bound, bypassed' if device.mikrotik_bypassed else ('bound, not bypassed' if device.mikrotik_bound else 'no binding') }}</div></div>
+    <div><div class="detail-label">Guessed type</div><div class="detail-value">{{ device.vendor_guess or '—' }}</div></div>
   </div>
 
   <div class="assoc-section">
@@ -72,6 +73,31 @@
       <textarea name="notes" rows="3" style="width:100%">{{ device.notes or '' }}</textarea>
       <button class="save-btn" type="submit">Save</button>
     </form>
+  </div>
+
+  <div class="assoc-section">
+    <h3>Port scan</h3>
+    <p class="hint" style="margin-top:0">
+      {% if last_scanned_at %}Last scanned: {{ last_scanned_at | localtime }}{% else %}Never scanned yet.{% endif %}
+      New devices are scanned automatically the first time they're discovered.
+    </p>
+    <form method="post" action="/devices/{{ device.mac }}/scan">
+      <button class="save-btn" type="submit" {% if not device.current_ip %}disabled title="no known IP"{% endif %}>
+        {{ 'Rescan' if scan_results else 'Scan now' }}
+      </button>
+    </form>
+    {% if scan_results %}
+    <div class="tcard" style="margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px">
+      <table>
+        <thead><tr><th>Port</th><th>Protocol</th><th>Service</th></tr></thead>
+        <tbody>
+          {% for r in scan_results %}
+          <tr><td class="mono">{{ r.port }}</td><td>{{ r.protocol }}</td><td>{{ r.service_guess or '—' }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
