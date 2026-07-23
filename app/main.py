@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import quota, sync
 from app.auth import BasicAuthMiddleware, warn_if_auth_disabled
-from app.routers import devices, enforcement, groups, health, users
+from app.routers import captive, devices, enforcement, groups, health, users
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -36,6 +36,7 @@ app.include_router(groups.router)
 app.include_router(users.router)
 app.include_router(enforcement.router)
 app.include_router(health.router)
+app.include_router(captive.router)
 
 
 @app.get("/")

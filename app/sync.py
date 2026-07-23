@@ -22,7 +22,7 @@ from sqlalchemy import select
 from app.config import MIKROTIK_PASSWORD, MIKROTIK_URL, MIKROTIK_USER, SYNC_INTERVAL_S
 from app.db import session_scope
 from app.mikrotik import MikroTikClient
-from app.mikrotik_enforce import BINDING_COMMENT
+from app.mikrotik_binding import BINDING_COMMENT
 from app.models import Device, Group
 
 logger = logging.getLogger("familink.sync")

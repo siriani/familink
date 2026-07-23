@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% if state == "unknown" %}<meta http-equiv="refresh" content="5">{% endif %}
+<title>Conectar à rede</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f4f5f7; margin: 0; padding: 24px 16px; color: #1a1a1a; }
+  .card { max-width: 420px; margin: 0 auto; background: #fff; border-radius: 12px;
+    padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  h1 { font-size: 1.3rem; margin: 0 0 16px; }
+  h2 { font-size: 1rem; margin: 20px 0 8px; color: #444; }
+  p.hint { color: #666; font-size: .9rem; }
+  .person-btn { display: block; width: 100%; text-align: left; padding: 12px 14px;
+    margin-bottom: 8px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa;
+    font-size: 1rem; cursor: pointer; }
+  .person-btn:active { background: #eee; }
+  input[type=text], input[type=email], input[type=date] {
+    width: 100%; box-sizing: border-box; padding: 10px; margin: 6px 0 12px;
+    border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+  label { font-size: .85rem; color: #555; }
+  .save-btn { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none;
+    border-radius: 8px; font-size: 1rem; cursor: pointer; }
+  .error { color: #b91c1c; font-size: .9rem; margin-bottom: 10px; }
+  .continue-link { display: block; margin-top: 16px; text-align: center; color: #2563eb; }
+</style>
+</head>
+<body>
+<div class="card">
+
+{% if state == "unknown" %}
+  <h1>Identificando seu dispositivo…</h1>
+  <p class="hint">Ainda não te encontramos na rede. Aguarde alguns segundos e recarregue a página.</p>
+
+{% elif state == "connected" %}
+  <h1>Conectado como {{ user.name }}</h1>
+  <p class="hint">Você já está identificado nesta rede.</p>
+  {% if continue_url %}
+  <a class="continue-link" href="{{ continue_url }}">Continuar navegando →</a>
+  {% endif %}
+
+{% elif state == "identify" %}
+  <h1>Quem é você?</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  {% if users %}
+  <h2>Já tenho conta</h2>
+  {% for u in users %}
+  <form method="post" action="/captive">
+    <input type="hidden" name="existing_user_id" value="{{ u.id }}">
+    <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
+    <button class="person-btn" type="submit">{{ u.name }}</button>
+  </form>
+  {% endfor %}
+  {% endif %}
+
+  <h2>Criar conta</h2>
+  <form method="post" action="/captive">
+    <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
+    <label>Nome</label>
+    <input type="text" name="name" required>
+    <label>Email (opcional)</label>
+    <input type="email" name="email">
+    <label>Data de nascimento (opcional)</label>
+    <input type="date" name="birthdate">
+    <button class="save-btn" type="submit">Entrar</button>
+  </form>
+{% endif %}
+
+</div>
+</body>
+</html>

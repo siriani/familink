@@ -21,7 +21,7 @@ from app.config import ADMIN_PASSWORD, ADMIN_USER
 
 logger = logging.getLogger("familink.auth")
 
-_EXEMPT_PATHS = {"/health"}
+_EXEMPT_PATHS = {"/health", "/captive"}
 _EXEMPT_PREFIXES = ("/static/",)
 
 

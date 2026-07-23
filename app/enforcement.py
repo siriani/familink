@@ -16,15 +16,47 @@ from app.models import Device
 
 PendingAction = Literal["none", "create_or_fix_binding", "remove_binding"]
 
+BindingState = Literal["none", "regular", "bypassed", "blocked"]
+
+
+def desired_binding_state(device: Device) -> BindingState:
+    """The one place that decides what a device's MikroTik ip-binding
+    SHOULD look like right now -- shared by app/mikrotik_enforce.py (admin
+    click), app/mikrotik_quota.py (block on quota exhaustion / unblock on
+    reset), and app/routers/captive.py (self-identification). A
+    `hotspot_required` device goes through one lifecycle on a single
+    binding: "regular" (not yet identified, forced through the captive
+    page) -> "bypassed" (identified, quota OK or no quota set) ->
+    "blocked" (quota exhausted) -> "bypassed" again next day, without ever
+    re-identifying, since the MAC->user link persists in the DB.
+    """
+    if not device.group.hotspot_required:
+        return "none"
+    if device.user_id is not None and device.user.blocked:
+        return "blocked"
+    if device.user_id is not None:
+        return "bypassed"
+    return "regular"
+
 
 def pending_action(device: Device) -> PendingAction:
-    desired_restricted = device.group.hotspot_required
-    actually_enforced = device.mikrotik_bound and not device.mikrotik_bypassed
+    desired = desired_binding_state(device)
 
-    if desired_restricted and not actually_enforced:
-        return "create_or_fix_binding"
-    if not desired_restricted and actually_enforced:
-        return "remove_binding"
+    if desired == "none":
+        bound = device.mikrotik_bound and not device.mikrotik_bypassed
+        return "remove_binding" if bound else "none"
+    if desired == "regular":
+        correct = device.mikrotik_bound and not device.mikrotik_bypassed
+        return "none" if correct else "create_or_fix_binding"
+    if desired == "bypassed":
+        correct = device.mikrotik_bound and device.mikrotik_bypassed
+        return "none" if correct else "create_or_fix_binding"
+    # desired == "blocked": device.mikrotik_bound/mikrotik_bypassed can't
+    # currently distinguish "blocked" from "regular" (both are
+    # bound=True/bypassed=False) -- quota's own tick_and_enforce already
+    # keeps this in sync every cycle regardless, so it's out of scope for
+    # this admin-click button (would need a tracked mikrotik_blocked
+    # column to show accurately here -- deferred, see SPEC.md).
     return "none"
 
 
