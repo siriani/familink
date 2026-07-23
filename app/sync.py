@@ -175,6 +175,10 @@ async def run_discovery_cycle(client: MikroTikClient) -> None:
         for device_id, ip in newly_created:
             asyncio.create_task(scan_and_store(device_id, ip))
 
+    from app.mqtt_publish import publish_all  # local import, same reason as above
+
+    await publish_all()  # no-op if MQTT_HOST isn't configured
+
 
 _last_cycle_at: datetime | None = None
 

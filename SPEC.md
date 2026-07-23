@@ -98,14 +98,24 @@ all). `merge_mikrotik_views` now also takes `address` from
 MikroTik currently sees on the wire (ARP-level) regardless of whether the
 device ever requested a DHCP lease.
 
-## Roadmap — not built yet
+## MQTT presence publisher / Home Assistant discovery (shipped)
 
-### MQTT presence publisher / Home Assistant discovery
-Publish [Home Assistant MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery)
-configs to `homeassistant/binary_sensor/<object_id>/config` per device
-(online/offline) plus a state topic, using the already-provisioned
-`device_mqtt_state` table to track what's been published and avoid
-re-publishing discovery configs every cycle.
+`app/mqtt_publish.py` runs once per discovery cycle, right after devices
+are refreshed. Entirely opt-in — a no-op unless `MQTT_HOST` is set. For
+every device: publishes its online/offline state (retained) to
+`<MQTT_TOPIC_PREFIX>/<object_id>/state`, and — once per device, tracked via
+`device_mqtt_state.discovery_published_at` so it's never resent — a
+[Home Assistant MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery)
+config (retained) to `homeassistant/binary_sensor/<object_id>/config`,
+`device_class: connectivity`. `object_id` is `familink_<mac_with_underscores>`,
+stored on `device_mqtt_state.object_id`. DB reads/writes go through
+`asyncio.to_thread` (same pattern as `app/sync.py`) rather than mixing sync
+SQLAlchemy calls into the async MQTT client loop directly.
+
+Verified live end-to-end against the real EMQX broker (dedicated
+`familink` MQTT user, not reusing Home Assistant's own credential) — a
+retained discovery config and state both landed correctly and matched
+HA's expected schema.
 
 ### Captive portal self-registration
 User connects to Wi-Fi, hits a MikroTik hotspot walled-garden landing page

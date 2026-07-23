@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends nmap \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir \
-    fastapi uvicorn[standard] httpx sqlalchemy alembic pymysql jinja2 python-multipart
+    fastapi uvicorn[standard] httpx sqlalchemy alembic pymysql jinja2 python-multipart aiomqtt
 
 COPY app ./app
 COPY migrations ./migrations

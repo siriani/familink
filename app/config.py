@@ -40,3 +40,12 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
 # DB's NOW() is local time, it usually isn't (see app/templating.py).
 # DISPLAY_TIMEZONE only affects how they're rendered in the admin UI.
 DISPLAY_TIMEZONE = os.environ.get("DISPLAY_TIMEZONE", "America/Sao_Paulo")
+
+# MQTT presence publisher (Home Assistant discovery). Empty MQTT_HOST =
+# disabled entirely -- not every familink install has a broker, this is
+# opt-in. See app/mqtt_publish.py.
+MQTT_HOST = os.environ.get("MQTT_HOST", "")
+MQTT_PORT = int(os.environ.get("MQTT_PORT", "1883"))
+MQTT_USER = os.environ.get("MQTT_USER", "")
+MQTT_PASSWORD = os.environ.get("MQTT_PASSWORD", "")
+MQTT_TOPIC_PREFIX = os.environ.get("MQTT_TOPIC_PREFIX", "familink")
