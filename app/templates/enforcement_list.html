@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Enforcement — familink{% endblock %}
+{% block content %}
+<p class="hint">{{ total_devices }} devices tracked. {{ pending|length }} out of sync with MikroTik.
+No bulk apply on purpose — open a device to review and apply it individually.</p>
+
+<div class="tcard">
+<table>
+  <thead><tr><th>Device</th><th>MAC</th><th>Current group</th><th>What would change</th></tr></thead>
+  <tbody>
+    {% for p in pending %}
+    <tr class="clickable" onclick="location.href='/devices/{{ p.device.mac }}'">
+      <td><strong>{{ p.device.hostname or '—' }}</strong></td>
+      <td class="mono small">{{ p.device.mac }}</td>
+      <td><span class="badge {{ 'b-hotspot' if p.device.group.hotspot_required else 'b-free' }}">{{ p.device.group.name }}</span></td>
+      <td>{{ p.label }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="empty">Nothing pending — every device's group matches what's enforced on MikroTik.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

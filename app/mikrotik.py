@@ -5,12 +5,12 @@ Auth, `{base}/rest/{path}`, JSON body, short timeout, normalize errors into
 a (status, body) tuple), just made httpx-async to match this project's
 FastAPI style.
 
-FOUNDATION PHASE NOTE: only `.get()` is exercised anywhere in this
-codebase (see app/sync.py). `.post()`/`.patch()`/`.delete()` exist because
-a future phase (the group -> MikroTik enforcement sync described in
-SPEC.md) will need them, and it's easier to have the shape ready than to
-retrofit it — but nothing in the foundation phase may call them. Don't wire
-a write call into the discovery loop.
+`.get()` is used by the read-only discovery loop (app/sync.py) — that loop
+must never call a write verb. `.post()`/`.patch()`/`.delete()` are used by
+app/mikrotik_enforce.py, which only ever runs from an explicit,
+admin-triggered request (POST /devices/{mac}/apply-mikrotik) — never from
+a background loop. Keep it that way: writes to a real router should always
+be a deliberate action, not something a timer does.
 """
 from __future__ import annotations
 

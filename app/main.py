@@ -12,7 +12,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app import sync
-from app.routers import devices, groups, health
+from app.routers import devices, enforcement, groups, health
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -28,6 +28,7 @@ app = FastAPI(title="familink", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(devices.router)
 app.include_router(groups.router)
+app.include_router(enforcement.router)
 app.include_router(health.router)
 
 

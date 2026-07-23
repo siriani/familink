@@ -25,8 +25,10 @@ behind a login page.
 ```
 
 familink does not bundle a database — point it at any MariaDB/MySQL you
-already run (see `.env.example`). It never writes to your MikroTik router in
-the foundation phase; it only reads.
+already run (see `.env.example`). The background discovery loop only ever
+reads from your MikroTik router; writes only happen from an explicit,
+admin-triggered click (see "Group → MikroTik enforcement" below) — never
+from a timer.
 
 ## Foundation (shipped)
 
@@ -34,23 +36,37 @@ the foundation phase; it only reads.
   leases, hotspot active sessions, hotspot hosts, and ip-binding table —
   merged by MAC address every `SYNC_INTERVAL_S` (default 60s).
 - Two seeded groups: **Liberado** (free, default for new devices) and
-  **Hotspot** (requires MikroTik hotspot login) — informational only in
-  this phase, nothing enforces them yet.
+  **Hotspot** (requires MikroTik hotspot login).
 - Admin panel: browse/search/filter devices, see online status, reassign a
-  device's group or linked user, add notes. All writes are database-only.
+  device's group or linked user, add notes.
 - Family member records (`users` — name/email/birthdate, not login
   accounts) that a device can be linked to.
 - `/health` endpoint for uptime monitoring.
 
-## Roadmap — not built yet
+## Group → MikroTik enforcement (shipped)
 
-### Group → MikroTik enforcement sync
-Push `devices.group_id` changes made in the admin panel back to MikroTik:
-create/update/delete `/ip/hotspot/ip-binding` entries so `hotspot_required`
-actually takes effect on the router, replacing the manual Winbox workflow.
-Needs a write-capable path (already stubbed in `app/mikrotik.py`, unused)
-and a reconciliation strategy for entries that exist on MikroTik but aren't
-in familink yet (first-sync import).
+A device's group now actually means something: `app/enforcement.py`
+computes, purely from data the discovery loop already keeps fresh, whether
+a device's real MikroTik state (`mikrotik_bound`/`mikrotik_bypassed`)
+matches what its group calls for. The device detail page shows that as
+"✓ in sync" or "⚠ needs: binding will be created/removed" with an **Apply
+to MikroTik** button — every application is one explicit click
+(`POST /devices/{mac}/apply-mikrotik`, `app/mikrotik_enforce.py`), logged
+to `enforcement_log` (success/failure + MikroTik's response), never
+automatic. `/enforcement` lists every device currently out of sync across
+the whole registry, read-only, with no bulk-apply button — that's a
+deliberate choice while trust in this feature is still being built; each
+change should be a decision, not a batch job. `Liberado` devices get no
+MikroTik entry at all (they fall through the router's existing subnet-wide
+bypass); `Hotspot` devices get a MAC-keyed `ip-binding` with no `type`
+(comment `familink`), the same shape the pre-existing hand-managed entries
+already used.
+
+**This makes the missing admin-panel auth (below) materially more
+important** — anyone on the LAN can now flip a device's actual internet
+access, not just a database label.
+
+## Roadmap — not built yet
 
 ### Port scanner
 Background/on-demand nmap scan per device IP, writing rows into the
@@ -79,9 +95,18 @@ profiles, instead of hand-coding them against specific usernames on the
 router.
 
 ### Admin panel auth
-Foundation ships with no authentication (LAN-only assumption). Add at
-minimum a shared admin credential (Basic Auth via env var) before running
-this on anything less trusted than a home LAN.
+Still no authentication (LAN-only assumption) — now the highest-priority
+item on this list, since the enforcement feature above means an
+unauthenticated visitor on the LAN can change what a device's internet
+access actually is, not just relabel it in a database. Add at minimum a
+shared admin credential (Basic Auth via env var) before running this on
+anything less trusted than a home LAN.
+
+### Bulk-apply on the /enforcement page
+Today every change requires opening the device and clicking Apply
+individually, by design (see above). Once the enforcement feature has run
+correctly for a while, a reviewed "apply all pending" action on
+`/enforcement` would remove that friction for routine cleanup.
 
 ## Non-goals
 

@@ -26,6 +26,31 @@
       </select>
       <button class="save-btn" type="submit">Save</button>
     </form>
+
+    <div class="mikrotik-status {{ 'in-sync' if pending_action == 'none' else 'out-of-sync' }}">
+      {{ '✓' if pending_action == 'none' else '⚠' }} {{ pending_action_label }}
+      {% if pending_action != 'none' %}
+      <form method="post" action="/devices/{{ device.mac }}/apply-mikrotik" style="display:inline">
+        <button class="save-btn apply-btn" type="submit"
+          onclick="return confirm('This will write to the real MikroTik router right now. Continue?')">
+          Apply to MikroTik
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+    {% if enforcement_logs %}
+    <div class="log-list">
+      <div class="detail-label">Recent MikroTik apply attempts</div>
+      {% for l in enforcement_logs %}
+      <div class="log-row {{ 'ok' if l.success else 'fail' }}">
+        <span class="small">{{ l.applied_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span class="small">{{ l.action }}</span>
+        <span class="small">{{ 'OK' if l.success else 'FAILED' }} — {{ l.detail }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
   </div>
 
   <div class="assoc-section">

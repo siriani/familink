@@ -122,6 +122,27 @@ class DeviceMqttState(Base):
     last_state_published_at: Mapped[datetime | None] = mapped_column(DateTime)
 
 
+class EnforcementLog(Base):
+    """Audit trail for every attempt to apply a device's group to MikroTik
+    (see app/mikrotik_enforce.py). Every click of "Apply to MikroTik" in
+    the admin UI writes one row here, success or failure — this is what
+    makes "what has familink actually changed on my router" answerable.
+    """
+
+    __tablename__ = "enforcement_log"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    device_id: Mapped[int] = mapped_column(
+        ForeignKey("devices.id", ondelete="CASCADE"), index=True
+    )
+    action: Mapped[str] = mapped_column(String(32))
+    success: Mapped[bool] = mapped_column(Boolean)
+    detail: Mapped[str | None] = mapped_column(Text)
+    applied_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    device: Mapped["Device"] = relationship()
+
+
 class RegistrationToken(Base):
     """Stub for the future captive-portal self-registration flow (see
     SPEC.md). `device_mac` is nullable because a token may be issued before
