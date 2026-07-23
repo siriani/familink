@@ -6,11 +6,16 @@ a (status, body) tuple), just made httpx-async to match this project's
 FastAPI style.
 
 `.get()` is used by the read-only discovery loop (app/sync.py) — that loop
-must never call a write verb. `.post()`/`.patch()`/`.delete()` are used by
+must never call a write verb. `.put()`/`.patch()`/`.delete()` are used by
 app/mikrotik_enforce.py, which only ever runs from an explicit,
 admin-triggered request (POST /devices/{mac}/apply-mikrotik) — never from
 a background loop. Keep it that way: writes to a real router should always
 be a deliberate action, not something a timer does.
+
+ARMADILHA verified live against RouterOS 7.23: the REST API is NOT plain
+REST-conventional — creating a new entry is **PUT**, not POST (POST on a
+collection path returns `{"detail": "no such command", "error": 400}`).
+GET/PATCH/DELETE behave as expected.
 """
 from __future__ import annotations
 
@@ -26,8 +31,10 @@ class MikroTikClient:
     async def get(self, path: str) -> tuple[int, list | dict]:
         return await self._request("GET", path)
 
-    async def post(self, path: str, body: dict | None = None) -> tuple[int, list | dict]:
-        return await self._request("POST", path, body)
+    async def put(self, path: str, body: dict | None = None) -> tuple[int, list | dict]:
+        """Create a new entry. MikroTik's REST API uses PUT for this, not
+        POST — see the module docstring."""
+        return await self._request("PUT", path, body)
 
     async def patch(self, path: str, body: dict | None = None) -> tuple[int, list | dict]:
         return await self._request("PATCH", path, body)

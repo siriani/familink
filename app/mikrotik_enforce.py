@@ -27,24 +27,29 @@ class ApplyResult:
     detail: str
 
 
-async def _find_binding(client: MikroTikClient, mac: str) -> dict | None:
+async def _find_binding(client: MikroTikClient, mac_upper: str) -> dict | None:
     """GET the existing ip-binding entry for this MAC, if any. Always
-    checked before writing — never blind-POST a MAC that might already
+    checked before writing — never blind-create a MAC that might already
     have an entry (would create a duplicate/conflicting binding).
+
+    ARMADILHA verified live: the `mac-address` REST filter is case-
+    sensitive and MikroTik stores/returns MACs uppercase — a lowercase
+    query silently matches nothing. Callers must pass an already-uppercased
+    MAC (see apply_device below, which is the only entry point).
     """
-    status, body = await client.get(f"ip/hotspot/ip-binding?mac-address={mac}")
+    status, body = await client.get(f"ip/hotspot/ip-binding?mac-address={mac_upper}")
     if status != 200 or not isinstance(body, list):
         raise RuntimeError(f"lookup failed (HTTP {status}): {body}")
     return body[0] if body else None
 
 
-async def _create_or_fix_binding(client: MikroTikClient, device: Device) -> ApplyResult:
-    existing = await _find_binding(client, device.mac)
+async def _create_or_fix_binding(client: MikroTikClient, mac_upper: str) -> ApplyResult:
+    existing = await _find_binding(client, mac_upper)
 
     if existing is None:
-        status, body = await client.post(
+        status, body = await client.put(
             "ip/hotspot/ip-binding",
-            {"mac-address": device.mac, "server": "all", "comment": BINDING_COMMENT},
+            {"mac-address": mac_upper, "server": "all", "comment": BINDING_COMMENT},
         )
         if status not in (200, 201):
             return ApplyResult("create_or_fix_binding", False, f"create failed (HTTP {status}): {body}")
@@ -56,16 +61,20 @@ async def _create_or_fix_binding(client: MikroTikClient, device: Device) -> Appl
         # would have returned "none". Treat as a successful no-op.
         return ApplyResult("create_or_fix_binding", True, "binding already correct, no-op")
 
+    # ARMADILHA verified live: PATCHing type="" to unset it fails with
+    # "ambiguous value of type" — the working value is the explicit
+    # "regular" enum member, not an empty string.
     binding_id = existing[".id"]
-    status, body = await client.patch(f"ip/hotspot/ip-binding/{binding_id}", {"type": ""})
+    status, body = await client.patch(f"ip/hotspot/ip-binding/{binding_id}", {"type": "regular"})
     if status == 200:
         return ApplyResult("create_or_fix_binding", True, f"cleared bypass on binding {binding_id}")
 
-    # PATCH-to-unset isn't guaranteed across RouterOS versions — fall back
-    # to delete + recreate, which reaches the same end state.
+    # Belt-and-suspenders in case a future RouterOS version changes this
+    # again: fall back to delete + recreate, which reaches the same end
+    # state via calls already proven to work above.
     logger.warning(
-        "PATCH to clear type=bypassed failed (HTTP %s: %s) for %s, falling back to delete+recreate",
-        status, body, device.mac,
+        "PATCH type=regular failed (HTTP %s: %s) for %s, falling back to delete+recreate",
+        status, body, mac_upper,
     )
     del_status, del_body = await client.delete(f"ip/hotspot/ip-binding/{binding_id}")
     if del_status not in (200, 204):
@@ -73,20 +82,20 @@ async def _create_or_fix_binding(client: MikroTikClient, device: Device) -> Appl
             "create_or_fix_binding", False,
             f"fallback delete failed (HTTP {del_status}): {del_body} (PATCH had failed: HTTP {status}: {body})",
         )
-    status2, body2 = await client.post(
+    status2, body2 = await client.put(
         "ip/hotspot/ip-binding",
-        {"mac-address": device.mac, "server": "all", "comment": BINDING_COMMENT},
+        {"mac-address": mac_upper, "server": "all", "comment": BINDING_COMMENT},
     )
     if status2 not in (200, 201):
         return ApplyResult(
             "create_or_fix_binding", False,
             f"fallback recreate failed (HTTP {status2}): {body2} (old bypassed binding was already deleted!)",
         )
-    return ApplyResult("create_or_fix_binding", True, f"recreated binding without bypass (fallback path)")
+    return ApplyResult("create_or_fix_binding", True, "recreated binding without bypass (fallback path)")
 
 
-async def _remove_binding(client: MikroTikClient, device: Device) -> ApplyResult:
-    existing = await _find_binding(client, device.mac)
+async def _remove_binding(client: MikroTikClient, mac_upper: str) -> ApplyResult:
+    existing = await _find_binding(client, mac_upper)
     if existing is None:
         return ApplyResult("remove_binding", True, "no binding existed, no-op")
 
@@ -98,10 +107,11 @@ async def _remove_binding(client: MikroTikClient, device: Device) -> ApplyResult
 
 
 async def apply_device(client: MikroTikClient, device: Device, action: PendingAction) -> ApplyResult:
+    mac_upper = device.mac.upper()
     if action == "none":
         return ApplyResult("none", True, "nothing to do")
     if action == "create_or_fix_binding":
-        return await _create_or_fix_binding(client, device)
+        return await _create_or_fix_binding(client, mac_upper)
     if action == "remove_binding":
-        return await _remove_binding(client, device)
+        return await _remove_binding(client, mac_upper)
     raise ValueError(f"unknown action {action!r}")
