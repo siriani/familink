@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from fastapi.templating import Jinja2Templates
 
 from app.config import DISPLAY_TIMEZONE
+from app.portscan import guess_port_url
 
 _tz = ZoneInfo(DISPLAY_TIMEZONE)
 
@@ -30,3 +31,4 @@ def local_datetime(dt: datetime | None, fmt: str = "%Y-%m-%d %H:%M") -> str:
 
 templates = Jinja2Templates(directory="app/templates")
 templates.env.filters["localtime"] = local_datetime
+templates.env.globals["port_url"] = guess_port_url

@@ -92,7 +92,14 @@
         <thead><tr><th>Port</th><th>Protocol</th><th>Service</th></tr></thead>
         <tbody>
           {% for r in scan_results %}
-          <tr><td class="mono">{{ r.port }}</td><td>{{ r.protocol }}</td><td>{{ r.service_guess or '—' }}</td></tr>
+          {% set url = port_url(device.current_ip, r.port) if device.current_ip else None %}
+          <tr>
+            <td class="mono">
+              {% if url %}<a href="{{ url }}" target="_blank" rel="noopener">{{ r.port }}</a>{% else %}{{ r.port }}{% endif %}
+            </td>
+            <td>{{ r.protocol }}</td>
+            <td>{{ r.service_guess or '—' }}</td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>

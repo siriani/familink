@@ -44,6 +44,36 @@ _TYPE_HINTS: list[tuple[set[int], str]] = [
     ({80, 443, 8080, 8081, 8000, 8443, 8880}, "Web device"),
 ]
 
+# Only ports with a browser-openable standard scheme get a clickable link
+# on the device detail page (app/templating.py registers this as the
+# `port_url` Jinja global). Raw/proprietary protocols (XM DVRIP on 34567,
+# Dahua on 37777, MQTT, MySQL, printer raw socket on 9100...) have no
+# sensible URL to hand a browser, so they stay plain text.
+_PORT_URL_SCHEMES: dict[int, str] = {
+    21: "ftp://{ip}",
+    22: "ssh://{ip}",
+    23: "telnet://{ip}",
+    80: "http://{ip}",
+    443: "https://{ip}",
+    554: "rtsp://{ip}",
+    631: "http://{ip}:631",
+    5900: "vnc://{ip}",
+    8000: "http://{ip}:8000",
+    8008: "http://{ip}:8008",
+    8080: "http://{ip}:8080",
+    8081: "http://{ip}:8081",
+    8123: "http://{ip}:8123",
+    8443: "https://{ip}:8443",
+    8880: "http://{ip}:8880",
+    9200: "http://{ip}:9200",
+}
+
+
+def guess_port_url(ip: str, port: int) -> str | None:
+    template = _PORT_URL_SCHEMES.get(port)
+    return template.format(ip=ip) if template else None
+
+
 _GREP_PORTS_RE = re.compile(r"Ports: (.+?)(?:\tIgnored|\n|$)")
 
 

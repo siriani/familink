@@ -11,7 +11,7 @@ No bulk apply on purpose — open a device to review and apply it individually.<
     {% for p in pending %}
     <tr class="clickable" onclick="location.href='/devices/{{ p.device.mac }}'">
       <td><strong>{{ p.device.hostname or '—' }}</strong></td>
-      <td class="mono small">{{ p.device.current_ip or '—' }}</td>
+      <td class="mono small">{{ p.device.current_ip or '—' }}{% if p.device.scan_results %} <span class="port-badge" title="{{ p.device.scan_results|length }} open port(s)">●{{ p.device.scan_results|length }}</span>{% endif %}</td>
       <td class="mono small">{{ p.device.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if p.device.group.hotspot_required else 'b-free' }}">{{ p.device.group.name }}</span></td>
       <td>{{ p.label }}</td>

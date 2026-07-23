@@ -10,7 +10,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import delete, desc, or_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
@@ -32,7 +32,10 @@ def _get_device_or_404(db: Session, mac: str) -> Device:
 
 
 def _query_devices(db: Session, q: str | None, group_id: int | None) -> list[Device]:
-    stmt = select(Device)
+    # selectinload: the list view shows an "open ports" indicator per
+    # device (see devices_list.html) -- without eager loading that would
+    # be one extra query per row (N+1) just to check scan_results.
+    stmt = select(Device).options(selectinload(Device.scan_results))
     if q:
         like = f"%{q}%"
         stmt = stmt.where(

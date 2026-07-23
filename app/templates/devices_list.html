@@ -22,7 +22,7 @@
     <tr class="clickable" onclick="location.href='/devices/{{ d.mac }}'">
       <td><span class="dot {{ 'on' if d.is_online else 'off' }}"></span>{{ 'Online' if d.is_online else 'Offline' }}</td>
       <td><strong>{{ d.hostname or '—' }}</strong></td>
-      <td class="mono">{{ d.current_ip or '—' }}</td>
+      <td class="mono">{{ d.current_ip or '—' }}{% if d.scan_results %} <span class="port-badge" title="{{ d.scan_results|length }} open port(s)">●{{ d.scan_results|length }}</span>{% endif %}</td>
       <td class="mono small">{{ d.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if d.group.hotspot_required else 'b-free' }}">{{ d.group.name }}</span></td>
       <td>{{ d.user.name if d.user else '—' }}</td>

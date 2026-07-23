@@ -8,7 +8,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
@@ -20,7 +20,7 @@ router = APIRouter()
 
 @router.get("/enforcement", response_class=HTMLResponse)
 def page_enforcement(request: Request, db: Session = Depends(get_db)):
-    devices = list(db.scalars(select(Device)))
+    devices = list(db.scalars(select(Device).options(selectinload(Device.scan_results))))
     pending = [
         {"device": d, "action": a, "label": pending_action_label(a)}
         for d in devices
