@@ -54,14 +54,22 @@ def merge_mikrotik_views(
     """One row per normalized MAC, merged from all four MikroTik views.
 
     - hostname: from DHCP lease (fallback: ip-binding comment)
-    - ip: from DHCP lease if there is one, but ALSO from `active`/`hosts` —
-      those two reflect whatever MikroTik currently sees on the wire (ARP-
-      level, via the hotspot host table) regardless of whether the device
-      ever took a DHCP lease at all. This matters for devices with a
-      manually-configured static IP outside the DHCP pool (seen live: a
-      camera with `NetWork.NetDHCP=false` and a hand-set address) — those
-      never appear in `lease` but do show up in `hosts` with a real
-      `address` field, so relying on `lease` alone silently drops their IP.
+    - ip: from DHCP lease if there is one -- that always wins. `active`/
+      `hosts` only fill it in when there's no lease at all, for devices
+      with a manually-configured static IP outside the DHCP pool (seen
+      live: a camera with `NetWork.NetDHCP=false` and a hand-set address,
+      which never appears in `lease` but does show up in `hosts` with a
+      real `address` field). Deliberately NOT a co-equal second source
+      once a lease exists: `active`/`hosts` reflect ARP-level "whatever's
+      currently on the wire", which turned out to be noisier than the
+      lease table in practice -- found live (25/jul/2026): Xavier's and
+      Tempestade's real MACs (each hosting many Docker containers) had a
+      correct lease (their real LAN IP) but ALSO showed up in `hosts`
+      with their Docker bridge's internal gateway address (172.x), which
+      then silently overwrote the correct lease IP every cycle. The
+      Docker-internal address isn't wrong information from MikroTik's
+      point of view (it really did see that ARP entry) -- it's just not
+      a more current or more correct answer than the lease already gave.
     - is_online: MAC present in `active` (authenticated hotspot session),
       `hosts` (broader "seen on network"), OR has a `status=bound` DHCP
       lease. The DHCP signal turned out to matter in practice, not just in
@@ -110,7 +118,7 @@ def merge_mikrotik_views(
             continue
         e = entry(mac)
         e["is_online"] = True
-        e["ip"] = row.get("address") or e["ip"]
+        e["ip"] = e["ip"] or row.get("address")
 
     for binding in bindings or []:
         mac = normalize_mac(binding.get("mac-address", ""))
