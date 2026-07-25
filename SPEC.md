@@ -161,11 +161,13 @@ router at all:
   of their linked devices is online, `seconds_used_today` gets
   `SYNC_INTERVAL_S` added. The moment it reaches `todays_limit_s(user)`,
   every device linked to that person gets a `type=blocked` MikroTik
-  ip-binding (`app/mikrotik_quota.py:block_device`, comment
-  `familink-quota` — a different tag than `app/mikrotik_enforce.py`'s
-  `familink`, so the two systems never touch each other's bindings; don't
-  mix a quota group with a `hotspot_required` group for the same device,
-  see `block_device`'s docstring for what happens if you do). Once daily
+  ip-binding (`app/mikrotik_quota.py:block_device`). **Updated
+  24/jul/2026**: quota and hotspot-enforcement bindings used to carry two
+  separate comment tags (`familink-quota` vs `familink`) so the two
+  subsystems wouldn't touch each other's bindings — replaced by a single
+  unified owner, see "Captive portal self-registration" below;
+  `block_device`/`unblock_device` are now thin callers of
+  `app/mikrotik_binding.py:apply_binding_state`, same as enforcement. Once daily
   at 00:01 `DISPLAY_TIMEZONE` (`app/quota.py:nightly_reset_loop`), every
   user's counter zeroes and anyone blocked gets unblocked
   (`unblock_device`) — logged either way. `/users/{id}/reset-today` is a
@@ -191,14 +193,78 @@ Groups aren't limited to the 2 seeded ones — full CRUD at `/groups`
 `/users` (name/email/birthdate, personal quota override, read-only
 today's-usage/blocked status).
 
-## Roadmap — not built yet
+## Captive portal self-registration (shipped)
 
-### Captive portal self-registration
-User connects to Wi-Fi, hits a MikroTik hotspot walled-garden landing page
-that talks to familink instead of (or in addition to) MikroTik's built-in
-login, registers name/email/birthdate into `users`, links the connecting
-device's MAC. Uses the already-provisioned `registration_tokens` table for
-the linking handshake.
+Replaces MikroTik's own hotspot login page entirely — a `Hotspot`-group
+device that isn't yet linked to a `User` no longer sees a MikroTik
+`/ip hotspot user` username/password form. The router's
+`hotspot/login.html` (one-time, out-of-band router-side change, see
+`mikrotik-hotspot-html/README.md`) now redirects to familink's own
+`GET/POST /captive` (`app/routers/captive.py`), a standalone page (no
+admin nav — this is shown on family members' own phones) with an
+identity picker (existing `users` by name, or "create new"). Requires a
+`/ip hotspot walled-garden ip` entry so the unauthenticated redirect can
+even reach `192.168.1.10:8190` in the first place before it's allowed
+to load anything else.
+
+**Never trusts the `mac` query param for writes** — every request
+re-resolves the true MAC live from MikroTik's own `ip/hotspot/active`/
+`ip/hotspot/host` tables, keyed by the actual connecting IP
+(`request.client.host`), not the possibly-stale `devices.current_ip`.
+This matters because `/captive` is, by necessity, the one unauthenticated
+route in the whole app (`app/auth.py`'s `_EXEMPT_PATHS`) — without the
+live re-resolution, anyone on the LAN could craft `/captive?mac=<victim>`
+themselves. `POST /captive` also refuses to touch a device that already
+has a `user_id` (reassigning an already-registered device goes through
+the authenticated admin Owner dropdown instead, not this public
+endpoint).
+
+**Binding ownership unification, the part of this that wasn't just "add
+a page":** a `Hotspot`-group device goes through one lifecycle on the
+same MikroTik ip-binding — not-yet-identified (forced through `/captive`)
+→ identified + under quota (free access) → quota exhausted (blocked) →
+next day (free again, no re-identifying). The pre-existing code couldn't
+express that (enforcement and quota each assumed the other's bindings
+were foreign and refused to touch them, using two different comment
+tags). `app/enforcement.py:desired_binding_state(device)` is now the one
+pure function computing what a device's binding *should* be
+(`none`/`regular`/`bypassed`/`blocked`), and
+`app/mikrotik_binding.py:apply_binding_state` is the one function that
+actually reads/writes it — `app/mikrotik_enforce.py`, `app/mikrotik_quota.py`,
+and `app/routers/captive.py` are all thin callers now, all using the same
+`comment=familink` tag.
+
+**Real gap found live (24/jul/2026), not anticipated by the design above:**
+several `Hotspot`-group family devices already had a MikroTik ip-binding
+predating familink entirely (hand-created by the retired hotspot-admin
+script, comment = the device's own hostname, e.g. `Joao-nightpudim`,
+`Isis`, `Bia-Xiaomi`). `apply_binding_state` correctly refuses to touch a
+binding it doesn't own (logged as `"device already has an unrelated
+ip-binding ... not touching it"`) — which is the right call to avoid
+silently clobbering something unrelated, but it meant these specific
+devices were never actually brought under familink's control: some had
+already self-identified via `/captive` (the DB said so) while the router
+still silently bypassed them on a stale binding; others had never even
+reached the captive redirect, since the old binding's default `bypassed`-
+equivalent behavior meant they never hit the hotspot wall in the first
+place. Fixed per-device: deleted the stale binding, then
+`POST /devices/{mac}/apply-mikrotik` to let familink create a fresh
+`comment=familink` one in the correct state. No code change needed — the
+"remove or retag manually" the code already logged was exactly right;
+this was a one-time cleanup of pre-existing router state, not a bug in
+`apply_binding_state` itself. Worth checking for again if any other
+legacy (non-`familink`-tagged) `ip-binding` entries turn up later
+(`GET /ip/hotspot/ip-binding`, filter out anything not commented
+`familink` and cross-reference the MAC against `devices`).
+
+Old MikroTik-native `/ip hotspot user` accounts (`bia`/`joao`/`isis`/
+`tati`/`allan`/`visita`) are **not yet deactivated** — `tati` and `allan`
+had live sessions with real traffic when this was last checked, so
+disabling them was deliberately left for a moment when someone's actually
+around to notice if a device unexpectedly loses access. Deactivate (not
+delete) once confirmed nothing still depends on them.
+
+## Roadmap — not built yet
 
 ### Bulk-apply on the /enforcement page
 Today every change requires opening the device and clicking Apply
