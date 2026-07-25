@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 09:26-0300\n"
+"POT-Creation-Date: 2026-07-25 10:13-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -215,8 +215,7 @@ msgstr ""
 msgid "Offline"
 msgstr ""
 
-#: app/templates/device_detail.html:12 app/templates/devices_list.html:18
-#: app/templates/enforcement_list.html:10
+#: app/templates/device_detail.html:12
 msgid "MAC"
 msgstr ""
 
@@ -250,130 +249,134 @@ msgstr ""
 msgid "no binding"
 msgstr ""
 
-#: app/templates/device_detail.html:17
+#: app/templates/device_detail.html:20
+msgid "Identification"
+msgstr ""
+
+#: app/templates/device_detail.html:22 app/templates/devices_list.html:18
+msgid "Hostname"
+msgstr ""
+
+#: app/templates/device_detail.html:23
 msgid "Guessed type"
 msgstr ""
 
-#: app/templates/device_detail.html:21 app/templates/devices_list.html:18
-msgid "Group"
+#: app/templates/device_detail.html:24
+msgid "Manufacturer"
 msgstr ""
 
-#: app/templates/device_detail.html:25
-msgid "hotspot required"
+#: app/templates/device_detail.html:25 app/templates/enforcement_list.html:10
+msgid "Device"
 msgstr ""
 
-#: app/templates/device_detail.html:28 app/templates/device_detail.html:66
-#: app/templates/device_detail.html:74 app/templates/groups_form.html:72
-#: app/templates/settings.html:21 app/templates/users_form.html:93
-msgid "Save"
+#: app/templates/device_detail.html:27
+msgid "Confidence"
 msgstr ""
 
-#: app/templates/device_detail.html:36
-msgid "This will write to the real MikroTik router right now. Continue?"
-msgstr ""
-
-#: app/templates/device_detail.html:37
-msgid "Apply to MikroTik"
-msgstr ""
-
-#: app/templates/device_detail.html:45
-msgid "Recent MikroTik apply attempts"
-msgstr ""
-
-#: app/templates/device_detail.html:50 app/templates/users_form.html:64
-msgctxt "log_result"
-msgid "OK"
-msgstr ""
-
-#: app/templates/device_detail.html:50
-msgid "FAILED"
-msgstr ""
-
-#: app/templates/device_detail.html:58
-msgid "Owner"
-msgstr ""
-
-#: app/templates/device_detail.html:61
-msgid "— unassigned —"
-msgstr ""
-
-#: app/templates/device_detail.html:71
-msgid "Notes"
-msgstr ""
-
-#: app/templates/device_detail.html:79
-msgid "Port scan"
-msgstr ""
-
-#: app/templates/device_detail.html:81
-#, python-format
-msgid "Last scanned: %(when)s"
-msgstr ""
-
-#: app/templates/device_detail.html:81
-msgid "Never scanned yet."
-msgstr ""
-
-#: app/templates/device_detail.html:82
-msgid "New devices are scanned automatically the first time they're discovered."
-msgstr ""
-
-#: app/templates/device_detail.html:85
-msgid "no known IP"
-msgstr ""
-
-#: app/templates/device_detail.html:86
-msgid "Rescan"
-msgstr ""
-
-#: app/templates/device_detail.html:86
-msgid "Scan now"
-msgstr ""
-
-#: app/templates/device_detail.html:92
-msgid "Port"
-msgstr ""
-
-#: app/templates/device_detail.html:92
-msgid "Protocol"
-msgstr ""
-
-#: app/templates/device_detail.html:92
-msgid "Service"
-msgstr ""
-
-#: app/templates/device_detail.html:111
-msgid "Fingerbank identification"
-msgstr ""
-
-#: app/templates/device_detail.html:115
+#: app/templates/device_detail.html:33
 #, python-format
 msgid "Last checked: %(when)s"
 msgstr ""
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:35
 #, python-format
 msgid "Last checked: %(when)s — no match."
 msgstr ""
 
-#: app/templates/device_detail.html:120
+#: app/templates/device_detail.html:38
 msgid "Never checked yet."
 msgstr ""
 
-#: app/templates/device_detail.html:125
-msgid "Manufacturer"
-msgstr ""
-
-#: app/templates/device_detail.html:126 app/templates/enforcement_list.html:10
-msgid "Device"
-msgstr ""
-
-#: app/templates/device_detail.html:127
-msgid "Confidence"
-msgstr ""
-
-#: app/templates/device_detail.html:131
+#: app/templates/device_detail.html:42
 msgid "Refresh identification"
+msgstr ""
+
+#: app/templates/device_detail.html:47 app/templates/devices_list.html:18
+msgid "Group"
+msgstr ""
+
+#: app/templates/device_detail.html:51
+msgid "hotspot required"
+msgstr ""
+
+#: app/templates/device_detail.html:54 app/templates/device_detail.html:92
+#: app/templates/device_detail.html:100 app/templates/groups_form.html:72
+#: app/templates/settings.html:21 app/templates/users_form.html:93
+msgid "Save"
+msgstr ""
+
+#: app/templates/device_detail.html:62
+msgid "This will write to the real MikroTik router right now. Continue?"
+msgstr ""
+
+#: app/templates/device_detail.html:63
+msgid "Apply to MikroTik"
+msgstr ""
+
+#: app/templates/device_detail.html:71
+msgid "Recent MikroTik apply attempts"
+msgstr ""
+
+#: app/templates/device_detail.html:76 app/templates/users_form.html:64
+msgctxt "log_result"
+msgid "OK"
+msgstr ""
+
+#: app/templates/device_detail.html:76
+msgid "FAILED"
+msgstr ""
+
+#: app/templates/device_detail.html:84
+msgid "Owner"
+msgstr ""
+
+#: app/templates/device_detail.html:87
+msgid "— unassigned —"
+msgstr ""
+
+#: app/templates/device_detail.html:97
+msgid "Notes"
+msgstr ""
+
+#: app/templates/device_detail.html:105
+msgid "Port scan"
+msgstr ""
+
+#: app/templates/device_detail.html:107
+#, python-format
+msgid "Last scanned: %(when)s"
+msgstr ""
+
+#: app/templates/device_detail.html:107
+msgid "Never scanned yet."
+msgstr ""
+
+#: app/templates/device_detail.html:108
+msgid "New devices are scanned automatically the first time they're discovered."
+msgstr ""
+
+#: app/templates/device_detail.html:111
+msgid "no known IP"
+msgstr ""
+
+#: app/templates/device_detail.html:112
+msgid "Rescan"
+msgstr ""
+
+#: app/templates/device_detail.html:112
+msgid "Scan now"
+msgstr ""
+
+#: app/templates/device_detail.html:118
+msgid "Port"
+msgstr ""
+
+#: app/templates/device_detail.html:118
+msgid "Protocol"
+msgstr ""
+
+#: app/templates/device_detail.html:118
+msgid "Service"
 msgstr ""
 
 #: app/templates/devices_list.html:5
@@ -394,21 +397,17 @@ msgid "Status"
 msgstr ""
 
 #: app/templates/devices_list.html:18
-msgid "Hostname"
-msgstr ""
-
-#: app/templates/devices_list.html:18
 msgid "User"
 msgstr ""
 
-#: app/templates/devices_list.html:25 app/templates/enforcement_list.html:15
+#: app/templates/devices_list.html:29 app/templates/enforcement_list.html:18
 #, python-format
 msgid "%(n)s open port"
 msgid_plural "%(n)s open ports"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/templates/devices_list.html:32
+#: app/templates/devices_list.html:35
 msgid "No devices yet — waiting for the first MikroTik discovery cycle."
 msgstr ""
 
@@ -440,7 +439,7 @@ msgstr ""
 msgid "What would change"
 msgstr ""
 
-#: app/templates/enforcement_list.html:22
+#: app/templates/enforcement_list.html:24
 msgid ""
 "Nothing pending — every device's group matches what's enforced on "
 "MikroTik."

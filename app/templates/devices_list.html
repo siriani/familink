@@ -15,21 +15,24 @@
 <div class="tcard">
 <table>
   <thead>
-    <tr><th>{{ _('Status') }}</th><th>{{ _('Hostname') }}</th><th>{{ _('IP') }}</th><th>{{ _('MAC') }}</th><th>{{ _('Group') }}</th><th>{{ _('User') }}</th><th>{{ _('Last seen') }}</th></tr>
+    <tr><th>{{ _('Status') }}</th><th>{{ _('Hostname') }}</th><th>{{ _('IP') }}</th><th>{{ _('Group') }}</th><th>{{ _('User') }}</th><th>{{ _('Last seen') }}</th></tr>
   </thead>
   <tbody>
     {% for d in devices %}
     <tr class="clickable" onclick="location.href='/devices/{{ d.mac }}'">
       <td><span class="dot {{ 'on' if d.is_online else 'off' }}"></span>{{ _('Online') if d.is_online else _('Offline') }}</td>
-      <td><span class="avatar avatar-{{ (loop.index0 % 4) + 1 }}">{{ (d.hostname or d.mac)[0] | upper }}</span> <strong>{{ d.hostname or '—' }}</strong></td>
+      <td>
+        <span class="avatar avatar-{{ (loop.index0 % 4) + 1 }}">{{ (d.hostname or d.mac)[0] | upper }}</span>
+        <strong>{{ d.hostname or '—' }}</strong><br>
+        <span class="mono small">{{ d.mac }}</span>
+      </td>
       <td class="mono">{{ d.current_ip or '—' }}{% if d.scan_results %} <span class="port-badge" title="{{ ngettext('%(n)s open port', '%(n)s open ports', d.scan_results|length) % {'n': d.scan_results|length} }}">●{{ d.scan_results|length }}</span>{% endif %}</td>
-      <td class="mono small">{{ d.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if d.group.hotspot_required else 'b-free' }}">{{ d.group.name }}</span></td>
       <td>{{ d.user.name if d.user else '—' }}</td>
       <td class="small">{{ d.last_seen | localtime }}</td>
     </tr>
     {% else %}
-    <tr><td colspan="7" class="empty">{{ _('No devices yet — waiting for the first MikroTik discovery cycle.') }}</td></tr>
+    <tr><td colspan="6" class="empty">{{ _('No devices yet — waiting for the first MikroTik discovery cycle.') }}</td></tr>
     {% endfor %}
   </tbody>
 </table>
