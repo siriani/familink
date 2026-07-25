@@ -11,18 +11,18 @@
 <div class="card">
 
 {% if state == "unknown" %}
-  <h1>{{ _('Identifying your device…') }}</h1>
+  <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Identifying your device…') }}</h1>
   <p class="captive-hint">{{ _("We haven't found you on the network yet. Wait a few seconds and reload the page.") }}</p>
 
 {% elif state == "connected" %}
-  <h1>{{ _('Connected as %(name)s') % {'name': user.name} }}</h1>
+  <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Connected as %(name)s') % {'name': user.name} }}</h1>
   <p class="captive-hint">{{ _('You are already identified on this network.') }}</p>
   {% if continue_url %}
   <a class="continue-link" href="{{ continue_url }}">{{ _('Continue browsing →') }}</a>
   {% endif %}
 
 {% elif state == "identify" and view == "new" %}
-  <h1>{{ _('Create account') }}</h1>
+  <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Create account') }}</h1>
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
   <form method="post" action="/captive">
     <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
@@ -41,7 +41,7 @@
   </div>
 
 {% elif state == "identify" %}
-  <h1>{{ _('Who are you?') }}</h1>
+  <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Who are you?') }}</h1>
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
 
   {% if users %}
@@ -49,6 +49,7 @@
     {% for u in users %}
     <details class="person-card">
       <summary>
+        <span class="avatar">{{ u.name[0] | upper }}</span>
         <span class="person-name">{{ u.name }}</span>
         {% if u.last_seen_at %}<span class="person-meta">{{ _('Last seen: %(when)s') % {'when': u.last_seen_at | localtime} }}</span>{% endif %}
       </summary>

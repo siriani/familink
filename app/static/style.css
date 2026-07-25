@@ -72,30 +72,57 @@ textarea{width:100%}
 .form-inline{display:inline}
 .tcard-compact{margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px}
 
-/* /captive -- the one unauthenticated page, light/mobile-card theme
-   instead of the dashboard's dark gradient above. Scoped under
-   body.captive (and its own .captive-btn/.captive-hint instead of
-   reusing .save-btn/.hint) so this section can share the same global
-   stylesheet as the admin panel without the two colliding -- both
-   pages use those class names for genuinely different looks. */
-body.captive{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f7;color:#1a1a1a}
-.captive .card{max-width:420px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.captive h1{font-size:1.3rem;margin:0 0 16px}
-.captive .captive-hint{color:#666;font-size:.9rem}
-.captive input[type=text],.captive input[type=email],.captive input[type=date],.captive input[type=password]{width:100%;padding:10px;margin:6px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:1rem}
-.captive label{font-size:.85rem;color:#555}
-.captive .captive-btn{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:400;cursor:pointer}
-.captive .error{color:#b91c1c;font-size:.9rem;margin-bottom:10px}
-.captive .continue-link{display:block;margin-top:16px;text-align:center;color:#2563eb}
-.captive .person-list{margin-bottom:16px}
-.captive .person-card{border:1px solid #ddd;border-radius:8px;margin-bottom:8px;background:#fafafa;overflow:hidden}
-.captive .person-card[open]{border-color:#2563eb}
-.captive .person-card summary{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:13px 14px;cursor:pointer;font-size:1rem;list-style:none}
+/* /captive -- the one unauthenticated page, on its own minimal
+   mobile-first design system (cream/near-black/pastel, geometric-bold
+   display type, pill buttons, rounded pastel cards) instead of the
+   dashboard's dark gradient above. Scoped under body.captive (and its
+   own .captive-btn/.captive-hint instead of reusing .save-btn/.hint)
+   so this section can share the same global stylesheet as the admin
+   panel without the two colliding. Responsive down to a 375px-wide
+   screen (iPhone 13 mini) -- everything here is already single-column
+   and fluid-width, so no extra breakpoint is needed at that floor;
+   .card's max-width is what does the scaling-up on larger screens. */
+:root{
+  --cap-cream:#F6F4F0;
+  --cap-ink:#1D1C1B;
+  --cap-blush:#F6D0EF;
+  --cap-lavender:#C1C8FF;
+  --cap-sky:#C3E4EE;
+  --cap-gold:#D8D1AF;
+  --cap-display-font:Futura,'Century Gothic','Segoe UI',ui-rounded,-apple-system,sans-serif;
+  --cap-body-font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body.captive{font-family:var(--cap-body-font);background:var(--cap-cream);color:var(--cap-ink);position:relative;overflow-x:hidden}
+/* Simple geometric shapes as background composition -- fixed/decorative
+   only, never affects document flow or the 375px-floor layout. */
+body.captive::before,body.captive::after{content:'';position:fixed;z-index:0;pointer-events:none}
+body.captive::before{width:120px;height:120px;border-radius:50%;background:var(--cap-sky);top:-40px;right:-40px;opacity:.7}
+body.captive::after{width:70px;height:70px;border-radius:18px;background:var(--cap-gold);bottom:30px;left:-24px;opacity:.6;transform:rotate(12deg)}
+.captive .card{position:relative;z-index:1;max-width:420px;margin:0 auto;background:#fff;border-radius:20px;padding:28px 24px;box-shadow:0 8px 30px rgba(29,28,27,.08)}
+.captive h1{font-family:var(--cap-display-font);font-weight:800;font-size:1.5rem;letter-spacing:-.01em;line-height:1.15;margin:0 0 20px;display:flex;align-items:center;gap:8px}
+.captive .sparkle{color:var(--cap-lavender);font-size:1rem;-webkit-text-stroke:.5px var(--cap-ink)}
+.captive .captive-hint{color:#6b6a68;font-size:.9rem;line-height:1.5}
+.captive input[type=text],.captive input[type=email],.captive input[type=date],.captive input[type=password]{width:100%;padding:12px 14px;margin:6px 0 14px;border:1.5px solid #e6e2da;border-radius:14px;background:var(--cap-cream);font-size:1rem;font-family:var(--cap-body-font);color:var(--cap-ink)}
+.captive input:focus{outline:2px solid var(--cap-lavender);outline-offset:1px}
+.captive label{font-size:.8rem;font-weight:700;color:var(--cap-ink);text-transform:uppercase;letter-spacing:.03em}
+.captive .captive-btn{width:100%;padding:14px;background:var(--cap-ink);color:var(--cap-cream);border:none;border-radius:999px;font-size:1rem;font-weight:700;font-family:var(--cap-display-font);cursor:pointer}
+.captive .captive-btn:active{opacity:.85}
+.captive .error{color:#a3315c;background:var(--cap-blush);border-radius:12px;padding:10px 14px;font-size:.9rem;margin-bottom:14px;font-weight:600}
+.captive .continue-link{display:block;margin-top:16px;text-align:center;color:var(--cap-ink);font-weight:700}
+.captive .person-list{margin-bottom:18px;display:flex;flex-direction:column;gap:10px}
+.captive .person-card{border:none;border-radius:18px;background:var(--cap-pastel,var(--cap-sky));overflow:hidden}
+.captive .person-card:nth-of-type(4n+1){--cap-pastel:var(--cap-blush)}
+.captive .person-card:nth-of-type(4n+2){--cap-pastel:var(--cap-lavender)}
+.captive .person-card:nth-of-type(4n+3){--cap-pastel:var(--cap-sky)}
+.captive .person-card:nth-of-type(4n+4){--cap-pastel:var(--cap-gold)}
+.captive .person-card[open]{box-shadow:inset 0 0 0 2px var(--cap-ink)}
+.captive .person-card summary{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;font-size:1rem;list-style:none}
 .captive .person-card summary::-webkit-details-marker{display:none}
-.captive .person-name{font-weight:500}
-.captive .person-meta{font-size:.75rem;color:#888;white-space:nowrap}
+.captive .avatar{flex:none;width:36px;height:36px;border-radius:50%;background:var(--cap-ink);color:var(--cap-cream);display:flex;align-items:center;justify-content:center;font-family:var(--cap-display-font);font-weight:800;font-size:.9rem}
+.captive .person-name{font-weight:700;flex:1}
+.captive .person-meta{font-size:.7rem;font-weight:700;color:var(--cap-ink);background:rgba(29,28,27,.08);border-radius:999px;padding:4px 10px;white-space:nowrap}
 .captive .pin-form{padding:0 14px 14px}
-.captive .pin-form input[type=password]{text-align:center;letter-spacing:.4em;font-size:1.2rem;margin:0 0 8px}
-.captive .pin-form .captive-btn{padding:10px;font-size:.95rem}
+.captive .pin-form input[type=password]{text-align:center;letter-spacing:.4em;font-size:1.2rem;margin:0 0 8px;background:#fff}
+.captive .pin-form .captive-btn{padding:11px;font-size:.95rem}
 .captive .switch-links{text-align:center;margin-top:8px}
-.captive .switch-links a{display:block;padding:10px;color:#2563eb;font-size:.9rem;text-decoration:none}
+.captive .switch-links a{display:block;padding:10px;color:var(--cap-ink);font-weight:700;font-size:.9rem;text-decoration:none}
