@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
+from app.fingerbank import enrich_and_store
 from app.i18n import get_translations
 from app.mikrotik_enforce import apply_device
 from app.models import Device, DeviceScanResult, EnforcementLog, Group, User
@@ -154,6 +155,13 @@ async def post_scan_device(mac: str, db: Session = Depends(get_db)):
         db.execute(delete(DeviceScanResult).where(DeviceScanResult.device_id == device.id))
         db.commit()
         await scan_and_store(device.id, device.current_ip)
+    return RedirectResponse(f"/devices/{mac}", status_code=303)
+
+
+@router.post("/devices/{mac}/fingerbank")
+async def post_fingerbank_device(mac: str, db: Session = Depends(get_db)):
+    device = _get_device_or_404(db, mac)
+    await enrich_and_store(device.id, device.mac)
     return RedirectResponse(f"/devices/{mac}", status_code=303)
 
 

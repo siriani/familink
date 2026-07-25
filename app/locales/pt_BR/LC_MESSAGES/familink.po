@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 08:12-0300\n"
+"POT-Creation-Date: 2026-07-25 09:26-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -119,79 +119,83 @@ msgstr "Pessoas"
 msgid "Enforcement"
 msgstr "Aplicação"
 
+#: app/templates/base.html:17 app/templates/settings.html:2
+msgid "Settings"
+msgstr "Configurações"
+
 #: app/templates/captive.html:7
 msgid "Connect to the network"
 msgstr "Conectar à rede"
 
-#: app/templates/captive.html:46
+#: app/templates/captive.html:14
 msgid "Identifying your device…"
 msgstr "Identificando seu dispositivo…"
 
-#: app/templates/captive.html:47
+#: app/templates/captive.html:15
 msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
 msgstr "Ainda não te encontramos na rede. Aguarde alguns segundos e recarregue a página."
 
-#: app/templates/captive.html:50
+#: app/templates/captive.html:18
 #, python-format
 msgid "Connected as %(name)s"
 msgstr "Conectado como %(name)s"
 
-#: app/templates/captive.html:51
+#: app/templates/captive.html:19
 msgid "You are already identified on this network."
 msgstr "Você já está identificado nesta rede."
 
-#: app/templates/captive.html:53
+#: app/templates/captive.html:21
 msgid "Continue browsing →"
 msgstr "Continuar navegando →"
 
-#: app/templates/captive.html:57
+#: app/templates/captive.html:25
 msgid "Create account"
 msgstr "Criar conta"
 
-#: app/templates/captive.html:61 app/templates/groups_form.html:12
+#: app/templates/captive.html:29 app/templates/groups_form.html:12
 #: app/templates/groups_list.html:10 app/templates/users_form.html:12
 #: app/templates/users_list.html:10
 msgid "Name"
 msgstr "Nome"
 
-#: app/templates/captive.html:63
+#: app/templates/captive.html:31
 msgid "Email (optional)"
 msgstr "Email (opcional)"
 
-#: app/templates/captive.html:65
+#: app/templates/captive.html:33
 msgid "Birthdate (optional)"
 msgstr "Data de nascimento (opcional)"
 
-#: app/templates/captive.html:67
+#: app/templates/captive.html:35
 msgid "Choose a 4-digit PIN — you'll need it to link future devices to this account"
 msgstr "Escolha um PIN de 4 dígitos — você vai precisar dele pra vincular outros dispositivos a essa conta"
 
-#: app/templates/captive.html:69 app/templates/captive.html:92
+#: app/templates/captive.html:37 app/templates/captive.html:61
 msgid "Enter"
 msgstr "Entrar"
 
-#: app/templates/captive.html:72
+#: app/templates/captive.html:40
 msgid "I already have an account"
 msgstr "Já tenho conta"
 
-#: app/templates/captive.html:76
+#: app/templates/captive.html:44
 msgid "Who are you?"
 msgstr "Quem é você?"
 
-#: app/templates/captive.html:85
+#: app/templates/captive.html:54
 #, python-format
 msgid "Last seen: %(when)s"
 msgstr "Visto por último: %(when)s"
 
-#: app/templates/captive.html:91 app/templates/users_list.html:10
+#: app/templates/captive.html:60 app/templates/users_list.html:10
 msgid "PIN"
 msgstr "PIN"
 
-#: app/templates/captive.html:101
+#: app/templates/captive.html:70
 msgid "Other user"
 msgstr "Outro usuário"
 
-#: app/templates/captive.html:103
+#: app/templates/captive.html:72
 msgid "I don't have an account"
 msgstr "Não tenho conta"
 
@@ -257,7 +261,7 @@ msgstr "requer hotspot"
 
 #: app/templates/device_detail.html:28 app/templates/device_detail.html:66
 #: app/templates/device_detail.html:74 app/templates/groups_form.html:72
-#: app/templates/users_form.html:93
+#: app/templates/settings.html:21 app/templates/users_form.html:93
 msgid "Save"
 msgstr "Salvar"
 
@@ -335,6 +339,40 @@ msgstr "Protocolo"
 msgid "Service"
 msgstr "Serviço"
 
+#: app/templates/device_detail.html:111
+msgid "Fingerbank identification"
+msgstr "Identificação Fingerbank"
+
+#: app/templates/device_detail.html:115
+#, python-format
+msgid "Last checked: %(when)s"
+msgstr "Última verificação: %(when)s"
+
+#: app/templates/device_detail.html:117
+#, python-format
+msgid "Last checked: %(when)s — no match."
+msgstr "Última verificação: %(when)s — sem correspondência."
+
+#: app/templates/device_detail.html:120
+msgid "Never checked yet."
+msgstr "Ainda não verificado."
+
+#: app/templates/device_detail.html:125
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+#: app/templates/device_detail.html:126 app/templates/enforcement_list.html:10
+msgid "Device"
+msgstr "Dispositivo"
+
+#: app/templates/device_detail.html:127
+msgid "Confidence"
+msgstr "Confiança"
+
+#: app/templates/device_detail.html:131
+msgid "Refresh identification"
+msgstr "Atualizar identificação"
+
 #: app/templates/devices_list.html:5
 msgid "Search by hostname, IP or MAC..."
 msgstr "Buscar por hostname, IP ou MAC..."
@@ -388,10 +426,6 @@ msgstr[1] "%(n)s fora de sincronia com o MikroTik."
 #: app/templates/enforcement_list.html:6
 msgid "No bulk apply on purpose — open a device to review and apply it individually."
 msgstr "Não há aplicação em massa de propósito — abra um dispositivo para revisar e aplicar individualmente."
-
-#: app/templates/enforcement_list.html:10
-msgid "Device"
-msgstr "Dispositivo"
 
 #: app/templates/enforcement_list.html:10
 msgid "Current group"
@@ -509,6 +543,38 @@ msgstr "Não"
 #: app/templates/groups_list.html:26 app/templates/users_list.html:28
 msgid "Edit"
 msgstr "Editar"
+
+#: app/templates/settings.html:6
+msgid "Fingerbank device identification"
+msgstr "Identificação de dispositivos via Fingerbank"
+
+#: app/templates/settings.html:7
+msgid ""
+"Optional. Enriches each device's detail page with a manufacturer/device\n"
+"      guess from"
+msgstr "Opcional. Enriquece a página de detalhes de cada dispositivo com um palpite de fabricante/modelo vindo do"
+
+#: app/templates/settings.html:8
+msgid ""
+", looked up by MAC address. Get a free key at fingerbank.org and paste it below --\n"
+"      leave it blank if you don't want this."
+msgstr " pra enriquecer a página de detalhes de cada dispositivo com um palpite de fabricante/modelo, buscado pelo endereço MAC. Consiga uma chave gratuita em fingerbank.org e cole abaixo -- deixe em branco se não quiser usar isso."
+
+#: app/templates/settings.html:11
+msgid "Fingerbank API key"
+msgstr "Chave de API do Fingerbank"
+
+#: app/templates/settings.html:13
+msgid "configured"
+msgstr "configurada"
+
+#: app/templates/settings.html:16
+msgid "A key is already configured. Leave blank to keep it, or paste a new one to replace it."
+msgstr "Já existe uma chave configurada. Deixe em branco pra mantê-la, ou cole uma nova pra substituir."
+
+#: app/templates/settings.html:18
+msgid "No key configured yet -- Fingerbank lookups are skipped until one is set."
+msgstr "Nenhuma chave configurada ainda -- as consultas ao Fingerbank ficam desativadas até você definir uma."
 
 #: app/templates/users_form.html:2
 msgid "Edit user"

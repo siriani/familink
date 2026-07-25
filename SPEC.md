@@ -116,6 +116,44 @@ all). `merge_mikrotik_views` now also takes `address` from
 MikroTik currently sees on the wire (ARP-level) regardless of whether the
 device ever requested a DHCP lease.
 
+## Fingerbank device identification (shipped)
+
+Optional enrichment on top of the port scanner's guess, using
+[fingerbank.org](https://fingerbank.org/)'s device-combinations database —
+`app/fingerbank.py:lookup_mac` queries `GET /api/v2/combinations/
+interrogate` by MAC address and stores `device_name`/`manufacturer`/
+`score` onto the device row (`device.fingerbank_*`, migrations/versions/
+0007_fingerbank.py). Triggers the same way the port scanner does: once
+automatically the first time the discovery loop sees a brand new device
+(`app/sync.py`), plus a manual **Refresh identification** button on the
+device detail page for anyone who wants a fresh read. Shown as its own
+section on that page, not merged into `vendor_guess` — the two are
+different signals (Fingerbank's OUI/device database vs. the port-scanner's
+hand-picked port heuristics) and can legitimately disagree.
+
+**MAC-only, not full DHCP fingerprinting.** Fingerbank's API also accepts
+a `dhcp_fingerprint` (option 55 parameter-request list) and `dhcp_vendor`
+for much more precise device identification, but MikroTik's REST API
+doesn't expose that raw data today — only what's already in `/ip/
+dhcp-server/lease` (address, hostname, a handful of DHCP-relay fields),
+none of which is the option-55 list itself. A MAC-only lookup still beats
+the port scanner's heuristics for manufacturer identification (a real
+vendor database vs. a dozen hand-picked ports) but can't distinguish two
+devices from the same manufacturer the way a full fingerprint could.
+Worth revisiting if a future RouterOS version exposes that data via REST.
+
+**API key is admin-configured at `/settings`, not an env var.** Every
+other credential in familink (MikroTik password, DB password, MQTT
+password) is `.env` + redeploy — deliberately different here, because
+familink is community software now and a non-technical admin running
+someone else's install may not have shell access to edit `.env` at all.
+`app/models.py:Setting` is a minimal key/value table for exactly this
+case, not a general settings framework — a second admin-configurable
+value would get its own row under the same table, not a new schema
+concept. No key configured = lookups are a fast no-op (never a failed
+network call, never a startup warning) — this is opt-in, not everyone
+wants to send their family's device MACs to a third-party service.
+
 ## MQTT presence publisher / Home Assistant discovery (shipped)
 
 `app/mqtt_publish.py` runs once per discovery cycle, right after devices

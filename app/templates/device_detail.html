@@ -106,5 +106,30 @@
     </div>
     {% endif %}
   </div>
+
+  <div class="assoc-section">
+    <h3>{{ _('Fingerbank identification') }}</h3>
+    <p class="hint">
+      {% if device.fingerbank_checked_at %}
+        {% if device.fingerbank_device_name %}
+          {{ _('Last checked: %(when)s') % {'when': device.fingerbank_checked_at | localtime} }}
+        {% else %}
+          {{ _('Last checked: %(when)s — no match.') % {'when': device.fingerbank_checked_at | localtime} }}
+        {% endif %}
+      {% else %}
+        {{ _('Never checked yet.') }}
+      {% endif %}
+    </p>
+    {% if device.fingerbank_device_name or device.fingerbank_manufacturer %}
+    <div class="detail-grid detail-grid-3">
+      <div><div class="detail-label">{{ _('Manufacturer') }}</div><div class="detail-value">{{ device.fingerbank_manufacturer or '—' }}</div></div>
+      <div><div class="detail-label">{{ _('Device') }}</div><div class="detail-value">{{ device.fingerbank_device_name or '—' }}</div></div>
+      <div><div class="detail-label">{{ _('Confidence') }}</div><div class="detail-value">{{ device.fingerbank_score ~ '%' if device.fingerbank_score is not none else '—' }}</div></div>
+    </div>
+    {% endif %}
+    <form method="post" action="/devices/{{ device.mac }}/fingerbank">
+      <button class="save-btn" type="submit">{{ _('Refresh identification') }}</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

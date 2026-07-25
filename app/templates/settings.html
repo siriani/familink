@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Settings') }} — familink{% endblock %}
+{% block content %}
+<div class="detail-card">
+  <div class="assoc-section">
+    <h3>{{ _('Fingerbank device identification') }}</h3>
+    <p class="hint">{{ _('Optional. Enriches each device\'s detail page with a manufacturer/device
+      guess from') }} <a href="https://fingerbank.org/" target="_blank" rel="noopener">fingerbank.org</a>{{ _(', looked up by MAC address. Get a free key at fingerbank.org and paste it below --
+      leave it blank if you don\'t want this.') }}</p>
+    <form method="post" action="/settings">
+      <div class="detail-label">{{ _('Fingerbank API key') }}</div>
+      <input class="search" type="password" name="fingerbank_api_key"
+        placeholder="{{ '•••••••••••••••• (' + _('configured') + ')' if fingerbank_key_set else '' }}">
+      <p class="hint">
+        {% if fingerbank_key_set %}
+          {{ _('A key is already configured. Leave blank to keep it, or paste a new one to replace it.') }}
+        {% else %}
+          {{ _('No key configured yet -- Fingerbank lookups are skipped until one is set.') }}
+        {% endif %}
+      </p>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

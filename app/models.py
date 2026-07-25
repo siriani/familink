@@ -112,6 +112,16 @@ class Device(Base):
     current_ip: Mapped[str | None] = mapped_column(String(45))
     hostname: Mapped[str | None] = mapped_column(String(255))
     vendor_guess: Mapped[str | None] = mapped_column(String(100))
+    # Fingerbank.org enrichment (app/fingerbank.py) -- a MAC-address-only
+    # lookup against Fingerbank's device-combinations database, opt-in via
+    # an admin-configured API key (Setting below). Independent of
+    # vendor_guess (port-scan heuristics, app/portscan.py): shown
+    # side by side on the device detail page as two different signals,
+    # not merged, since they can legitimately disagree.
+    fingerbank_device_name: Mapped[str | None] = mapped_column(String(255))
+    fingerbank_manufacturer: Mapped[str | None] = mapped_column(String(255))
+    fingerbank_score: Mapped[int | None] = mapped_column(Integer)
+    fingerbank_checked_at: Mapped[datetime | None] = mapped_column(DateTime)
     first_seen: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     last_seen: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=func.now()
@@ -225,3 +235,24 @@ class RegistrationToken(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     expires_at: Mapped[datetime | None] = mapped_column(DateTime)
     consumed_at: Mapped[datetime | None] = mapped_column(DateTime)
+
+
+class Setting(Base):
+    """Generic key/value store for admin-configurable runtime settings
+    that shouldn't require editing .env + redeploying to change -- the
+    motivating case is the Fingerbank API key (app/fingerbank.py,
+    app/routers/settings.py): familink is community software now, and a
+    non-technical admin should be able to paste an API key into a form
+    instead of touching environment variables on a server they may not
+    have shell access to. Deliberately not a general settings framework
+    -- add a row only when something concrete needs one, same restraint
+    as the rest of this schema (see the module docstring).
+    """
+
+    __tablename__ = "settings"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str | None] = mapped_column(Text)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now()
+    )

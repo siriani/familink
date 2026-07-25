@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 08:12-0300\n"
+"POT-Creation-Date: 2026-07-25 09:26-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans\n"
@@ -119,79 +119,83 @@ msgstr "用户"
 msgid "Enforcement"
 msgstr "强制执行"
 
+#: app/templates/base.html:17 app/templates/settings.html:2
+msgid "Settings"
+msgstr "设置"
+
 #: app/templates/captive.html:7
 msgid "Connect to the network"
 msgstr "连接网络"
 
-#: app/templates/captive.html:46
+#: app/templates/captive.html:14
 msgid "Identifying your device…"
 msgstr "正在识别你的设备…"
 
-#: app/templates/captive.html:47
+#: app/templates/captive.html:15
 msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
 msgstr "我们还没有在网络中找到你的设备。请稍等几秒后刷新页面。"
 
-#: app/templates/captive.html:50
+#: app/templates/captive.html:18
 #, python-format
 msgid "Connected as %(name)s"
 msgstr "已作为 %(name)s 连接"
 
-#: app/templates/captive.html:51
+#: app/templates/captive.html:19
 msgid "You are already identified on this network."
 msgstr "你已在此网络中完成身份识别。"
 
-#: app/templates/captive.html:53
+#: app/templates/captive.html:21
 msgid "Continue browsing →"
 msgstr "继续浏览 →"
 
-#: app/templates/captive.html:57
+#: app/templates/captive.html:25
 msgid "Create account"
 msgstr "创建账号"
 
-#: app/templates/captive.html:61 app/templates/groups_form.html:12
+#: app/templates/captive.html:29 app/templates/groups_form.html:12
 #: app/templates/groups_list.html:10 app/templates/users_form.html:12
 #: app/templates/users_list.html:10
 msgid "Name"
 msgstr "姓名"
 
-#: app/templates/captive.html:63
+#: app/templates/captive.html:31
 msgid "Email (optional)"
 msgstr "电子邮箱(可选)"
 
-#: app/templates/captive.html:65
+#: app/templates/captive.html:33
 msgid "Birthdate (optional)"
 msgstr "出生日期(可选)"
 
-#: app/templates/captive.html:67
+#: app/templates/captive.html:35
 msgid "Choose a 4-digit PIN — you'll need it to link future devices to this account"
 msgstr "设置一个 4 位 PIN 码 — 以后关联新设备时需要用到"
 
-#: app/templates/captive.html:69 app/templates/captive.html:92
+#: app/templates/captive.html:37 app/templates/captive.html:61
 msgid "Enter"
 msgstr "进入"
 
-#: app/templates/captive.html:72
+#: app/templates/captive.html:40
 msgid "I already have an account"
 msgstr "我已经有账号"
 
-#: app/templates/captive.html:76
+#: app/templates/captive.html:44
 msgid "Who are you?"
 msgstr "你是谁?"
 
-#: app/templates/captive.html:85
+#: app/templates/captive.html:54
 #, python-format
 msgid "Last seen: %(when)s"
 msgstr "最后出现:%(when)s"
 
-#: app/templates/captive.html:91 app/templates/users_list.html:10
+#: app/templates/captive.html:60 app/templates/users_list.html:10
 msgid "PIN"
 msgstr "PIN"
 
-#: app/templates/captive.html:101
+#: app/templates/captive.html:70
 msgid "Other user"
 msgstr "其他用户"
 
-#: app/templates/captive.html:103
+#: app/templates/captive.html:72
 msgid "I don't have an account"
 msgstr "我还没有账号"
 
@@ -257,7 +261,7 @@ msgstr "需要热点登录"
 
 #: app/templates/device_detail.html:28 app/templates/device_detail.html:66
 #: app/templates/device_detail.html:74 app/templates/groups_form.html:72
-#: app/templates/users_form.html:93
+#: app/templates/settings.html:21 app/templates/users_form.html:93
 msgid "Save"
 msgstr "保存"
 
@@ -335,6 +339,40 @@ msgstr "协议"
 msgid "Service"
 msgstr "服务"
 
+#: app/templates/device_detail.html:111
+msgid "Fingerbank identification"
+msgstr "Fingerbank 识别"
+
+#: app/templates/device_detail.html:115
+#, python-format
+msgid "Last checked: %(when)s"
+msgstr "上次检查:%(when)s"
+
+#: app/templates/device_detail.html:117
+#, python-format
+msgid "Last checked: %(when)s — no match."
+msgstr "上次检查:%(when)s — 未匹配到结果。"
+
+#: app/templates/device_detail.html:120
+msgid "Never checked yet."
+msgstr "尚未检查。"
+
+#: app/templates/device_detail.html:125
+msgid "Manufacturer"
+msgstr "制造商"
+
+#: app/templates/device_detail.html:126 app/templates/enforcement_list.html:10
+msgid "Device"
+msgstr "设备"
+
+#: app/templates/device_detail.html:127
+msgid "Confidence"
+msgstr "置信度"
+
+#: app/templates/device_detail.html:131
+msgid "Refresh identification"
+msgstr "刷新识别"
+
 #: app/templates/devices_list.html:5
 msgid "Search by hostname, IP or MAC..."
 msgstr "按主机名、IP 或 MAC 搜索…"
@@ -385,10 +423,6 @@ msgstr[0] "%(n)s 个与 MikroTik 不同步。"
 #: app/templates/enforcement_list.html:6
 msgid "No bulk apply on purpose — open a device to review and apply it individually."
 msgstr "刻意不提供批量应用 — 请打开单个设备进行审查并单独应用。"
-
-#: app/templates/enforcement_list.html:10
-msgid "Device"
-msgstr "设备"
 
 #: app/templates/enforcement_list.html:10
 msgid "Current group"
@@ -506,6 +540,38 @@ msgstr "否"
 #: app/templates/groups_list.html:26 app/templates/users_list.html:28
 msgid "Edit"
 msgstr "编辑"
+
+#: app/templates/settings.html:6
+msgid "Fingerbank device identification"
+msgstr "通过 Fingerbank 识别设备"
+
+#: app/templates/settings.html:7
+msgid ""
+"Optional. Enriches each device's detail page with a manufacturer/device\n"
+"      guess from"
+msgstr "可选。通过"
+
+#: app/templates/settings.html:8
+msgid ""
+", looked up by MAC address. Get a free key at fingerbank.org and paste it below --\n"
+"      leave it blank if you don't want this."
+msgstr "（通过 MAC 地址查询）为每个设备的详情页补充制造商/型号推测信息。在 fingerbank.org 获取免费密钥并粘贴到下方 -- 如果不需要此功能可留空。"
+
+#: app/templates/settings.html:11
+msgid "Fingerbank API key"
+msgstr "Fingerbank API 密钥"
+
+#: app/templates/settings.html:13
+msgid "configured"
+msgstr "已配置"
+
+#: app/templates/settings.html:16
+msgid "A key is already configured. Leave blank to keep it, or paste a new one to replace it."
+msgstr "已配置密钥。留空则保留当前密钥,粘贴新密钥可替换。"
+
+#: app/templates/settings.html:18
+msgid "No key configured yet -- Fingerbank lookups are skipped until one is set."
+msgstr "尚未配置密钥 -- 在设置密钥之前将跳过 Fingerbank 查询。"
 
 #: app/templates/users_form.html:2
 msgid "Edit user"

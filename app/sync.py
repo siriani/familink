@@ -138,16 +138,18 @@ def _default_group_id(session) -> int:
     return group_id
 
 
-def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str]]:
+def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str, str | None]]:
     """Sync DB write, run off the event loop via asyncio.to_thread by the
     caller. Opens its own session so it's safe to call from a worker thread.
 
-    Returns (device_id, ip) for every device INSERTED this cycle (not
-    updated) that has a known IP — the caller uses this to kick off an
-    automatic port scan for newly-discovered devices only, see
-    app/portscan.py.
+    Returns (device_id, mac, ip) for every device INSERTED this cycle
+    (not updated) — the caller uses this to kick off an automatic port
+    scan (app/portscan.py, only possible once an IP is known, so gated
+    on `ip` at the call site) and a Fingerbank lookup (app/fingerbank.py,
+    needs only the MAC, so it fires for every newly-discovered device
+    regardless of IP).
     """
-    newly_created: list[tuple[int, str]] = []
+    newly_created: list[tuple[int, str, str | None]] = []
     with session_scope() as session:
         default_group_id = _default_group_id(session)
         now = datetime.now(timezone.utc)
@@ -163,9 +165,9 @@ def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str]]:
             device.mikrotik_bound = info["mikrotik_bound"]
             device.mikrotik_bypassed = info["mikrotik_bypassed"]
             device.last_seen = now
-            if is_new and device.current_ip:
+            if is_new:
                 session.flush()  # need device.id before commit
-                newly_created.append((device.id, device.current_ip))
+                newly_created.append((device.id, mac, device.current_ip))
         session.commit()
     return newly_created
 
@@ -216,9 +218,12 @@ async def run_discovery_cycle(client: MikroTikClient) -> None:
         from app.portscan import scan_and_store  # local import: avoids a
         # hard dependency from the read-only discovery loop on the scanner
         # module unless a new device actually triggers it.
+        from app.fingerbank import enrich_and_store  # same reason
 
-        for device_id, ip in newly_created:
-            asyncio.create_task(scan_and_store(device_id, ip))
+        for device_id, mac, ip in newly_created:
+            if ip:
+                asyncio.create_task(scan_and_store(device_id, ip))
+            asyncio.create_task(enrich_and_store(device_id, mac))
 
     from app.mqtt_publish import publish_all  # local import, same reason as above
 
