@@ -5,50 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {% if state == "unknown" %}<meta http-equiv="refresh" content="5">{% endif %}
 <title>{{ _('Connect to the network') }}</title>
-<style>
-  * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f4f5f7; margin: 0; padding: 24px 16px; color: #1a1a1a; }
-  .card { max-width: 420px; margin: 0 auto; background: #fff; border-radius: 12px;
-    padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-  h1 { font-size: 1.3rem; margin: 0 0 16px; }
-  p.hint { color: #666; font-size: .9rem; }
-  input[type=text], input[type=email], input[type=date], input[type=password] {
-    width: 100%; padding: 10px; margin: 6px 0 12px;
-    border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-  label { font-size: .85rem; color: #555; }
-  .save-btn { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none;
-    border-radius: 8px; font-size: 1rem; cursor: pointer; }
-  .error { color: #b91c1c; font-size: .9rem; margin-bottom: 10px; }
-  .continue-link { display: block; margin-top: 16px; text-align: center; color: #2563eb; }
-  .person-list { margin-bottom: 16px; }
-  .person-card { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px;
-    background: #fafafa; overflow: hidden; }
-  .person-card[open] { border-color: #2563eb; }
-  .person-card summary { display: flex; align-items: baseline; justify-content: space-between;
-    gap: 8px; padding: 13px 14px; cursor: pointer; font-size: 1rem; list-style: none; }
-  .person-card summary::-webkit-details-marker { display: none; }
-  .person-name { font-weight: 500; }
-  .person-meta { font-size: .75rem; color: #888; white-space: nowrap; }
-  .pin-form { padding: 0 14px 14px; }
-  .pin-form input[type=password] { text-align: center; letter-spacing: .4em;
-    font-size: 1.2rem; margin: 0 0 8px; }
-  .pin-form .save-btn { padding: 10px; font-size: .95rem; }
-  .switch-links { text-align: center; margin-top: 8px; }
-  .switch-links a { display: block; padding: 10px; color: #2563eb; font-size: .9rem;
-    text-decoration: none; }
-</style>
+<link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body class="captive">
 <div class="card">
 
 {% if state == "unknown" %}
   <h1>{{ _('Identifying your device…') }}</h1>
-  <p class="hint">{{ _("We haven't found you on the network yet. Wait a few seconds and reload the page.") }}</p>
+  <p class="captive-hint">{{ _("We haven't found you on the network yet. Wait a few seconds and reload the page.") }}</p>
 
 {% elif state == "connected" %}
   <h1>{{ _('Connected as %(name)s') % {'name': user.name} }}</h1>
-  <p class="hint">{{ _('You are already identified on this network.') }}</p>
+  <p class="captive-hint">{{ _('You are already identified on this network.') }}</p>
   {% if continue_url %}
   <a class="continue-link" href="{{ continue_url }}">{{ _('Continue browsing →') }}</a>
   {% endif %}
@@ -66,7 +34,7 @@
     <input type="date" name="birthdate">
     <label>{{ _('Choose a 4-digit PIN — you\'ll need it to link future devices to this account') }}</label>
     <input type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="new_pin" required>
-    <button class="save-btn" type="submit">{{ _('Enter') }}</button>
+    <button class="captive-btn" type="submit">{{ _('Enter') }}</button>
   </form>
   <div class="switch-links">
     <a href="/captive{% if continue_url %}?link_orig={{ continue_url | urlencode }}{% endif %}">&larr; {{ _('I already have an account') }}</a>
@@ -89,7 +57,7 @@
         <input type="hidden" name="view" value="{{ view }}">
         <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
         <input type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" name="pin" placeholder="{{ _('PIN') }}" required autofocus>
-        <button class="save-btn" type="submit">{{ _('Enter') }}</button>
+        <button class="captive-btn" type="submit">{{ _('Enter') }}</button>
       </form>
     </details>
     {% endfor %}

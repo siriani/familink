@@ -55,3 +55,47 @@ textarea{border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:inhe
 .log-row.fail{color:#c53030}
 .log-row.ok{color:#555}
 .port-badge{display:inline-block;font-size:10px;font-weight:700;color:#2b6cb0;background:#ebf4ff;border-radius:10px;padding:1px 6px;vertical-align:middle}
+
+/* Form layout: structural selectors instead of repeating the same
+   inline style on every matching element (a first assoc-section sitting
+   flush with the card top, a label-adjacent input, a hint right after
+   a heading or an input, etc). See device_detail.html/groups_form.html/
+   users_form.html for the markup these target. */
+.assoc-section:first-child{margin-top:0;padding-top:0;border-top:none}
+.detail-grid-1{grid-template-columns:1fr}
+.detail-grid-3{grid-template-columns:1fr 1fr 1fr}
+.detail-label+.search{margin-top:4px}
+h3+p.hint{margin-top:0}
+.search+p.hint{margin-top:4px}
+.detail-grid+form{margin-top:10px}
+textarea{width:100%}
+.form-inline{display:inline}
+.tcard-compact{margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px}
+
+/* /captive -- the one unauthenticated page, light/mobile-card theme
+   instead of the dashboard's dark gradient above. Scoped under
+   body.captive (and its own .captive-btn/.captive-hint instead of
+   reusing .save-btn/.hint) so this section can share the same global
+   stylesheet as the admin panel without the two colliding -- both
+   pages use those class names for genuinely different looks. */
+body.captive{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f5f7;color:#1a1a1a}
+.captive .card{max-width:420px;margin:0 auto;background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.captive h1{font-size:1.3rem;margin:0 0 16px}
+.captive .captive-hint{color:#666;font-size:.9rem}
+.captive input[type=text],.captive input[type=email],.captive input[type=date],.captive input[type=password]{width:100%;padding:10px;margin:6px 0 12px;border:1px solid #ccc;border-radius:6px;font-size:1rem}
+.captive label{font-size:.85rem;color:#555}
+.captive .captive-btn{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:400;cursor:pointer}
+.captive .error{color:#b91c1c;font-size:.9rem;margin-bottom:10px}
+.captive .continue-link{display:block;margin-top:16px;text-align:center;color:#2563eb}
+.captive .person-list{margin-bottom:16px}
+.captive .person-card{border:1px solid #ddd;border-radius:8px;margin-bottom:8px;background:#fafafa;overflow:hidden}
+.captive .person-card[open]{border-color:#2563eb}
+.captive .person-card summary{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:13px 14px;cursor:pointer;font-size:1rem;list-style:none}
+.captive .person-card summary::-webkit-details-marker{display:none}
+.captive .person-name{font-weight:500}
+.captive .person-meta{font-size:.75rem;color:#888;white-space:nowrap}
+.captive .pin-form{padding:0 14px 14px}
+.captive .pin-form input[type=password]{text-align:center;letter-spacing:.4em;font-size:1.2rem;margin:0 0 8px}
+.captive .pin-form .captive-btn{padding:10px;font-size:.95rem}
+.captive .switch-links{text-align:center;margin-top:8px}
+.captive .switch-links a{display:block;padding:10px;color:#2563eb;font-size:.9rem;text-decoration:none}

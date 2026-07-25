@@ -5,25 +5,25 @@
 
 <div class="detail-card">
   <form method="post" action="{{ '/users/%d' % user.id if user else '/users' }}">
-    <div class="assoc-section" style="margin-top:0;padding-top:0;border-top:none">
+    <div class="assoc-section">
       <h3>{{ _('Basics') }}</h3>
-      <div class="detail-grid" style="grid-template-columns:1fr">
+      <div class="detail-grid detail-grid-1">
         <div>
           <div class="detail-label">{{ _('Name') }}</div>
-          <input class="search" style="margin-top:4px" type="text" name="name" required value="{{ user.name if user else '' }}">
+          <input class="search" type="text" name="name" required value="{{ user.name if user else '' }}">
         </div>
         <div>
           <div class="detail-label">{{ _('Email') }}</div>
-          <input class="search" style="margin-top:4px" type="email" name="email" value="{{ user.email if user else '' }}">
+          <input class="search" type="email" name="email" value="{{ user.email if user else '' }}">
         </div>
         <div>
           <div class="detail-label">{{ _('Birthdate') }}</div>
-          <input class="search" style="margin-top:4px" type="date" name="birthdate" value="{{ user.birthdate if user else '' }}">
+          <input class="search" type="date" name="birthdate" value="{{ user.birthdate if user else '' }}">
         </div>
         <div>
           <div class="detail-label">{{ _('PIN (4 digits)') }}</div>
-          <input class="search" style="margin-top:4px" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="pin" placeholder="{{ '••••' if user and user.pin_hash else '' }}">
-          <p class="hint" style="margin-top:4px">
+          <input class="search" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="pin" placeholder="{{ '••••' if user and user.pin_hash else '' }}">
+          <p class="hint">
             {% if user %}
               {{ _('Required for this person to be selectable on /captive. Leave blank to keep the current PIN.') }}
             {% else %}
@@ -37,13 +37,13 @@
     {% if user %}
     <div class="assoc-section">
       <h3>{{ _("Today's usage (familink-tracked, no MikroTik login involved)") }}</h3>
-      <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+      <div class="detail-grid">
         <div><div class="detail-label">{{ _('Used today') }}</div><div class="detail-value">{{ (user.seconds_used_today / 3600) | localnumber(2) }}h</div></div>
         <div><div class="detail-label">{{ _('Status') }}</div><div class="detail-value">
           <span class="badge {{ 'b-hotspot' if user.blocked else 'b-free' }}">{{ _('Blocked') if user.blocked else pgettext('user_status', 'OK') }}</span>
         </div></div>
       </div>
-      <form method="post" action="/users/{{ user.id }}/reset-today" style="margin-top:10px">
+      <form method="post" action="/users/{{ user.id }}/reset-today">
         <button class="save-btn apply-btn" type="submit"
           onclick="return confirm('{{ _("Zero today's usage and unblock this person right now?") }}')">
           {{ _("Reset today's usage now") }}
@@ -73,17 +73,17 @@
 
     <div class="assoc-section">
       <h3>{{ _('Personal quota override') }}</h3>
-      <p class="hint" style="margin-top:0">{{ _('Leave blank to just use whatever their devices\'') }}
+      <p class="hint">{{ _('Leave blank to just use whatever their devices\'') }}
         <a href="/groups">{{ _('group') }}</a> {{ _('specifies. Fill in to override it for this person specifically.') }}</p>
-      <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+      <div class="detail-grid">
         <div>
           <div class="detail-label">{{ _('Weekday limit (seconds)') }}</div>
-          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekday_s"
+          <input class="search" type="number" name="daily_limit_weekday_s"
             value="{{ user.daily_limit_weekday_s if user and user.daily_limit_weekday_s is not none else '' }}">
         </div>
         <div>
           <div class="detail-label">{{ _('Weekend limit (seconds)') }}</div>
-          <input class="search" style="margin-top:4px" type="number" name="daily_limit_weekend_s"
+          <input class="search" type="number" name="daily_limit_weekend_s"
             value="{{ user.daily_limit_weekend_s if user and user.daily_limit_weekend_s is not none else '' }}">
         </div>
       </div>

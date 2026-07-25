@@ -31,7 +31,7 @@
     <div class="mikrotik-status {{ 'in-sync' if pending_action == 'none' else 'out-of-sync' }}">
       {{ '✓' if pending_action == 'none' else '⚠' }} {{ pending_action_label }}
       {% if pending_action != 'none' %}
-      <form method="post" action="/devices/{{ device.mac }}/apply-mikrotik" style="display:inline">
+      <form method="post" action="/devices/{{ device.mac }}/apply-mikrotik" class="form-inline">
         <button class="save-btn apply-btn" type="submit"
           onclick="return confirm('{{ _('This will write to the real MikroTik router right now. Continue?') }}')">
           {{ _('Apply to MikroTik') }}
@@ -70,14 +70,14 @@
   <div class="assoc-section">
     <h3>{{ _('Notes') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/notes" class="inline-form">
-      <textarea name="notes" rows="3" style="width:100%">{{ device.notes or '' }}</textarea>
+      <textarea name="notes" rows="3">{{ device.notes or '' }}</textarea>
       <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
   </div>
 
   <div class="assoc-section">
     <h3>{{ _('Port scan') }}</h3>
-    <p class="hint" style="margin-top:0">
+    <p class="hint">
       {% if last_scanned_at %}{{ _('Last scanned: %(when)s') % {'when': last_scanned_at | localtime} }}{% else %}{{ _('Never scanned yet.') }}{% endif %}
       {{ _("New devices are scanned automatically the first time they're discovered.") }}
     </p>
@@ -87,7 +87,7 @@
       </button>
     </form>
     {% if scan_results %}
-    <div class="tcard" style="margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px">
+    <div class="tcard tcard-compact">
       <table>
         <thead><tr><th>{{ _('Port') }}</th><th>{{ _('Protocol') }}</th><th>{{ _('Service') }}</th></tr></thead>
         <tbody>
