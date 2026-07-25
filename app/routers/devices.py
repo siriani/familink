@@ -100,7 +100,13 @@ def page_list_devices(
     return templates.TemplateResponse(
         request,
         "devices_list.html",
-        {"devices": devices, "groups": groups, "q": q or "", "group_id": group_id},
+        {
+            "devices": devices,
+            "groups": groups,
+            "q": q or "",
+            "group_id": group_id,
+            "TYPE_LABEL_MSGIDS": TYPE_LABEL_MSGIDS,
+        },
     )
 
 

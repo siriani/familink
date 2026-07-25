@@ -20,6 +20,7 @@
     <h3>{{ _('Identification') }}</h3>
     <div class="detail-grid">
       <div><div class="detail-label">{{ _('Hostname') }}</div><div class="detail-value">{{ device.hostname or '—' }}</div></div>
+      <div><div class="detail-label">{{ _('MAC address type') }}</div><div class="detail-value">{{ _('Random') if device.mac_is_random else _('Fixed') }}</div></div>
       <div><div class="detail-label">{{ _('Guessed type') }}</div><div class="detail-value">{{ vendor_guess_label or '—' }}</div></div>
       <div><div class="detail-label">{{ _('Manufacturer') }}</div><div class="detail-value">{{ device.fingerbank_manufacturer or '—' }}</div></div>
       <div><div class="detail-label">{{ _('Device') }}</div><div class="detail-value">{{ device.fingerbank_device_name or '—' }}</div></div>

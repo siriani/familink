@@ -29,6 +29,10 @@ logger = logging.getLogger("familink.sync")
 
 _MAC_RE = re.compile(r"^[0-9a-f]{2}(:[0-9a-f]{2}){5}$")
 
+# See the mass-rediscovery comment where these are used, further down.
+_SCAN_CONCURRENCY = 5
+_FINGERBANK_CONCURRENCY = 3
+
 
 def normalize_mac(raw: str) -> str | None:
     """Lowercase, colon-separated. Returns None if it doesn't look like a MAC
@@ -220,10 +224,29 @@ async def run_discovery_cycle(client: MikroTikClient) -> None:
         # module unless a new device actually triggers it.
         from app.fingerbank import enrich_and_store  # same reason
 
+        # Normally 0-2 devices per cycle, so these semaphores never
+        # actually engage -- they exist for the mass-rediscovery case
+        # (e.g. wiping the devices table to force a full re-scan/re-
+        # fingerprint of everything already on the network), where
+        # firing 100+ concurrent nmap subprocesses or Fingerbank API
+        # calls in one burst would be real load, not a `create_task`
+        # implementation detail. Fresh per cycle, so a normal cycle's
+        # 1-2 new devices are never held up by a previous cycle's batch.
+        scan_limit = asyncio.Semaphore(_SCAN_CONCURRENCY)
+        fingerbank_limit = asyncio.Semaphore(_FINGERBANK_CONCURRENCY)
+
+        async def _throttled_scan(device_id: int, ip: str) -> None:
+            async with scan_limit:
+                await scan_and_store(device_id, ip)
+
+        async def _throttled_enrich(device_id: int, mac: str) -> None:
+            async with fingerbank_limit:
+                await enrich_and_store(device_id, mac)
+
         for device_id, mac, ip in newly_created:
             if ip:
-                asyncio.create_task(scan_and_store(device_id, ip))
-            asyncio.create_task(enrich_and_store(device_id, mac))
+                asyncio.create_task(_throttled_scan(device_id, ip))
+            asyncio.create_task(_throttled_enrich(device_id, mac))
 
     from app.mqtt_publish import publish_all  # local import, same reason as above
 

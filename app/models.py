@@ -151,6 +151,18 @@ class Device(Base):
         back_populates="device", cascade="all, delete-orphan"
     )
 
+    @property
+    def mac_is_random(self) -> bool:
+        """True if the "locally administered" bit is set in the MAC's
+        first octet -- the standard signal for a randomized/private MAC
+        address (iOS Private Wi-Fi Address, Android MAC randomization)
+        rather than the device's real burned-in hardware address. Pure
+        function of the MAC string itself, so it's always available with
+        no extra lookup, no separate column, no staleness to track.
+        """
+        first_octet = self.mac.split(":", 1)[0]
+        return bool(int(first_octet, 16) & 0x02)
+
 
 class DeviceScanResult(Base):
     """Stub for the future nmap-based port scanner (see SPEC.md). No code

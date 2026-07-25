@@ -118,6 +118,8 @@ tr.clickable:hover{background:var(--cream)}
 .avatar-3{background:var(--sky);color:var(--ink)}
 .avatar-4{background:var(--gold);color:var(--ink)}
 .sparkle{color:var(--lavender);font-size:.85em;-webkit-text-stroke:.5px var(--ink)}
+.chip-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.chip-row .badge{font-size:10px;padding:2px 8px}
 
 /* Form layout: structural selectors instead of repeating the same
    inline style on every matching element (a first assoc-section sitting

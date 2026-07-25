@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:51-0300\n"
+"POT-Creation-Date: 2026-07-25 11:09-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans\n"
@@ -204,11 +204,11 @@ msgstr "我还没有账号"
 msgid "Back"
 msgstr "返回"
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
 msgid "Online"
 msgstr "在线"
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
 msgid "Offline"
 msgstr "离线"
 
@@ -225,8 +225,7 @@ msgstr "IP"
 msgid "First seen"
 msgstr "首次出现"
 
-#: app/templates/device_detail.html:15 app/templates/devices_list.html:18
-#: app/templates/enforcement_list.html:10
+#: app/templates/device_detail.html:15 app/templates/enforcement_list.html:10
 msgid "Last seen"
 msgstr "最后出现"
 
@@ -250,140 +249,153 @@ msgstr "无绑定"
 msgid "Identification"
 msgstr "识别信息"
 
-#: app/templates/device_detail.html:22 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:22
 msgid "Hostname"
 msgstr "主机名"
 
 #: app/templates/device_detail.html:23
+msgid "MAC address type"
+msgstr "MAC 地址类型"
+
+#: app/templates/device_detail.html:23
+msgid "Random"
+msgstr "随机"
+
+#: app/templates/device_detail.html:23
+msgid "Fixed"
+msgstr "固定"
+
+#: app/templates/device_detail.html:24
 msgid "Guessed type"
 msgstr "推测类型"
 
-#: app/templates/device_detail.html:24
+#: app/templates/device_detail.html:25
 msgid "Manufacturer"
 msgstr "制造商"
 
-#: app/templates/device_detail.html:25 app/templates/enforcement_list.html:10
+#: app/templates/device_detail.html:26 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
 msgid "Device"
 msgstr "设备"
 
-#: app/templates/device_detail.html:27
+#: app/templates/device_detail.html:28
 msgid "Confidence"
 msgstr "置信度"
 
-#: app/templates/device_detail.html:33
+#: app/templates/device_detail.html:34
 #, python-format
 msgid "Last checked: %(when)s"
 msgstr "上次检查:%(when)s"
 
-#: app/templates/device_detail.html:35
+#: app/templates/device_detail.html:36
 #, python-format
 msgid "Last checked: %(when)s — no match."
 msgstr "上次检查:%(when)s — 未匹配到结果。"
 
-#: app/templates/device_detail.html:38
+#: app/templates/device_detail.html:39
 msgid "Never checked yet."
 msgstr "尚未检查。"
 
-#: app/templates/device_detail.html:42
+#: app/templates/device_detail.html:43
 msgid "Refresh identification"
 msgstr "刷新识别"
 
-#: app/templates/device_detail.html:47 app/templates/settings.html:26
+#: app/templates/device_detail.html:48 app/templates/settings.html:26
 #: app/templates/users_form.html:99
 msgid "MQTT"
 msgstr "MQTT"
 
-#: app/templates/device_detail.html:50
+#: app/templates/device_detail.html:51
 msgid "Publish this device's presence via MQTT"
 msgstr "通过 MQTT 发布此设备的在线状态"
 
-#: app/templates/device_detail.html:51 app/templates/device_detail.html:63
-#: app/templates/device_detail.html:101 app/templates/device_detail.html:109
+#: app/templates/device_detail.html:52 app/templates/device_detail.html:64
+#: app/templates/device_detail.html:102 app/templates/device_detail.html:110
 #: app/templates/groups_form.html:72 app/templates/settings.html:21
 #: app/templates/settings.html:55 app/templates/users_form.html:93
 #: app/templates/users_form.html:103
 msgid "Save"
 msgstr "保存"
 
-#: app/templates/device_detail.html:56 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:57 app/templates/devices_list.html:18
 msgid "Group"
 msgstr "分组"
 
-#: app/templates/device_detail.html:60
+#: app/templates/device_detail.html:61
 msgid "hotspot required"
 msgstr "需要热点登录"
 
-#: app/templates/device_detail.html:71
+#: app/templates/device_detail.html:72
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr "这将立即写入真实的 MikroTik 路由器。是否继续?"
 
-#: app/templates/device_detail.html:72
+#: app/templates/device_detail.html:73
 msgid "Apply to MikroTik"
 msgstr "应用到 MikroTik"
 
-#: app/templates/device_detail.html:80
+#: app/templates/device_detail.html:81
 msgid "Recent MikroTik apply attempts"
 msgstr "最近的 MikroTik 应用尝试"
 
-#: app/templates/device_detail.html:85 app/templates/users_form.html:64
+#: app/templates/device_detail.html:86 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/device_detail.html:85
+#: app/templates/device_detail.html:86
 msgid "FAILED"
 msgstr "失败"
 
-#: app/templates/device_detail.html:93
+#: app/templates/device_detail.html:94
 msgid "Owner"
 msgstr "所有者"
 
-#: app/templates/device_detail.html:96
+#: app/templates/device_detail.html:97
 msgid "— unassigned —"
 msgstr "— 未分配 —"
 
-#: app/templates/device_detail.html:106
+#: app/templates/device_detail.html:107
 msgid "Notes"
 msgstr "备注"
 
-#: app/templates/device_detail.html:114
+#: app/templates/device_detail.html:115
 msgid "Port scan"
 msgstr "端口扫描"
 
-#: app/templates/device_detail.html:116
+#: app/templates/device_detail.html:117
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr "上次扫描:%(when)s"
 
-#: app/templates/device_detail.html:116
+#: app/templates/device_detail.html:117
 msgid "Never scanned yet."
 msgstr "尚未扫描。"
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:118
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr "新设备在首次被发现时会自动扫描。"
 
-#: app/templates/device_detail.html:120
+#: app/templates/device_detail.html:121
 msgid "no known IP"
 msgstr "无已知 IP"
 
-#: app/templates/device_detail.html:121
+#: app/templates/device_detail.html:122
 msgid "Rescan"
 msgstr "重新扫描"
 
-#: app/templates/device_detail.html:121
+#: app/templates/device_detail.html:122
 msgid "Scan now"
 msgstr "立即扫描"
 
-#: app/templates/device_detail.html:127
+#: app/templates/device_detail.html:128
 msgid "Port"
 msgstr "端口"
 
-#: app/templates/device_detail.html:127
+#: app/templates/device_detail.html:128
 msgid "Protocol"
 msgstr "协议"
 
-#: app/templates/device_detail.html:127
+#: app/templates/device_detail.html:128
 msgid "Service"
 msgstr "服务"
 
@@ -408,13 +420,17 @@ msgstr "状态"
 msgid "User"
 msgstr "用户"
 
-#: app/templates/devices_list.html:29 app/templates/enforcement_list.html:18
+#: app/templates/devices_list.html:29
+msgid "Random MAC"
+msgstr "随机 MAC"
+
+#: app/templates/devices_list.html:37 app/templates/enforcement_list.html:18
 #, python-format
 msgid "%(n)s open port"
 msgid_plural "%(n)s open ports"
 msgstr[0] "%(n)s 个开放端口"
 
-#: app/templates/devices_list.html:35
+#: app/templates/devices_list.html:42
 msgid "No devices yet — waiting for the first MikroTik discovery cycle."
 msgstr "暂无设备 — 等待 MikroTik 首次发现周期。"
 
