@@ -93,5 +93,16 @@
       <button class="save-btn" type="submit">{{ _('Save') if user else _('Create user') }}</button>
     </div>
   </form>
+
+  {% if user %}
+  <div class="assoc-section">
+    <h3>{{ _('MQTT / Home Assistant') }}</h3>
+    <form method="post" action="/users/{{ user.id }}/mqtt" class="inline-form">
+      <label><input type="checkbox" name="mqtt_enabled" {% if user.mqtt_enabled %}checked{% endif %}>
+      {{ _('Publish this person to Home Assistant via MQTT') }}</label>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
+    </form>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

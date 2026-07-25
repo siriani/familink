@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:13-0300\n"
+"POT-Creation-Date: 2026-07-25 10:35-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -288,91 +288,102 @@ msgstr "Ainda não verificado."
 msgid "Refresh identification"
 msgstr "Atualizar identificação"
 
-#: app/templates/device_detail.html:47 app/templates/devices_list.html:18
-msgid "Group"
-msgstr "Grupo"
+#: app/templates/device_detail.html:47 app/templates/settings.html:26
+#: app/templates/users_form.html:99
+msgid "MQTT / Home Assistant"
+msgstr "MQTT / Home Assistant"
 
-#: app/templates/device_detail.html:51
-msgid "hotspot required"
-msgstr "requer hotspot"
+#: app/templates/device_detail.html:50
+msgid "Publish this device to Home Assistant via MQTT"
+msgstr "Publicar este dispositivo no Home Assistant via MQTT"
 
-#: app/templates/device_detail.html:54 app/templates/device_detail.html:92
-#: app/templates/device_detail.html:100 app/templates/groups_form.html:72
-#: app/templates/settings.html:21 app/templates/users_form.html:93
+#: app/templates/device_detail.html:51 app/templates/device_detail.html:63
+#: app/templates/device_detail.html:101 app/templates/device_detail.html:109
+#: app/templates/groups_form.html:72 app/templates/settings.html:21
+#: app/templates/settings.html:55 app/templates/users_form.html:93
+#: app/templates/users_form.html:103
 msgid "Save"
 msgstr "Salvar"
 
-#: app/templates/device_detail.html:62
+#: app/templates/device_detail.html:56 app/templates/devices_list.html:18
+msgid "Group"
+msgstr "Grupo"
+
+#: app/templates/device_detail.html:60
+msgid "hotspot required"
+msgstr "requer hotspot"
+
+#: app/templates/device_detail.html:71
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr "Isso vai gravar no roteador MikroTik real agora. Continuar?"
 
-#: app/templates/device_detail.html:63
+#: app/templates/device_detail.html:72
 msgid "Apply to MikroTik"
 msgstr "Aplicar no MikroTik"
 
-#: app/templates/device_detail.html:71
+#: app/templates/device_detail.html:80
 msgid "Recent MikroTik apply attempts"
 msgstr "Tentativas recentes de aplicação no MikroTik"
 
-#: app/templates/device_detail.html:76 app/templates/users_form.html:64
+#: app/templates/device_detail.html:85 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/device_detail.html:76
+#: app/templates/device_detail.html:85
 msgid "FAILED"
 msgstr "FALHOU"
 
-#: app/templates/device_detail.html:84
+#: app/templates/device_detail.html:93
 msgid "Owner"
 msgstr "Responsável"
 
-#: app/templates/device_detail.html:87
+#: app/templates/device_detail.html:96
 msgid "— unassigned —"
 msgstr "— sem responsável —"
 
-#: app/templates/device_detail.html:97
+#: app/templates/device_detail.html:106
 msgid "Notes"
 msgstr "Notas"
 
-#: app/templates/device_detail.html:105
+#: app/templates/device_detail.html:114
 msgid "Port scan"
 msgstr "Varredura de portas"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr "Última varredura: %(when)s"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 msgid "Never scanned yet."
 msgstr "Ainda não escaneado."
 
-#: app/templates/device_detail.html:108
+#: app/templates/device_detail.html:117
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr "Novos dispositivos são escaneados automaticamente na primeira vez que são descobertos."
 
-#: app/templates/device_detail.html:111
+#: app/templates/device_detail.html:120
 msgid "no known IP"
 msgstr "sem IP conhecido"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Rescan"
 msgstr "Escanear novamente"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Scan now"
 msgstr "Escanear agora"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Port"
 msgstr "Porta"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Protocol"
 msgstr "Protocolo"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Service"
 msgstr "Serviço"
 
@@ -563,7 +574,7 @@ msgstr " pra enriquecer a página de detalhes de cada dispositivo com um palpite
 msgid "Fingerbank API key"
 msgstr "Chave de API do Fingerbank"
 
-#: app/templates/settings.html:13
+#: app/templates/settings.html:13 app/templates/settings.html:51
 msgid "configured"
 msgstr "configurada"
 
@@ -574,6 +585,37 @@ msgstr "Já existe uma chave configurada. Deixe em branco pra mantê-la, ou cole
 #: app/templates/settings.html:18
 msgid "No key configured yet -- Fingerbank lookups are skipped until one is set."
 msgstr "Nenhuma chave configurada ainda -- as consultas ao Fingerbank ficam desativadas até você definir uma."
+
+#: app/templates/settings.html:27
+msgid ""
+"Optional. Publishes each device or person you enable (see their own page --\n"
+"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
+"      Leave the host blank to disable entirely."
+msgstr "Opcional. Publica cada dispositivo ou pessoa que você habilitar (veja a página de cada um -- procure a caixa de MQTT) como uma entidade do Home Assistant via MQTT Discovery. Deixe o host em branco para desativar completamente."
+
+#: app/templates/settings.html:33
+msgid "Broker host"
+msgstr "Host do broker"
+
+#: app/templates/settings.html:37
+msgid "Broker port"
+msgstr "Porta do broker"
+
+#: app/templates/settings.html:41
+msgid "Topic prefix"
+msgstr "Prefixo do tópico"
+
+#: app/templates/settings.html:45
+msgid "Username (optional)"
+msgstr "Usuário (opcional)"
+
+#: app/templates/settings.html:49
+msgid "Password (optional)"
+msgstr "Senha (opcional)"
+
+#: app/templates/settings.html:54
+msgid "Password field left blank keeps the current one, if any."
+msgstr "Deixar o campo de senha em branco mantém a senha atual, se houver."
 
 #: app/templates/users_form.html:2
 msgid "Edit user"
@@ -671,6 +713,10 @@ msgstr " dos dispositivos dela especifica. Preencha para sobrescrever isso espec
 #: app/templates/users_form.html:93
 msgid "Create user"
 msgstr "Criar pessoa"
+
+#: app/templates/users_form.html:102
+msgid "Publish this person to Home Assistant via MQTT"
+msgstr "Publicar esta pessoa no Home Assistant via MQTT"
 
 #: app/templates/users_list.html:10
 msgid "Quota override"

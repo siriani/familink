@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:13-0300\n"
+"POT-Creation-Date: 2026-07-25 10:35-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -288,91 +288,102 @@ msgstr "Never checked yet."
 msgid "Refresh identification"
 msgstr "Refresh identification"
 
-#: app/templates/device_detail.html:47 app/templates/devices_list.html:18
-msgid "Group"
-msgstr "Group"
+#: app/templates/device_detail.html:47 app/templates/settings.html:26
+#: app/templates/users_form.html:99
+msgid "MQTT / Home Assistant"
+msgstr "MQTT / Home Assistant"
 
-#: app/templates/device_detail.html:51
-msgid "hotspot required"
-msgstr "hotspot required"
+#: app/templates/device_detail.html:50
+msgid "Publish this device to Home Assistant via MQTT"
+msgstr "Publish this device to Home Assistant via MQTT"
 
-#: app/templates/device_detail.html:54 app/templates/device_detail.html:92
-#: app/templates/device_detail.html:100 app/templates/groups_form.html:72
-#: app/templates/settings.html:21 app/templates/users_form.html:93
+#: app/templates/device_detail.html:51 app/templates/device_detail.html:63
+#: app/templates/device_detail.html:101 app/templates/device_detail.html:109
+#: app/templates/groups_form.html:72 app/templates/settings.html:21
+#: app/templates/settings.html:55 app/templates/users_form.html:93
+#: app/templates/users_form.html:103
 msgid "Save"
 msgstr "Save"
 
-#: app/templates/device_detail.html:62
+#: app/templates/device_detail.html:56 app/templates/devices_list.html:18
+msgid "Group"
+msgstr "Group"
+
+#: app/templates/device_detail.html:60
+msgid "hotspot required"
+msgstr "hotspot required"
+
+#: app/templates/device_detail.html:71
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr "This will write to the real MikroTik router right now. Continue?"
 
-#: app/templates/device_detail.html:63
+#: app/templates/device_detail.html:72
 msgid "Apply to MikroTik"
 msgstr "Apply to MikroTik"
 
-#: app/templates/device_detail.html:71
+#: app/templates/device_detail.html:80
 msgid "Recent MikroTik apply attempts"
 msgstr "Recent MikroTik apply attempts"
 
-#: app/templates/device_detail.html:76 app/templates/users_form.html:64
+#: app/templates/device_detail.html:85 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/device_detail.html:76
+#: app/templates/device_detail.html:85
 msgid "FAILED"
 msgstr "FAILED"
 
-#: app/templates/device_detail.html:84
+#: app/templates/device_detail.html:93
 msgid "Owner"
 msgstr "Owner"
 
-#: app/templates/device_detail.html:87
+#: app/templates/device_detail.html:96
 msgid "— unassigned —"
 msgstr "— unassigned —"
 
-#: app/templates/device_detail.html:97
+#: app/templates/device_detail.html:106
 msgid "Notes"
 msgstr "Notes"
 
-#: app/templates/device_detail.html:105
+#: app/templates/device_detail.html:114
 msgid "Port scan"
 msgstr "Port scan"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr "Last scanned: %(when)s"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 msgid "Never scanned yet."
 msgstr "Never scanned yet."
 
-#: app/templates/device_detail.html:108
+#: app/templates/device_detail.html:117
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr "New devices are scanned automatically the first time they're discovered."
 
-#: app/templates/device_detail.html:111
+#: app/templates/device_detail.html:120
 msgid "no known IP"
 msgstr "no known IP"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Rescan"
 msgstr "Rescan"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Scan now"
 msgstr "Scan now"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Port"
 msgstr "Port"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Protocol"
 msgstr "Protocol"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Service"
 msgstr "Service"
 
@@ -576,7 +587,7 @@ msgstr ""
 msgid "Fingerbank API key"
 msgstr "Fingerbank API key"
 
-#: app/templates/settings.html:13
+#: app/templates/settings.html:13 app/templates/settings.html:51
 msgid "configured"
 msgstr "configured"
 
@@ -587,6 +598,40 @@ msgstr "A key is already configured. Leave blank to keep it, or paste a new one 
 #: app/templates/settings.html:18
 msgid "No key configured yet -- Fingerbank lookups are skipped until one is set."
 msgstr "No key configured yet -- Fingerbank lookups are skipped until one is set."
+
+#: app/templates/settings.html:27
+msgid ""
+"Optional. Publishes each device or person you enable (see their own page --\n"
+"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
+"      Leave the host blank to disable entirely."
+msgstr ""
+"Optional. Publishes each device or person you enable (see their own page --\n"
+"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
+"      Leave the host blank to disable entirely."
+
+#: app/templates/settings.html:33
+msgid "Broker host"
+msgstr "Broker host"
+
+#: app/templates/settings.html:37
+msgid "Broker port"
+msgstr "Broker port"
+
+#: app/templates/settings.html:41
+msgid "Topic prefix"
+msgstr "Topic prefix"
+
+#: app/templates/settings.html:45
+msgid "Username (optional)"
+msgstr "Username (optional)"
+
+#: app/templates/settings.html:49
+msgid "Password (optional)"
+msgstr "Password (optional)"
+
+#: app/templates/settings.html:54
+msgid "Password field left blank keeps the current one, if any."
+msgstr "Password field left blank keeps the current one, if any."
 
 #: app/templates/users_form.html:2
 msgid "Edit user"
@@ -684,6 +729,10 @@ msgstr "specifies. Fill in to override it for this person specifically."
 #: app/templates/users_form.html:93
 msgid "Create user"
 msgstr "Create user"
+
+#: app/templates/users_form.html:102
+msgid "Publish this person to Home Assistant via MQTT"
+msgstr "Publish this person to Home Assistant via MQTT"
 
 #: app/templates/users_list.html:10
 msgid "Quota override"

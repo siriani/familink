@@ -44,6 +44,15 @@
   </div>
 
   <div class="assoc-section">
+    <h3>{{ _('MQTT / Home Assistant') }}</h3>
+    <form method="post" action="/devices/{{ device.mac }}/mqtt" class="inline-form">
+      <label><input type="checkbox" name="mqtt_enabled" {% if device.mqtt_enabled %}checked{% endif %}>
+      {{ _('Publish this device to Home Assistant via MQTT') }}</label>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
+    </form>
+  </div>
+
+  <div class="assoc-section">
     <h3>{{ _('Group') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/group" class="inline-form">
       <select name="group_id">

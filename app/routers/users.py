@@ -167,3 +167,11 @@ async def post_reset_today(user_id: int, db: Session = Depends(get_db)):
         db.commit()
 
     return RedirectResponse(f"/users/{user_id}/edit", status_code=303)
+
+
+@router.post("/users/{user_id}/mqtt")
+def post_user_mqtt(user_id: int, mqtt_enabled: str = Form(""), db: Session = Depends(get_db)):
+    user = _get_user_or_404(db, user_id)
+    user.mqtt_enabled = mqtt_enabled == "on"
+    db.commit()
+    return RedirectResponse(f"/users/{user_id}/edit", status_code=303)

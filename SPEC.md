@@ -157,21 +157,53 @@ wants to send their family's device MACs to a third-party service.
 ## MQTT presence publisher / Home Assistant discovery (shipped)
 
 `app/mqtt_publish.py` runs once per discovery cycle, right after devices
-are refreshed. Entirely opt-in — a no-op unless `MQTT_HOST` is set. For
-every device: publishes its online/offline state (retained) to
-`<MQTT_TOPIC_PREFIX>/<object_id>/state`, and — once per device, tracked via
+are refreshed. Opt-in at two levels, revised 25/jul/2026 from the
+original all-or-nothing design:
+
+- **Broker connection** (host/port/user/password/topic prefix) is
+  admin-configured at `/settings`, not `MQTT_*` env vars — same reasoning
+  as the Fingerbank key: a non-technical admin running someone else's
+  install may not have shell access to edit `.env`. No host configured =
+  `publish_all()` is a no-op.
+- **Per device/person**: `device.mqtt_enabled` / `user.mqtt_enabled`
+  (both default false, toggled from that device's/person's own detail
+  page). Originally every device published automatically once
+  `MQTT_HOST` was set — changed because a family's whole device list
+  showing up in someone's Home Assistant without being asked is exactly
+  the kind of silent-by-default behavior familink avoids elsewhere
+  (see the MikroTik-write discipline, enforcement's explicit-click-only
+  design). Only opted-in rows are loaded, published, or tracked.
+
+For every opted-in device: publishes online/offline state (retained) to
+`<prefix>/<object_id>/state`, and — once, tracked via
 `device_mqtt_state.discovery_published_at` so it's never resent — a
 [Home Assistant MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery)
 config (retained) to `homeassistant/binary_sensor/<object_id>/config`,
-`device_class: connectivity`. `object_id` is `familink_<mac_with_underscores>`,
-stored on `device_mqtt_state.object_id`. DB reads/writes go through
-`asyncio.to_thread` (same pattern as `app/sync.py`) rather than mixing sync
-SQLAlchemy calls into the async MQTT client loop directly.
+`device_class: connectivity`. `object_id` is `familink_<mac_with_underscores>`.
+The `device` block's `manufacturer`/`model` now come from Fingerbank
+enrichment (`device.fingerbank_manufacturer`/`fingerbank_device_name`)
+when available, falling back to the port-scanner's `vendor_guess` —
+richer than the original's flat `"familink"` manufacturer. Also added:
+a `connections` field (MAC), an `origin` block (current HA discovery
+schema convention), and an `availability_topic` pointing at
+`<prefix>/bridge/state` — published `"online"` right after connecting,
+set as the client's MQTT Last Will (`"offline"`, retained) so every
+entity correctly shows unavailable in HA if familink itself goes down,
+rather than freezing on its last state forever. Same pattern
+Zigbee2MQTT/similar bridges use.
+
+New in this revision: each opted-in **person** also publishes a
+presence `binary_sensor` (`device_class: presence`), online if any of
+their linked devices is online — `user_mqtt_state` mirrors
+`device_mqtt_state` for tracking. `object_id` is `familink_user_<id>`
+(the numeric id, not the name, so it stays stable if someone's renamed).
 
 Verified live end-to-end against the real EMQX broker (dedicated
 `familink` MQTT user, not reusing Home Assistant's own credential) — a
 retained discovery config and state both landed correctly and matched
-HA's expected schema.
+HA's expected schema. This revision re-verified with a mocked MQTT
+client (real code path, fake transport) rather than the live broker —
+worth a live re-check next time the real broker is reachable.
 
 ## Quota / schedule engine (shipped)
 

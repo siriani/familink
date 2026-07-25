@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:13-0300\n"
+"POT-Creation-Date: 2026-07-25 10:35-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans\n"
@@ -288,91 +288,102 @@ msgstr "尚未检查。"
 msgid "Refresh identification"
 msgstr "刷新识别"
 
-#: app/templates/device_detail.html:47 app/templates/devices_list.html:18
-msgid "Group"
-msgstr "分组"
+#: app/templates/device_detail.html:47 app/templates/settings.html:26
+#: app/templates/users_form.html:99
+msgid "MQTT / Home Assistant"
+msgstr "MQTT / Home Assistant"
 
-#: app/templates/device_detail.html:51
-msgid "hotspot required"
-msgstr "需要热点登录"
+#: app/templates/device_detail.html:50
+msgid "Publish this device to Home Assistant via MQTT"
+msgstr "通过 MQTT 将此设备发布到 Home Assistant"
 
-#: app/templates/device_detail.html:54 app/templates/device_detail.html:92
-#: app/templates/device_detail.html:100 app/templates/groups_form.html:72
-#: app/templates/settings.html:21 app/templates/users_form.html:93
+#: app/templates/device_detail.html:51 app/templates/device_detail.html:63
+#: app/templates/device_detail.html:101 app/templates/device_detail.html:109
+#: app/templates/groups_form.html:72 app/templates/settings.html:21
+#: app/templates/settings.html:55 app/templates/users_form.html:93
+#: app/templates/users_form.html:103
 msgid "Save"
 msgstr "保存"
 
-#: app/templates/device_detail.html:62
+#: app/templates/device_detail.html:56 app/templates/devices_list.html:18
+msgid "Group"
+msgstr "分组"
+
+#: app/templates/device_detail.html:60
+msgid "hotspot required"
+msgstr "需要热点登录"
+
+#: app/templates/device_detail.html:71
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr "这将立即写入真实的 MikroTik 路由器。是否继续?"
 
-#: app/templates/device_detail.html:63
+#: app/templates/device_detail.html:72
 msgid "Apply to MikroTik"
 msgstr "应用到 MikroTik"
 
-#: app/templates/device_detail.html:71
+#: app/templates/device_detail.html:80
 msgid "Recent MikroTik apply attempts"
 msgstr "最近的 MikroTik 应用尝试"
 
-#: app/templates/device_detail.html:76 app/templates/users_form.html:64
+#: app/templates/device_detail.html:85 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/device_detail.html:76
+#: app/templates/device_detail.html:85
 msgid "FAILED"
 msgstr "失败"
 
-#: app/templates/device_detail.html:84
+#: app/templates/device_detail.html:93
 msgid "Owner"
 msgstr "所有者"
 
-#: app/templates/device_detail.html:87
+#: app/templates/device_detail.html:96
 msgid "— unassigned —"
 msgstr "— 未分配 —"
 
-#: app/templates/device_detail.html:97
+#: app/templates/device_detail.html:106
 msgid "Notes"
 msgstr "备注"
 
-#: app/templates/device_detail.html:105
+#: app/templates/device_detail.html:114
 msgid "Port scan"
 msgstr "端口扫描"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr "上次扫描:%(when)s"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:116
 msgid "Never scanned yet."
 msgstr "尚未扫描。"
 
-#: app/templates/device_detail.html:108
+#: app/templates/device_detail.html:117
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr "新设备在首次被发现时会自动扫描。"
 
-#: app/templates/device_detail.html:111
+#: app/templates/device_detail.html:120
 msgid "no known IP"
 msgstr "无已知 IP"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Rescan"
 msgstr "重新扫描"
 
-#: app/templates/device_detail.html:112
+#: app/templates/device_detail.html:121
 msgid "Scan now"
 msgstr "立即扫描"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Port"
 msgstr "端口"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Protocol"
 msgstr "协议"
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:127
 msgid "Service"
 msgstr "服务"
 
@@ -560,7 +571,7 @@ msgstr "（通过 MAC 地址查询）为每个设备的详情页补充制造商/
 msgid "Fingerbank API key"
 msgstr "Fingerbank API 密钥"
 
-#: app/templates/settings.html:13
+#: app/templates/settings.html:13 app/templates/settings.html:51
 msgid "configured"
 msgstr "已配置"
 
@@ -571,6 +582,37 @@ msgstr "已配置密钥。留空则保留当前密钥,粘贴新密钥可替换�
 #: app/templates/settings.html:18
 msgid "No key configured yet -- Fingerbank lookups are skipped until one is set."
 msgstr "尚未配置密钥 -- 在设置密钥之前将跳过 Fingerbank 查询。"
+
+#: app/templates/settings.html:27
+msgid ""
+"Optional. Publishes each device or person you enable (see their own page --\n"
+"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
+"      Leave the host blank to disable entirely."
+msgstr "可选。将你启用的每个设备或用户(在其各自页面上寻找 MQTT 复选框)通过 MQTT Discovery 发布为 Home Assistant 实体。将主机留空可完全禁用此功能。"
+
+#: app/templates/settings.html:33
+msgid "Broker host"
+msgstr "Broker 主机"
+
+#: app/templates/settings.html:37
+msgid "Broker port"
+msgstr "Broker 端口"
+
+#: app/templates/settings.html:41
+msgid "Topic prefix"
+msgstr "主题前缀"
+
+#: app/templates/settings.html:45
+msgid "Username (optional)"
+msgstr "用户名(可选)"
+
+#: app/templates/settings.html:49
+msgid "Password (optional)"
+msgstr "密码(可选)"
+
+#: app/templates/settings.html:54
+msgid "Password field left blank keeps the current one, if any."
+msgstr "密码字段留空将保留当前密码(如果有)。"
 
 #: app/templates/users_form.html:2
 msgid "Edit user"
@@ -668,6 +710,10 @@ msgstr "中设定的值。填写此项可为该人员单独覆盖该设置。"
 #: app/templates/users_form.html:93
 msgid "Create user"
 msgstr "创建用户"
+
+#: app/templates/users_form.html:102
+msgid "Publish this person to Home Assistant via MQTT"
+msgstr "通过 MQTT 将此人发布到 Home Assistant"
 
 #: app/templates/users_list.html:10
 msgid "Quota override"

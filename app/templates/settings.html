@@ -21,5 +21,39 @@
       <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
   </div>
+
+  <div class="assoc-section">
+    <h3>{{ _('MQTT / Home Assistant') }}</h3>
+    <p class="hint">{{ _('Optional. Publishes each device or person you enable (see their own page --
+      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.
+      Leave the host blank to disable entirely.') }}</p>
+    <form method="post" action="/settings">
+      <div class="detail-grid detail-grid-3">
+        <div>
+          <div class="detail-label">{{ _('Broker host') }}</div>
+          <input class="search" type="text" name="mqtt_host" value="{{ mqtt_host }}" placeholder="192.168.1.10">
+        </div>
+        <div>
+          <div class="detail-label">{{ _('Broker port') }}</div>
+          <input class="search" type="text" inputmode="numeric" name="mqtt_port" value="{{ mqtt_port }}">
+        </div>
+        <div>
+          <div class="detail-label">{{ _('Topic prefix') }}</div>
+          <input class="search" type="text" name="mqtt_topic_prefix" value="{{ mqtt_topic_prefix }}">
+        </div>
+        <div>
+          <div class="detail-label">{{ _('Username (optional)') }}</div>
+          <input class="search" type="text" name="mqtt_user" value="{{ mqtt_user }}">
+        </div>
+        <div>
+          <div class="detail-label">{{ _('Password (optional)') }}</div>
+          <input class="search" type="password" name="mqtt_password"
+            placeholder="{{ '•••••••••••••••• (' + _('configured') + ')' if mqtt_password_set else '' }}">
+        </div>
+      </div>
+      <p class="hint">{{ _('Password field left blank keeps the current one, if any.') }}</p>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

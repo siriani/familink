@@ -165,6 +165,14 @@ async def post_fingerbank_device(mac: str, db: Session = Depends(get_db)):
     return RedirectResponse(f"/devices/{mac}", status_code=303)
 
 
+@router.post("/devices/{mac}/mqtt")
+def post_device_mqtt(mac: str, mqtt_enabled: str = Form(""), db: Session = Depends(get_db)):
+    device = _get_device_or_404(db, mac)
+    device.mqtt_enabled = mqtt_enabled == "on"
+    db.commit()
+    return RedirectResponse(f"/devices/{mac}", status_code=303)
+
+
 @router.post("/devices/{mac}/apply-mikrotik")
 async def post_apply_mikrotik(mac: str, db: Session = Depends(get_db)):
     device = _get_device_or_404(db, mac)
