@@ -186,6 +186,7 @@ async def post_device_identification(
     db: Session = Depends(get_db),
 ):
     device = _get_device_or_404(db, mac)
+    had_hostname_override = device.hostname_override is not None
     device.hostname_override = hostname_override.strip() or None
     device.type_override = type_override.strip() or None
     device.device_name_override = device_name_override.strip() or None
@@ -195,10 +196,21 @@ async def post_device_identification(
     # comment field) -- Tipo/Dispositivo are familink-only corrections,
     # there's nothing on MikroTik to push them to. Best-effort: a failed
     # push doesn't undo the save above, just logs a warning.
-    if device.hostname_override:
+    #
+    # Clearing the override also clears the lease comment (not just
+    # skipping the push) -- app/sync.py's merge_mikrotik_views falls back
+    # to the lease's `comment` field as `hostname` when DHCP reports no
+    # host-name (found live 25/jul/2026: leaving our own override text
+    # sitting in the lease comment fed it right back in as the "auto-
+    # detected" hostname next cycle, so clearing the override never
+    # actually reverted the displayed value).
+    new_lease_comment = device.hostname_override if device.hostname_override else (
+        "" if had_hostname_override else None
+    )
+    if new_lease_comment is not None:
         client = get_mikrotik_client()
         try:
-            result = await push_hostname_to_lease(client, device.mac, device.hostname_override)
+            result = await push_hostname_to_lease(client, device.mac, new_lease_comment)
         except Exception:
             logger.warning(
                 "failed to push hostname override to MikroTik lease for %s", mac, exc_info=True
