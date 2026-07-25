@@ -20,6 +20,17 @@ rather than silently freezing on its last-known state forever -- the
 usual pattern for an MQTT bridge/integration, same idea as Zigbee2MQTT's
 bridge/state topic.
 
+Turning mqtt_enabled off does NOT make an entity disappear from HA by
+itself -- MQTT discovery configs are retained messages, so they sit on
+the broker (and HA keeps showing the entity, frozen on its last state)
+until something explicitly clears them. Every cycle also checks for
+device_mqtt_state/user_mqtt_state rows whose device/person is no longer
+enabled and publishes an empty retained payload to their discovery
+config topic (the standard MQTT-discovery way to remove an entity),
+then deletes the state row -- so disabling the checkbox is enough on
+its own, no separate cleanup step, and re-enabling later republishes a
+fresh discovery config rather than assuming the old one still applies.
+
 DB access is split from the MQTT I/O (same asyncio.to_thread pattern as
 app/sync.py) rather than mixing sync SQLAlchemy calls into the async
 publish loop directly.
@@ -87,7 +98,12 @@ class _UserRow:
     discovery_published: bool
 
 
-def _load_rows() -> tuple[list[_DeviceRow], list[_UserRow]]:
+def _load_rows() -> tuple[list[_DeviceRow], list[_UserRow], list[tuple[int, str]], list[tuple[int, str]]]:
+    """Returns (devices, users, stale_devices, stale_users) -- the last
+    two are (id, object_id) pairs for rows that have a discovery config
+    published on the broker (a device_mqtt_state/user_mqtt_state row)
+    but are no longer mqtt_enabled, so publish_all() can clear them.
+    """
     from sqlalchemy import select
     from sqlalchemy.orm import selectinload
 
@@ -110,6 +126,12 @@ def _load_rows() -> tuple[list[_DeviceRow], list[_UserRow]]:
             )
             for d in session.scalars(select(Device).where(Device.mqtt_enabled.is_(True)))
         ]
+        enabled_device_ids = {row.id for row in devices}
+        stale_devices = [
+            (device_id, state.object_id)
+            for device_id, state in device_states.items()
+            if device_id not in enabled_device_ids and state.object_id
+        ]
 
         user_states = {s.user_id: s for s in session.scalars(select(UserMqttState))}
         users = [
@@ -124,7 +146,13 @@ def _load_rows() -> tuple[list[_DeviceRow], list[_UserRow]]:
                 select(User).where(User.mqtt_enabled.is_(True)).options(selectinload(User.devices))
             )
         ]
-    return devices, users
+        enabled_user_ids = {row.id for row in users}
+        stale_users = [
+            (user_id, state.object_id)
+            for user_id, state in user_states.items()
+            if user_id not in enabled_user_ids and state.object_id
+        ]
+    return devices, users, stale_devices, stale_users
 
 
 def _save_published(
@@ -164,6 +192,26 @@ def _save_published(
                 state.discovery_published_at = now
             state.last_state_published_at = now
 
+        session.commit()
+
+
+def _clear_stale(cleared_device_ids: set[int], cleared_user_ids: set[int]) -> None:
+    from sqlalchemy import delete
+
+    from app.db import session_scope
+    from app.models import DeviceMqttState, UserMqttState
+
+    if not cleared_device_ids and not cleared_user_ids:
+        return
+    with session_scope() as session:
+        if cleared_device_ids:
+            session.execute(
+                delete(DeviceMqttState).where(DeviceMqttState.device_id.in_(cleared_device_ids))
+            )
+        if cleared_user_ids:
+            session.execute(
+                delete(UserMqttState).where(UserMqttState.user_id.in_(cleared_user_ids))
+            )
         session.commit()
 
 
@@ -222,8 +270,8 @@ async def publish_all() -> None:
         logger.error("MQTT host is configured but aiomqtt isn't installed — check the Dockerfile")
         return
 
-    devices, users = await asyncio.to_thread(_load_rows)
-    if not devices and not users:
+    devices, users, stale_devices, stale_users = await asyncio.to_thread(_load_rows)
+    if not devices and not users and not stale_devices and not stale_users:
         return
 
     availability_topic = f"{config.topic_prefix}/{_AVAILABILITY_SUFFIX}"
@@ -232,6 +280,8 @@ async def publish_all() -> None:
     published_device_state: dict[int, str] = {}
     published_user_discovery: set[int] = set()
     published_user_state: dict[int, str] = {}
+    cleared_device_ids: set[int] = set()
+    cleared_user_ids: set[int] = set()
     try:
         async with aiomqtt.Client(
             hostname=config.host,
@@ -267,6 +317,20 @@ async def publish_all() -> None:
                     state_topic, "online" if row.is_online else "offline", retain=True
                 )
                 published_user_state[row.id] = object_id
+
+            # No-longer-enabled rows that still have a discovery config
+            # sitting on the broker -- an empty retained payload is the
+            # standard MQTT-discovery way to tell HA to remove an entity.
+            for device_id, object_id in stale_devices:
+                await client.publish(
+                    f"homeassistant/binary_sensor/{object_id}/config", "", retain=True
+                )
+                cleared_device_ids.add(device_id)
+            for user_id, object_id in stale_users:
+                await client.publish(
+                    f"homeassistant/binary_sensor/{object_id}/config", "", retain=True
+                )
+                cleared_user_ids.add(user_id)
     except Exception:
         logger.exception("mqtt publish cycle failed")
         # Still persist whatever succeeded before the failure -- partial
@@ -286,4 +350,11 @@ async def publish_all() -> None:
             len(published_device_discovery),
             len(published_user_state),
             len(published_user_discovery),
+        )
+    if cleared_device_ids or cleared_user_ids:
+        await asyncio.to_thread(_clear_stale, cleared_device_ids, cleared_user_ids)
+        logger.info(
+            "mqtt: removed %d stale device(s), %d stale user(s) from Home Assistant",
+            len(cleared_device_ids),
+            len(cleared_user_ids),
         )
