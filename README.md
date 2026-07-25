@@ -50,14 +50,42 @@ your router (DHCP leases, hotspot sessions) should start appearing.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install fastapi "uvicorn[standard]" httpx sqlalchemy alembic pymysql jinja2 python-multipart
+pip install fastapi "uvicorn[standard]" httpx sqlalchemy alembic pymysql jinja2 python-multipart babel
 export MIKROTIK_PASSWORD=... DB_PASSWORD=... DB_HOST=... DB_USER=... DB_NAME=... ADMIN_PASSWORD=...
 alembic upgrade head
+pybabel compile -d app/locales -D familink
 uvicorn app.main:app --reload --port 8190
 ```
 
 New model change? `alembic revision --autogenerate -m "describe it"`, review
 the generated file, commit it alongside the model change.
+
+## Translations
+
+The admin panel and the `/captive` self-registration page are translated
+into pt-BR, English, Spanish, German and Simplified Chinese via gettext —
+switch languages with the flags in the top bar, or `/captive` picks up your
+browser's language automatically. Source strings live in
+`app/locales/familink.pot`; each language's translations are in
+`app/locales/<locale>/LC_MESSAGES/familink.po`.
+
+Contributing a translation or fixing one doesn't require touching any
+Python or template code — just edit the relevant `.po` file (any text
+editor, or a tool like [Poedit](https://poedit.net/)) and open a PR. If a
+template changes and adds/removes translatable text, regenerate the
+catalogs:
+
+```bash
+pybabel extract -F babel.cfg -o app/locales/familink.pot .
+pybabel update -i app/locales/familink.pot -d app/locales -D familink
+```
+
+`pybabel update` merges the new/changed strings into every existing `.po`
+file without discarding translations that still apply. After editing a
+`.po` file, run `pybabel compile -d app/locales -D familink` and restart
+(or `--reload` will pick it up) to see the change — an untranslated string
+just falls back to its English source, so a half-finished translation never
+breaks the app.
 
 ## License
 

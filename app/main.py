@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import quota, sync
 from app.auth import BasicAuthMiddleware, warn_if_auth_disabled
+from app.i18n import LocaleMiddleware, warn_if_translations_missing
 from app.routers import captive, devices, enforcement, groups, health, users
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -21,6 +22,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     warn_if_auth_disabled()
+    warn_if_translations_missing()
     discovery_task = asyncio.create_task(sync.discovery_loop())
     quota_task = asyncio.create_task(quota.nightly_reset_loop())
     yield
@@ -30,6 +32,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="familink", lifespan=lifespan)
 app.add_middleware(BasicAuthMiddleware)
+# Added AFTER BasicAuthMiddleware -- Starlette wraps later-added middleware
+# outermost, so locale resolves (and /captive's Accept-Language detection
+# runs) even on requests that end up 401'd. See app/i18n.py.
+app.add_middleware(LocaleMiddleware)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(devices.router)
 app.include_router(groups.router)

@@ -26,23 +26,51 @@ PORTS = (
 
 SCAN_TIMEOUT_S = 30.0
 
-# First (ports, label) whose intersection with the open-port set is
-# non-empty wins -- order matters, most specific first.
+# First (ports, key) whose intersection with the open-port set is
+# non-empty wins -- order matters, most specific first. `device.vendor_guess`
+# stores the KEY (stable, language-invariant), never the label -- the
+# label is looked up + translated at display time via TYPE_LABEL_MSGIDS
+# (see app/routers/devices.py). This split exists because vendor_guess is
+# a persisted current-state field (unlike e.g. EnforcementLog.detail, an
+# audit trail that's an explicit i18n non-goal) -- storing literal English
+# text here would make it impossible to re-translate existing rows without
+# a migration (see migrations/versions/0005_vendor_guess_keys.py, which
+# did exactly that migration once, the last time this was literal text).
 _TYPE_HINTS: list[tuple[set[int], str]] = [
-    ({34567}, "DVR/NVR (XM/Xiongmai-style)"),
-    ({37777}, "DVR/NVR (Dahua-compatible)"),
-    ({8899}, "Camera (ONVIF)"),
-    ({554}, "Camera/streaming (RTSP)"),
-    ({9100}, "Printer (JetDirect)"),
-    ({631}, "Printer (IPP)"),
-    ({8123}, "Home Assistant"),
-    ({1883}, "MQTT broker"),
-    ({3306}, "MySQL/MariaDB"),
-    ({5432}, "PostgreSQL"),
-    ({5900}, "VNC"),
-    ({22}, "Linux/SSH host"),
-    ({80, 443, 8080, 8081, 8000, 8443, 8880}, "Web device"),
+    ({34567}, "dvr_nvr_xm"),
+    ({37777}, "dvr_nvr_dahua"),
+    ({8899}, "camera_onvif"),
+    ({554}, "camera_rtsp"),
+    ({9100}, "printer_jetdirect"),
+    ({631}, "printer_ipp"),
+    ({8123}, "home_assistant"),
+    ({1883}, "mqtt_broker"),
+    ({3306}, "mysql_mariadb"),
+    ({5432}, "postgresql"),
+    ({5900}, "vnc"),
+    ({22}, "linux_ssh_host"),
+    ({80, 443, 8080, 8081, 8000, 8443, 8880}, "web_device"),
 ]
+
+# pybabel extract only finds literal string arguments, not variables --
+# these msgids get discovered via app/enforcement.py's _extraction_hints()
+# stub instead (kept there, next to pending_action_label's equivalent
+# extraction hint, rather than duplicated here).
+TYPE_LABEL_MSGIDS: dict[str, str] = {
+    "dvr_nvr_xm": "DVR/NVR (XM/Xiongmai-style)",
+    "dvr_nvr_dahua": "DVR/NVR (Dahua-compatible)",
+    "camera_onvif": "Camera (ONVIF)",
+    "camera_rtsp": "Camera/streaming (RTSP)",
+    "printer_jetdirect": "Printer (JetDirect)",
+    "printer_ipp": "Printer (IPP)",
+    "home_assistant": "Home Assistant",
+    "mqtt_broker": "MQTT broker",
+    "mysql_mariadb": "MySQL/MariaDB",
+    "postgresql": "PostgreSQL",
+    "vnc": "VNC",
+    "linux_ssh_host": "Linux/SSH host",
+    "web_device": "Web device",
+}
 
 # Only ports with a browser-openable standard scheme get a clickable link
 # on the device detail page (app/templating.py registers this as the
@@ -94,9 +122,12 @@ def _parse_greppable(text: str) -> list[tuple[int, str]]:
 
 
 def guess_type(open_ports: set[int]) -> str | None:
-    for ports, label in _TYPE_HINTS:
+    """Returns a stable key into TYPE_LABEL_MSGIDS (e.g. "camera_onvif"),
+    not a display label -- translate at render time, see
+    app/routers/devices.py."""
+    for ports, key in _TYPE_HINTS:
         if ports & open_ports:
-            return label
+            return key
     return None
 
 

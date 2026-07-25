@@ -5,6 +5,10 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#
 .nav{display:flex;gap:6px}
 .nav-btn{padding:7px 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;transition:background .2s}
 .nav-btn:hover{background:rgba(255,255,255,.2)}
+.lang-switcher{display:flex;gap:4px}
+.lang-switcher a{padding:5px 8px;border-radius:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);text-decoration:none;transition:background .2s,color .2s}
+.lang-switcher a:hover{background:rgba(255,255,255,.15);color:#fff}
+.lang-switcher a.active{background:rgba(255,255,255,.2);color:#fff}
 .content{padding:20px;max-width:1100px;margin:0 auto}
 .topbar2{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
 .search{flex:1;min-width:200px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none}

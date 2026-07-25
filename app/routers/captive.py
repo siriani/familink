@@ -27,6 +27,7 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.enforcement import desired_binding_state
+from app.i18n import get_translations
 from app.mikrotik import MikroTikClient
 from app.mikrotik_binding import apply_binding_state
 from app.models import Device, EnforcementLog, User
@@ -132,6 +133,7 @@ async def post_captive(
             {"state": "connected", "user": device.user, "continue_url": continue_url},
         )
 
+    t = get_translations(request.state.locale)
     if existing_user_id:
         user = db.get(User, int(existing_user_id))
         if user is None:
@@ -139,7 +141,12 @@ async def post_captive(
             return templates.TemplateResponse(
                 request,
                 "captive.html",
-                {"state": "identify", "users": users, "continue_url": continue_url, "error": "Pessoa não encontrada."},
+                {
+                    "state": "identify",
+                    "users": users,
+                    "continue_url": continue_url,
+                    "error": t.gettext("Person not found."),
+                },
             )
     else:
         if not name.strip():
@@ -147,7 +154,12 @@ async def post_captive(
             return templates.TemplateResponse(
                 request,
                 "captive.html",
-                {"state": "identify", "users": users, "continue_url": continue_url, "error": "Informe um nome."},
+                {
+                    "state": "identify",
+                    "users": users,
+                    "continue_url": continue_url,
+                    "error": t.gettext("Please enter a name."),
+                },
             )
         birthdate_val: date | None = None
         if birthdate.strip():

@@ -69,3 +69,39 @@ _LABELS: dict[PendingAction, str] = {
 
 def pending_action_label(action: PendingAction) -> str:
     return _LABELS[action]
+
+
+def _extraction_hints() -> None:  # pragma: no cover
+    """Never called. `pybabel extract` only finds literal string
+    arguments, not variables -- pending_action_label() and
+    app/portscan.py's TYPE_LABEL_MSGIDS both return one of a small fixed
+    set of strings computed at runtime, so extraction can't find those
+    msgids by scanning the actual call sites. This function exists purely
+    so the literal `_("...")` calls below get discovered; the real
+    translation happens where the *variable* is used
+    (app/routers/devices.py, app/routers/enforcement.py)."""
+    def _(s: str) -> str:
+        return s
+
+    _("MikroTik in sync")
+    _("MikroTik needs: hotspot binding will be created")
+    _("MikroTik needs: hotspot binding will be removed")
+
+    # app/portscan.py's TYPE_LABEL_MSGIDS values, spelled out as literals
+    # (not looped from the dict) because pybabel's scanner only finds
+    # literal string arguments -- a loop variable would be invisible to
+    # extraction. Keep this list in sync with TYPE_LABEL_MSGIDS by hand;
+    # a mismatch just means a string doesn't get translated, not a crash.
+    _("DVR/NVR (XM/Xiongmai-style)")
+    _("DVR/NVR (Dahua-compatible)")
+    _("Camera (ONVIF)")
+    _("Camera/streaming (RTSP)")
+    _("Printer (JetDirect)")
+    _("Printer (IPP)")
+    _("Home Assistant")
+    _("MQTT broker")
+    _("MySQL/MariaDB")
+    _("PostgreSQL")
+    _("VNC")
+    _("Linux/SSH host")
+    _("Web device")

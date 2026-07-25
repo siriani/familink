@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
+from app.i18n import get_translations
 from app.models import Device
 from app.templating import templates
 
@@ -21,8 +22,9 @@ router = APIRouter()
 @router.get("/enforcement", response_class=HTMLResponse)
 def page_enforcement(request: Request, db: Session = Depends(get_db)):
     devices = list(db.scalars(select(Device).options(selectinload(Device.scan_results))))
+    t = get_translations(request.state.locale)
     pending = [
-        {"device": d, "action": a, "label": pending_action_label(a)}
+        {"device": d, "action": a, "label": t.gettext(pending_action_label(a))}
         for d in devices
         if (a := pending_action(d)) != "none"
     ]

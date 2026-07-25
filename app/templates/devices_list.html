@@ -1,35 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Devices — familink{% endblock %}
+{% block title %}{{ _('Devices') }} — familink{% endblock %}
 {% block content %}
 <form class="topbar2" method="get" action="/devices">
-  <input class="search" type="text" name="q" value="{{ q }}" placeholder="Search by hostname, IP or MAC...">
+  <input class="search" type="text" name="q" value="{{ q }}" placeholder="{{ _('Search by hostname, IP or MAC...') }}">
   <select name="group_id" onchange="this.form.submit()">
-    <option value="">All groups</option>
+    <option value="">{{ _('All groups') }}</option>
     {% for g in groups %}
     <option value="{{ g.id }}" {% if group_id == g.id %}selected{% endif %}>{{ g.name }}</option>
     {% endfor %}
   </select>
-  <button class="rbtn" type="submit">Filter</button>
+  <button class="rbtn" type="submit">{{ _('Filter') }}</button>
 </form>
 
 <div class="tcard">
 <table>
   <thead>
-    <tr><th>Status</th><th>Hostname</th><th>IP</th><th>MAC</th><th>Group</th><th>User</th><th>Last seen</th></tr>
+    <tr><th>{{ _('Status') }}</th><th>{{ _('Hostname') }}</th><th>{{ _('IP') }}</th><th>{{ _('MAC') }}</th><th>{{ _('Group') }}</th><th>{{ _('User') }}</th><th>{{ _('Last seen') }}</th></tr>
   </thead>
   <tbody>
     {% for d in devices %}
     <tr class="clickable" onclick="location.href='/devices/{{ d.mac }}'">
-      <td><span class="dot {{ 'on' if d.is_online else 'off' }}"></span>{{ 'Online' if d.is_online else 'Offline' }}</td>
+      <td><span class="dot {{ 'on' if d.is_online else 'off' }}"></span>{{ _('Online') if d.is_online else _('Offline') }}</td>
       <td><strong>{{ d.hostname or '—' }}</strong></td>
-      <td class="mono">{{ d.current_ip or '—' }}{% if d.scan_results %} <span class="port-badge" title="{{ d.scan_results|length }} open port(s)">●{{ d.scan_results|length }}</span>{% endif %}</td>
+      <td class="mono">{{ d.current_ip or '—' }}{% if d.scan_results %} <span class="port-badge" title="{{ ngettext('%(n)s open port', '%(n)s open ports', d.scan_results|length) % {'n': d.scan_results|length} }}">●{{ d.scan_results|length }}</span>{% endif %}</td>
       <td class="mono small">{{ d.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if d.group.hotspot_required else 'b-free' }}">{{ d.group.name }}</span></td>
       <td>{{ d.user.name if d.user else '—' }}</td>
       <td class="small">{{ d.last_seen | localtime }}</td>
     </tr>
     {% else %}
-    <tr><td colspan="7" class="empty">No devices yet — waiting for the first MikroTik discovery cycle.</td></tr>
+    <tr><td colspan="7" class="empty">{{ _('No devices yet — waiting for the first MikroTik discovery cycle.') }}</td></tr>
     {% endfor %}
   </tbody>
 </table>

@@ -1,0 +1,580 @@
+# German translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-07-25 06:54-0300\n"
+"PO-Revision-Date: 2026-07-25 06:54-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app/enforcement.py:86
+msgid "MikroTik in sync"
+msgstr "MikroTik synchron"
+
+#: app/enforcement.py:87
+msgid "MikroTik needs: hotspot binding will be created"
+msgstr "MikroTik erforderlich: Hotspot-Binding wird erstellt"
+
+#: app/enforcement.py:88
+msgid "MikroTik needs: hotspot binding will be removed"
+msgstr "MikroTik erforderlich: Hotspot-Binding wird entfernt"
+
+#: app/enforcement.py:95
+msgid "DVR/NVR (XM/Xiongmai-style)"
+msgstr "DVR/NVR (XM/Xiongmai-Stil)"
+
+#: app/enforcement.py:96
+msgid "DVR/NVR (Dahua-compatible)"
+msgstr "DVR/NVR (Dahua-kompatibel)"
+
+#: app/enforcement.py:97
+msgid "Camera (ONVIF)"
+msgstr "Kamera (ONVIF)"
+
+#: app/enforcement.py:98
+msgid "Camera/streaming (RTSP)"
+msgstr "Kamera/Streaming (RTSP)"
+
+#: app/enforcement.py:99
+msgid "Printer (JetDirect)"
+msgstr "Drucker (JetDirect)"
+
+#: app/enforcement.py:100
+msgid "Printer (IPP)"
+msgstr "Drucker (IPP)"
+
+#: app/enforcement.py:101
+msgid "Home Assistant"
+msgstr "Home Assistant"
+
+#: app/enforcement.py:102
+msgid "MQTT broker"
+msgstr "MQTT-Broker"
+
+#: app/enforcement.py:103
+msgid "MySQL/MariaDB"
+msgstr "MySQL/MariaDB"
+
+#: app/enforcement.py:104
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: app/enforcement.py:105
+msgid "VNC"
+msgstr "VNC"
+
+#: app/enforcement.py:106
+msgid "Linux/SSH host"
+msgstr "Linux/SSH-Host"
+
+#: app/enforcement.py:107
+msgid "Web device"
+msgstr "Webgerät"
+
+#: app/routers/captive.py:148
+msgid "Person not found."
+msgstr "Person nicht gefunden."
+
+#: app/routers/captive.py:161
+msgid "Please enter a name."
+msgstr "Bitte einen Namen eingeben."
+
+#: app/templates/base.html:13 app/templates/devices_list.html:2
+#: app/templates/groups_list.html:10 app/templates/users_list.html:10
+msgid "Devices"
+msgstr "Geräte"
+
+#: app/templates/base.html:14 app/templates/groups_list.html:2
+msgid "Groups"
+msgstr "Gruppen"
+
+#: app/templates/base.html:15 app/templates/users_list.html:2
+msgid "Users"
+msgstr "Personen"
+
+#: app/templates/base.html:16 app/templates/enforcement_list.html:2
+msgid "Enforcement"
+msgstr "Durchsetzung"
+
+#: app/templates/captive.html:7
+msgid "Connect to the network"
+msgstr "Mit dem Netzwerk verbinden"
+
+#: app/templates/captive.html:34
+msgid "Identifying your device…"
+msgstr "Dein Gerät wird identifiziert …"
+
+#: app/templates/captive.html:35
+msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
+msgstr "Wir haben dich im Netzwerk noch nicht gefunden. Warte ein paar Sekunden und lade die Seite neu."
+
+#: app/templates/captive.html:38
+#, python-format
+msgid "Connected as %(name)s"
+msgstr "Verbunden als %(name)s"
+
+#: app/templates/captive.html:39
+msgid "You are already identified on this network."
+msgstr "Du bist in diesem Netzwerk bereits identifiziert."
+
+#: app/templates/captive.html:41
+msgid "Continue browsing →"
+msgstr "Weiter surfen →"
+
+#: app/templates/captive.html:45
+msgid "Who are you?"
+msgstr "Wer bist du?"
+
+#: app/templates/captive.html:49
+msgid "I already have an account"
+msgstr "Ich habe bereits ein Konto"
+
+#: app/templates/captive.html:59
+msgid "Create account"
+msgstr "Konto erstellen"
+
+#: app/templates/captive.html:62 app/templates/groups_form.html:12
+#: app/templates/groups_list.html:10 app/templates/users_form.html:12
+#: app/templates/users_list.html:10
+msgid "Name"
+msgstr "Name"
+
+#: app/templates/captive.html:64
+msgid "Email (optional)"
+msgstr "E-Mail (optional)"
+
+#: app/templates/captive.html:66
+msgid "Birthdate (optional)"
+msgstr "Geburtsdatum (optional)"
+
+#: app/templates/captive.html:68
+msgid "Enter"
+msgstr "Eintreten"
+
+#: app/templates/device_detail.html:4 app/templates/groups_form.html:4
+#: app/templates/users_form.html:4
+msgid "Back"
+msgstr "Zurück"
+
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+msgid "Online"
+msgstr "Online"
+
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+msgid "Offline"
+msgstr "Offline"
+
+#: app/templates/device_detail.html:12 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "MAC"
+msgstr "MAC"
+
+#: app/templates/device_detail.html:13 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "IP"
+msgstr "IP"
+
+#: app/templates/device_detail.html:14
+msgid "First seen"
+msgstr "Erstmals gesehen"
+
+#: app/templates/device_detail.html:15 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "Last seen"
+msgstr "Zuletzt gesehen"
+
+#: app/templates/device_detail.html:16
+msgid "MikroTik ip-binding"
+msgstr "MikroTik-IP-Binding"
+
+#: app/templates/device_detail.html:16
+msgid "bound, bypassed"
+msgstr "gebunden, mit Bypass"
+
+#: app/templates/device_detail.html:16
+msgid "bound, not bypassed"
+msgstr "gebunden, ohne Bypass"
+
+#: app/templates/device_detail.html:16
+msgid "no binding"
+msgstr "kein Binding"
+
+#: app/templates/device_detail.html:17
+msgid "Guessed type"
+msgstr "Vermuteter Typ"
+
+#: app/templates/device_detail.html:21 app/templates/devices_list.html:18
+msgid "Group"
+msgstr "Gruppe"
+
+#: app/templates/device_detail.html:25
+msgid "hotspot required"
+msgstr "Hotspot erforderlich"
+
+#: app/templates/device_detail.html:28 app/templates/device_detail.html:66
+#: app/templates/device_detail.html:74 app/templates/groups_form.html:72
+#: app/templates/users_form.html:82
+msgid "Save"
+msgstr "Speichern"
+
+#: app/templates/device_detail.html:36
+msgid "This will write to the real MikroTik router right now. Continue?"
+msgstr "Dies schreibt jetzt sofort auf den echten MikroTik-Router. Fortfahren?"
+
+#: app/templates/device_detail.html:37
+msgid "Apply to MikroTik"
+msgstr "Auf MikroTik anwenden"
+
+#: app/templates/device_detail.html:45
+msgid "Recent MikroTik apply attempts"
+msgstr "Letzte MikroTik-Anwendungsversuche"
+
+#: app/templates/device_detail.html:50 app/templates/users_form.html:53
+msgctxt "log_result"
+msgid "OK"
+msgstr "OK"
+
+#: app/templates/device_detail.html:50
+msgid "FAILED"
+msgstr "FEHLGESCHLAGEN"
+
+#: app/templates/device_detail.html:58
+msgid "Owner"
+msgstr "Besitzer"
+
+#: app/templates/device_detail.html:61
+msgid "— unassigned —"
+msgstr "— nicht zugewiesen —"
+
+#: app/templates/device_detail.html:71
+msgid "Notes"
+msgstr "Notizen"
+
+#: app/templates/device_detail.html:79
+msgid "Port scan"
+msgstr "Portscan"
+
+#: app/templates/device_detail.html:81
+#, python-format
+msgid "Last scanned: %(when)s"
+msgstr "Zuletzt gescannt: %(when)s"
+
+#: app/templates/device_detail.html:81
+msgid "Never scanned yet."
+msgstr "Noch nicht gescannt."
+
+#: app/templates/device_detail.html:82
+msgid "New devices are scanned automatically the first time they're discovered."
+msgstr "Neue Geräte werden automatisch gescannt, sobald sie erstmals erkannt werden."
+
+#: app/templates/device_detail.html:85
+msgid "no known IP"
+msgstr "keine bekannte IP"
+
+#: app/templates/device_detail.html:86
+msgid "Rescan"
+msgstr "Erneut scannen"
+
+#: app/templates/device_detail.html:86
+msgid "Scan now"
+msgstr "Jetzt scannen"
+
+#: app/templates/device_detail.html:92
+msgid "Port"
+msgstr "Port"
+
+#: app/templates/device_detail.html:92
+msgid "Protocol"
+msgstr "Protokoll"
+
+#: app/templates/device_detail.html:92
+msgid "Service"
+msgstr "Dienst"
+
+#: app/templates/devices_list.html:5
+msgid "Search by hostname, IP or MAC..."
+msgstr "Suche nach Hostname, IP oder MAC..."
+
+#: app/templates/devices_list.html:7
+msgid "All groups"
+msgstr "Alle Gruppen"
+
+#: app/templates/devices_list.html:12
+msgid "Filter"
+msgstr "Filtern"
+
+#: app/templates/devices_list.html:18 app/templates/users_form.html:31
+#: app/templates/users_list.html:10
+msgid "Status"
+msgstr "Status"
+
+#: app/templates/devices_list.html:18
+msgid "Hostname"
+msgstr "Hostname"
+
+#: app/templates/devices_list.html:18
+msgid "User"
+msgstr "Person"
+
+#: app/templates/devices_list.html:25 app/templates/enforcement_list.html:15
+#, python-format
+msgid "%(n)s open port"
+msgid_plural "%(n)s open ports"
+msgstr[0] "%(n)s offener Port"
+msgstr[1] "%(n)s offene Ports"
+
+#: app/templates/devices_list.html:32
+msgid "No devices yet — waiting for the first MikroTik discovery cycle."
+msgstr "Noch keine Geräte — warte auf den ersten MikroTik-Erkennungszyklus."
+
+#: app/templates/enforcement_list.html:4
+#, python-format
+msgid "%(n)s device tracked."
+msgid_plural "%(n)s devices tracked."
+msgstr[0] "%(n)s Gerät erfasst."
+msgstr[1] "%(n)s Geräte erfasst."
+
+#: app/templates/enforcement_list.html:5
+#, python-format
+msgid "%(n)s out of sync with MikroTik."
+msgid_plural "%(n)s out of sync with MikroTik."
+msgstr[0] "%(n)s nicht synchron mit MikroTik."
+msgstr[1] "%(n)s nicht synchron mit MikroTik."
+
+#: app/templates/enforcement_list.html:6
+msgid "No bulk apply on purpose — open a device to review and apply it individually."
+msgstr "Absichtlich keine Sammelanwendung — öffne ein Gerät, um es einzeln zu prüfen und anzuwenden."
+
+#: app/templates/enforcement_list.html:10
+msgid "Device"
+msgstr "Gerät"
+
+#: app/templates/enforcement_list.html:10
+msgid "Current group"
+msgstr "Aktuelle Gruppe"
+
+#: app/templates/enforcement_list.html:10
+msgid "What would change"
+msgstr "Was sich ändern würde"
+
+#: app/templates/enforcement_list.html:22
+msgid "Nothing pending — every device's group matches what's enforced on MikroTik."
+msgstr "Nichts ausstehend — die Gruppe jedes Geräts stimmt mit dem überein, was auf MikroTik durchgesetzt wird."
+
+#: app/templates/groups_form.html:2
+msgid "Edit group"
+msgstr "Gruppe bearbeiten"
+
+#: app/templates/groups_form.html:2 app/templates/groups_list.html:6
+msgid "New group"
+msgstr "Neue Gruppe"
+
+#: app/templates/groups_form.html:9 app/templates/users_form.html:9
+msgid "Basics"
+msgstr "Grundlagen"
+
+#: app/templates/groups_form.html:16
+msgid "Description"
+msgstr "Beschreibung"
+
+#: app/templates/groups_form.html:21
+msgid "Requires MikroTik hotspot login"
+msgstr "Erfordert MikroTik-Hotspot-Anmeldung"
+
+#: app/templates/groups_form.html:27
+msgid "Quota (independent of \"requires hotspot login\" — no login needed)"
+msgstr "Kontingent (unabhängig von „Hotspot-Anmeldung erforderlich\" — kein Login nötig)"
+
+#: app/templates/groups_form.html:28
+msgid ""
+"Hours per day. familink tracks each person's online time\n"
+"        itself and blocks their devices directly on MikroTik once they hit the limit — leave blank for\n"
+"        no quota. A person's own override (set on their"
+msgstr "Stunden pro Tag. familink erfasst die Online-Zeit jeder Person selbst und sperrt ihre Geräte direkt auf MikroTik, sobald das Limit erreicht ist — leer lassen für kein Kontingent. Die eigene Einstellung einer Person (im Datensatz der"
+
+#: app/templates/groups_form.html:30
+msgid "user"
+msgstr "Person"
+
+#: app/templates/groups_form.html:30
+msgid ""
+"record) wins over\n"
+"        this default. Only applies to devices linked to a person (device detail page → Owner)."
+msgstr " festgelegt) hat Vorrang vor diesem Standardwert. Gilt nur für Geräte, die mit einer Person verknüpft sind (Gerätedetailseite → Besitzer)."
+
+#: app/templates/groups_form.html:34 app/templates/users_form.html:69
+msgid "Weekday limit (seconds)"
+msgstr "Wochentagslimit (Sekunden)"
+
+#: app/templates/groups_form.html:39 app/templates/users_form.html:74
+msgid "Weekend limit (seconds)"
+msgstr "Wochenendlimit (Sekunden)"
+
+#: app/templates/groups_form.html:47
+msgid "Night block (independent of quota/hotspot -- works for device-only groups too, e.g. TV/Playstation)"
+msgstr "Nachtsperre (unabhängig von Kontingent/Hotspot -- funktioniert auch für reine Gerätegruppen, z. B. TV/Playstation)"
+
+#: app/templates/groups_form.html:48
+msgid ""
+"familink only keeps this MikroTik address-list's membership\n"
+"        in sync with the group's devices' current IPs (comment=familink entries only) -- it does NOT\n"
+"        create the firewall rule that actually drops traffic during this window. Create that rule on\n"
+"        the router once, then point it here (e.g. reuse the existing \"RESTRITO\" list)."
+msgstr "familink hält nur die Mitgliedschaft dieser MikroTik-Adressliste mit den aktuellen IPs der Geräte der Gruppe synchron (nur Einträge mit comment=familink) -- es erstellt NICHT die Firewall-Regel, die den Datenverkehr während dieses Zeitfensters tatsächlich blockiert. Erstelle diese Regel einmal auf dem Router und verweise dann hier darauf (z. B. durch Wiederverwendung der bestehenden Liste \"RESTRITO\")."
+
+#: app/templates/groups_form.html:54
+msgid "Block start (HH:MM)"
+msgstr "Sperrbeginn (HH:MM)"
+
+#: app/templates/groups_form.html:59
+msgid "Block end (HH:MM)"
+msgstr "Sperrende (HH:MM)"
+
+#: app/templates/groups_form.html:64
+msgid "MikroTik address-list name"
+msgstr "Name der MikroTik-Adressliste"
+
+#: app/templates/groups_form.html:72
+msgid "Create group"
+msgstr "Gruppe erstellen"
+
+#: app/templates/groups_list.html:10
+msgid "Hotspot?"
+msgstr "Hotspot?"
+
+#: app/templates/groups_list.html:10
+msgid "Quota (weekday/weekend)"
+msgstr "Kontingent (Wochentag/Wochenende)"
+
+#: app/templates/groups_list.html:10
+msgid "Night block"
+msgstr "Nachtsperre"
+
+#: app/templates/groups_list.html:14
+msgid "default"
+msgstr "Standard"
+
+#: app/templates/groups_list.html:15
+msgid "Yes"
+msgstr "Ja"
+
+#: app/templates/groups_list.html:15
+msgid "No"
+msgstr "Nein"
+
+#: app/templates/groups_list.html:26 app/templates/users_list.html:24
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: app/templates/users_form.html:2
+msgid "Edit user"
+msgstr "Person bearbeiten"
+
+#: app/templates/users_form.html:2 app/templates/users_list.html:6
+msgid "New user"
+msgstr "Neue Person"
+
+#: app/templates/users_form.html:16
+msgid "Email"
+msgstr "E-Mail"
+
+#: app/templates/users_form.html:20
+msgid "Birthdate"
+msgstr "Geburtsdatum"
+
+#: app/templates/users_form.html:28
+msgid "Today's usage (familink-tracked, no MikroTik login involved)"
+msgstr "Heutige Nutzung (von familink erfasst, ohne MikroTik-Login)"
+
+#: app/templates/users_form.html:30
+msgid "Used today"
+msgstr "Heute genutzt"
+
+#: app/templates/users_form.html:32 app/templates/users_list.html:22
+msgid "Blocked"
+msgstr "Gesperrt"
+
+#: app/templates/users_form.html:32 app/templates/users_list.html:22
+msgctxt "user_status"
+msgid "OK"
+msgstr "OK"
+
+#: app/templates/users_form.html:37
+msgid "Zero today's usage and unblock this person right now?"
+msgstr "Heutige Nutzung auf null setzen und diese Person jetzt entsperren?"
+
+#: app/templates/users_form.html:38
+msgid "Reset today's usage now"
+msgstr "Heutige Nutzung jetzt zurücksetzen"
+
+#: app/templates/users_form.html:45
+msgid "Recent quota events"
+msgstr "Letzte Kontingent-Ereignisse"
+
+#: app/templates/users_form.html:47
+msgid "When"
+msgstr "Wann"
+
+#: app/templates/users_form.html:47
+msgid "Limit"
+msgstr "Limit"
+
+#: app/templates/users_form.html:47
+msgid "Result"
+msgstr "Ergebnis"
+
+#: app/templates/users_form.html:47
+msgid "Detail"
+msgstr "Details"
+
+#: app/templates/users_form.html:53
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: app/templates/users_form.html:64
+msgid "Personal quota override"
+msgstr "Persönliches Kontingent"
+
+#: app/templates/users_form.html:65
+msgid "Leave blank to just use whatever their devices'"
+msgstr "Leer lassen, um einfach zu verwenden, was die"
+
+#: app/templates/users_form.html:66
+msgid "group"
+msgstr "Gruppe"
+
+#: app/templates/users_form.html:66
+msgid "specifies. Fill in to override it for this person specifically."
+msgstr " ihrer Geräte festlegt. Ausfüllen, um dies speziell für diese Person zu überschreiben."
+
+#: app/templates/users_form.html:82
+msgid "Create user"
+msgstr "Person erstellen"
+
+#: app/templates/users_list.html:10
+msgid "Quota override"
+msgstr "Kontingent-Override"
+
+#: app/templates/users_list.html:10
+msgid "Today's usage"
+msgstr "Heutige Nutzung"
+
+#: app/templates/users_list.html:19
+msgid "uses group default"
+msgstr "nutzt Gruppenstandard"
+
+#: app/templates/users_list.html:27
+msgid "No users yet. Link a device to a user from the device detail page."
+msgstr "Noch keine Personen. Verknüpfe ein Gerät mit einer Person auf der Gerätedetailseite."
+

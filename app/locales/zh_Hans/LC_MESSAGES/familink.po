@@ -1,0 +1,577 @@
+# Chinese (Simplified) translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-07-25 06:54-0300\n"
+"PO-Revision-Date: 2026-07-25 06:54-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_Hans\n"
+"Language-Team: zh_Hans <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app/enforcement.py:86
+msgid "MikroTik in sync"
+msgstr "MikroTik 已同步"
+
+#: app/enforcement.py:87
+msgid "MikroTik needs: hotspot binding will be created"
+msgstr "MikroTik 需要:将创建热点绑定"
+
+#: app/enforcement.py:88
+msgid "MikroTik needs: hotspot binding will be removed"
+msgstr "MikroTik 需要:将移除热点绑定"
+
+#: app/enforcement.py:95
+msgid "DVR/NVR (XM/Xiongmai-style)"
+msgstr "DVR/NVR(XM/Xiongmai 类型)"
+
+#: app/enforcement.py:96
+msgid "DVR/NVR (Dahua-compatible)"
+msgstr "DVR/NVR(兼容大华)"
+
+#: app/enforcement.py:97
+msgid "Camera (ONVIF)"
+msgstr "摄像头(ONVIF)"
+
+#: app/enforcement.py:98
+msgid "Camera/streaming (RTSP)"
+msgstr "摄像头/流媒体(RTSP)"
+
+#: app/enforcement.py:99
+msgid "Printer (JetDirect)"
+msgstr "打印机(JetDirect)"
+
+#: app/enforcement.py:100
+msgid "Printer (IPP)"
+msgstr "打印机(IPP)"
+
+#: app/enforcement.py:101
+msgid "Home Assistant"
+msgstr "Home Assistant"
+
+#: app/enforcement.py:102
+msgid "MQTT broker"
+msgstr "MQTT 代理"
+
+#: app/enforcement.py:103
+msgid "MySQL/MariaDB"
+msgstr "MySQL/MariaDB"
+
+#: app/enforcement.py:104
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: app/enforcement.py:105
+msgid "VNC"
+msgstr "VNC"
+
+#: app/enforcement.py:106
+msgid "Linux/SSH host"
+msgstr "Linux/SSH 主机"
+
+#: app/enforcement.py:107
+msgid "Web device"
+msgstr "网页设备"
+
+#: app/routers/captive.py:148
+msgid "Person not found."
+msgstr "未找到该人员。"
+
+#: app/routers/captive.py:161
+msgid "Please enter a name."
+msgstr "请输入姓名。"
+
+#: app/templates/base.html:13 app/templates/devices_list.html:2
+#: app/templates/groups_list.html:10 app/templates/users_list.html:10
+msgid "Devices"
+msgstr "设备"
+
+#: app/templates/base.html:14 app/templates/groups_list.html:2
+msgid "Groups"
+msgstr "分组"
+
+#: app/templates/base.html:15 app/templates/users_list.html:2
+msgid "Users"
+msgstr "用户"
+
+#: app/templates/base.html:16 app/templates/enforcement_list.html:2
+msgid "Enforcement"
+msgstr "强制执行"
+
+#: app/templates/captive.html:7
+msgid "Connect to the network"
+msgstr "连接网络"
+
+#: app/templates/captive.html:34
+msgid "Identifying your device…"
+msgstr "正在识别你的设备…"
+
+#: app/templates/captive.html:35
+msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
+msgstr "我们还没有在网络中找到你的设备。请稍等几秒后刷新页面。"
+
+#: app/templates/captive.html:38
+#, python-format
+msgid "Connected as %(name)s"
+msgstr "已作为 %(name)s 连接"
+
+#: app/templates/captive.html:39
+msgid "You are already identified on this network."
+msgstr "你已在此网络中完成身份识别。"
+
+#: app/templates/captive.html:41
+msgid "Continue browsing →"
+msgstr "继续浏览 →"
+
+#: app/templates/captive.html:45
+msgid "Who are you?"
+msgstr "你是谁?"
+
+#: app/templates/captive.html:49
+msgid "I already have an account"
+msgstr "我已经有账号"
+
+#: app/templates/captive.html:59
+msgid "Create account"
+msgstr "创建账号"
+
+#: app/templates/captive.html:62 app/templates/groups_form.html:12
+#: app/templates/groups_list.html:10 app/templates/users_form.html:12
+#: app/templates/users_list.html:10
+msgid "Name"
+msgstr "姓名"
+
+#: app/templates/captive.html:64
+msgid "Email (optional)"
+msgstr "电子邮箱(可选)"
+
+#: app/templates/captive.html:66
+msgid "Birthdate (optional)"
+msgstr "出生日期(可选)"
+
+#: app/templates/captive.html:68
+msgid "Enter"
+msgstr "进入"
+
+#: app/templates/device_detail.html:4 app/templates/groups_form.html:4
+#: app/templates/users_form.html:4
+msgid "Back"
+msgstr "返回"
+
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+msgid "Online"
+msgstr "在线"
+
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:23
+msgid "Offline"
+msgstr "离线"
+
+#: app/templates/device_detail.html:12 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "MAC"
+msgstr "MAC"
+
+#: app/templates/device_detail.html:13 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "IP"
+msgstr "IP"
+
+#: app/templates/device_detail.html:14
+msgid "First seen"
+msgstr "首次出现"
+
+#: app/templates/device_detail.html:15 app/templates/devices_list.html:18
+#: app/templates/enforcement_list.html:10
+msgid "Last seen"
+msgstr "最后出现"
+
+#: app/templates/device_detail.html:16
+msgid "MikroTik ip-binding"
+msgstr "MikroTik IP 绑定"
+
+#: app/templates/device_detail.html:16
+msgid "bound, bypassed"
+msgstr "已绑定,已放行"
+
+#: app/templates/device_detail.html:16
+msgid "bound, not bypassed"
+msgstr "已绑定,未放行"
+
+#: app/templates/device_detail.html:16
+msgid "no binding"
+msgstr "无绑定"
+
+#: app/templates/device_detail.html:17
+msgid "Guessed type"
+msgstr "推测类型"
+
+#: app/templates/device_detail.html:21 app/templates/devices_list.html:18
+msgid "Group"
+msgstr "分组"
+
+#: app/templates/device_detail.html:25
+msgid "hotspot required"
+msgstr "需要热点登录"
+
+#: app/templates/device_detail.html:28 app/templates/device_detail.html:66
+#: app/templates/device_detail.html:74 app/templates/groups_form.html:72
+#: app/templates/users_form.html:82
+msgid "Save"
+msgstr "保存"
+
+#: app/templates/device_detail.html:36
+msgid "This will write to the real MikroTik router right now. Continue?"
+msgstr "这将立即写入真实的 MikroTik 路由器。是否继续?"
+
+#: app/templates/device_detail.html:37
+msgid "Apply to MikroTik"
+msgstr "应用到 MikroTik"
+
+#: app/templates/device_detail.html:45
+msgid "Recent MikroTik apply attempts"
+msgstr "最近的 MikroTik 应用尝试"
+
+#: app/templates/device_detail.html:50 app/templates/users_form.html:53
+msgctxt "log_result"
+msgid "OK"
+msgstr "OK"
+
+#: app/templates/device_detail.html:50
+msgid "FAILED"
+msgstr "失败"
+
+#: app/templates/device_detail.html:58
+msgid "Owner"
+msgstr "所有者"
+
+#: app/templates/device_detail.html:61
+msgid "— unassigned —"
+msgstr "— 未分配 —"
+
+#: app/templates/device_detail.html:71
+msgid "Notes"
+msgstr "备注"
+
+#: app/templates/device_detail.html:79
+msgid "Port scan"
+msgstr "端口扫描"
+
+#: app/templates/device_detail.html:81
+#, python-format
+msgid "Last scanned: %(when)s"
+msgstr "上次扫描:%(when)s"
+
+#: app/templates/device_detail.html:81
+msgid "Never scanned yet."
+msgstr "尚未扫描。"
+
+#: app/templates/device_detail.html:82
+msgid "New devices are scanned automatically the first time they're discovered."
+msgstr "新设备在首次被发现时会自动扫描。"
+
+#: app/templates/device_detail.html:85
+msgid "no known IP"
+msgstr "无已知 IP"
+
+#: app/templates/device_detail.html:86
+msgid "Rescan"
+msgstr "重新扫描"
+
+#: app/templates/device_detail.html:86
+msgid "Scan now"
+msgstr "立即扫描"
+
+#: app/templates/device_detail.html:92
+msgid "Port"
+msgstr "端口"
+
+#: app/templates/device_detail.html:92
+msgid "Protocol"
+msgstr "协议"
+
+#: app/templates/device_detail.html:92
+msgid "Service"
+msgstr "服务"
+
+#: app/templates/devices_list.html:5
+msgid "Search by hostname, IP or MAC..."
+msgstr "按主机名、IP 或 MAC 搜索…"
+
+#: app/templates/devices_list.html:7
+msgid "All groups"
+msgstr "所有分组"
+
+#: app/templates/devices_list.html:12
+msgid "Filter"
+msgstr "筛选"
+
+#: app/templates/devices_list.html:18 app/templates/users_form.html:31
+#: app/templates/users_list.html:10
+msgid "Status"
+msgstr "状态"
+
+#: app/templates/devices_list.html:18
+msgid "Hostname"
+msgstr "主机名"
+
+#: app/templates/devices_list.html:18
+msgid "User"
+msgstr "用户"
+
+#: app/templates/devices_list.html:25 app/templates/enforcement_list.html:15
+#, python-format
+msgid "%(n)s open port"
+msgid_plural "%(n)s open ports"
+msgstr[0] "%(n)s 个开放端口"
+
+#: app/templates/devices_list.html:32
+msgid "No devices yet — waiting for the first MikroTik discovery cycle."
+msgstr "暂无设备 — 等待 MikroTik 首次发现周期。"
+
+#: app/templates/enforcement_list.html:4
+#, python-format
+msgid "%(n)s device tracked."
+msgid_plural "%(n)s devices tracked."
+msgstr[0] "%(n)s 个设备被追踪。"
+
+#: app/templates/enforcement_list.html:5
+#, python-format
+msgid "%(n)s out of sync with MikroTik."
+msgid_plural "%(n)s out of sync with MikroTik."
+msgstr[0] "%(n)s 个与 MikroTik 不同步。"
+
+#: app/templates/enforcement_list.html:6
+msgid "No bulk apply on purpose — open a device to review and apply it individually."
+msgstr "刻意不提供批量应用 — 请打开单个设备进行审查并单独应用。"
+
+#: app/templates/enforcement_list.html:10
+msgid "Device"
+msgstr "设备"
+
+#: app/templates/enforcement_list.html:10
+msgid "Current group"
+msgstr "当前分组"
+
+#: app/templates/enforcement_list.html:10
+msgid "What would change"
+msgstr "将发生的变化"
+
+#: app/templates/enforcement_list.html:22
+msgid "Nothing pending — every device's group matches what's enforced on MikroTik."
+msgstr "没有待处理项 — 所有设备的分组均与 MikroTik 上执行的一致。"
+
+#: app/templates/groups_form.html:2
+msgid "Edit group"
+msgstr "编辑分组"
+
+#: app/templates/groups_form.html:2 app/templates/groups_list.html:6
+msgid "New group"
+msgstr "新建分组"
+
+#: app/templates/groups_form.html:9 app/templates/users_form.html:9
+msgid "Basics"
+msgstr "基本信息"
+
+#: app/templates/groups_form.html:16
+msgid "Description"
+msgstr "描述"
+
+#: app/templates/groups_form.html:21
+msgid "Requires MikroTik hotspot login"
+msgstr "需要 MikroTik 热点登录"
+
+#: app/templates/groups_form.html:27
+msgid "Quota (independent of \"requires hotspot login\" — no login needed)"
+msgstr "配额(与\"需要热点登录\"无关 — 无需登录)"
+
+#: app/templates/groups_form.html:28
+msgid ""
+"Hours per day. familink tracks each person's online time\n"
+"        itself and blocks their devices directly on MikroTik once they hit the limit — leave blank for\n"
+"        no quota. A person's own override (set on their"
+msgstr "每天的小时数。familink 会自动追踪每个人的在线时长,一旦达到上限就直接在 MikroTik 上封锁其设备 — 留空表示不设配额。个人的自定义设置(在"
+
+#: app/templates/groups_form.html:30
+msgid "user"
+msgstr "该用户"
+
+#: app/templates/groups_form.html:30
+msgid ""
+"record) wins over\n"
+"        this default. Only applies to devices linked to a person (device detail page → Owner)."
+msgstr "的记录中设置)优先于此默认值。仅适用于已关联到某人的设备(设备详情页 → 所有者)。"
+
+#: app/templates/groups_form.html:34 app/templates/users_form.html:69
+msgid "Weekday limit (seconds)"
+msgstr "工作日限额(秒)"
+
+#: app/templates/groups_form.html:39 app/templates/users_form.html:74
+msgid "Weekend limit (seconds)"
+msgstr "周末限额(秒)"
+
+#: app/templates/groups_form.html:47
+msgid "Night block (independent of quota/hotspot -- works for device-only groups too, e.g. TV/Playstation)"
+msgstr "夜间封锁(与配额/热点无关 -- 也适用于纯设备分组,例如电视/游戏机)"
+
+#: app/templates/groups_form.html:48
+msgid ""
+"familink only keeps this MikroTik address-list's membership\n"
+"        in sync with the group's devices' current IPs (comment=familink entries only) -- it does NOT\n"
+"        create the firewall rule that actually drops traffic during this window. Create that rule on\n"
+"        the router once, then point it here (e.g. reuse the existing \"RESTRITO\" list)."
+msgstr "familink 只负责让这个 MikroTik 地址列表的成员与该分组设备当前的 IP 保持同步(仅限 comment=familink 的条目)-- 它并不会创建真正在此时间段内阻断流量的防火墙规则。请先在路由器上创建一次该规则,然后在这里指向它(例如复用已有的 \"RESTRITO\" 列表)。"
+
+#: app/templates/groups_form.html:54
+msgid "Block start (HH:MM)"
+msgstr "封锁开始(HH:MM)"
+
+#: app/templates/groups_form.html:59
+msgid "Block end (HH:MM)"
+msgstr "封锁结束(HH:MM)"
+
+#: app/templates/groups_form.html:64
+msgid "MikroTik address-list name"
+msgstr "MikroTik 地址列表名称"
+
+#: app/templates/groups_form.html:72
+msgid "Create group"
+msgstr "创建分组"
+
+#: app/templates/groups_list.html:10
+msgid "Hotspot?"
+msgstr "热点?"
+
+#: app/templates/groups_list.html:10
+msgid "Quota (weekday/weekend)"
+msgstr "配额(工作日/周末)"
+
+#: app/templates/groups_list.html:10
+msgid "Night block"
+msgstr "夜间封锁"
+
+#: app/templates/groups_list.html:14
+msgid "default"
+msgstr "默认"
+
+#: app/templates/groups_list.html:15
+msgid "Yes"
+msgstr "是"
+
+#: app/templates/groups_list.html:15
+msgid "No"
+msgstr "否"
+
+#: app/templates/groups_list.html:26 app/templates/users_list.html:24
+msgid "Edit"
+msgstr "编辑"
+
+#: app/templates/users_form.html:2
+msgid "Edit user"
+msgstr "编辑用户"
+
+#: app/templates/users_form.html:2 app/templates/users_list.html:6
+msgid "New user"
+msgstr "新建用户"
+
+#: app/templates/users_form.html:16
+msgid "Email"
+msgstr "电子邮箱"
+
+#: app/templates/users_form.html:20
+msgid "Birthdate"
+msgstr "出生日期"
+
+#: app/templates/users_form.html:28
+msgid "Today's usage (familink-tracked, no MikroTik login involved)"
+msgstr "今日使用情况(由 familink 追踪,不涉及 MikroTik 登录)"
+
+#: app/templates/users_form.html:30
+msgid "Used today"
+msgstr "今日已用"
+
+#: app/templates/users_form.html:32 app/templates/users_list.html:22
+msgid "Blocked"
+msgstr "已封锁"
+
+#: app/templates/users_form.html:32 app/templates/users_list.html:22
+msgctxt "user_status"
+msgid "OK"
+msgstr "OK"
+
+#: app/templates/users_form.html:37
+msgid "Zero today's usage and unblock this person right now?"
+msgstr "现在将今日使用时长清零并解除此人的封锁?"
+
+#: app/templates/users_form.html:38
+msgid "Reset today's usage now"
+msgstr "立即重置今日使用时长"
+
+#: app/templates/users_form.html:45
+msgid "Recent quota events"
+msgstr "最近的配额事件"
+
+#: app/templates/users_form.html:47
+msgid "When"
+msgstr "时间"
+
+#: app/templates/users_form.html:47
+msgid "Limit"
+msgstr "限额"
+
+#: app/templates/users_form.html:47
+msgid "Result"
+msgstr "结果"
+
+#: app/templates/users_form.html:47
+msgid "Detail"
+msgstr "详情"
+
+#: app/templates/users_form.html:53
+msgid "Failed"
+msgstr "失败"
+
+#: app/templates/users_form.html:64
+msgid "Personal quota override"
+msgstr "个人配额覆盖"
+
+#: app/templates/users_form.html:65
+msgid "Leave blank to just use whatever their devices'"
+msgstr "留空则直接使用其设备所属"
+
+#: app/templates/users_form.html:66
+msgid "group"
+msgstr "分组"
+
+#: app/templates/users_form.html:66
+msgid "specifies. Fill in to override it for this person specifically."
+msgstr "中设定的值。填写此项可为该人员单独覆盖该设置。"
+
+#: app/templates/users_form.html:82
+msgid "Create user"
+msgstr "创建用户"
+
+#: app/templates/users_list.html:10
+msgid "Quota override"
+msgstr "配额覆盖"
+
+#: app/templates/users_list.html:10
+msgid "Today's usage"
+msgstr "今日使用"
+
+#: app/templates/users_list.html:19
+msgid "uses group default"
+msgstr "使用分组默认值"
+
+#: app/templates/users_list.html:27
+msgid "No users yet. Link a device to a user from the device detail page."
+msgstr "暂无用户。请在设备详情页将设备关联到某个用户。"
+

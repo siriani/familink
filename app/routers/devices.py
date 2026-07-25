@@ -14,9 +14,10 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import pending_action, pending_action_label
+from app.i18n import get_translations
 from app.mikrotik_enforce import apply_device
 from app.models import Device, DeviceScanResult, EnforcementLog, Group, User
-from app.portscan import scan_and_store
+from app.portscan import TYPE_LABEL_MSGIDS, scan_and_store
 from app.schemas import DeviceOut, DeviceUpdate
 from app.sync import get_mikrotik_client
 from app.templating import templates
@@ -124,6 +125,8 @@ def page_device_detail(request: Request, mac: str, db: Session = Depends(get_db)
         )
     )
     last_scanned_at = max((r.scanned_at for r in scan_results), default=None)
+    t = get_translations(request.state.locale)
+    vendor_guess_msgid = TYPE_LABEL_MSGIDS.get(device.vendor_guess) if device.vendor_guess else None
     return templates.TemplateResponse(
         request,
         "device_detail.html",
@@ -132,7 +135,11 @@ def page_device_detail(request: Request, mac: str, db: Session = Depends(get_db)
             "groups": groups,
             "users": users,
             "pending_action": action,
-            "pending_action_label": pending_action_label(action),
+            "pending_action_label": t.gettext(pending_action_label(action)),
+            # Falls back to the raw stored value for an unrecognized/legacy
+            # key (defensive -- shouldn't happen post-migration 0005, but
+            # harmless if it does) rather than showing nothing.
+            "vendor_guess_label": t.gettext(vendor_guess_msgid) if vendor_guess_msgid else device.vendor_guess,
             "enforcement_logs": logs,
             "scan_results": scan_results,
             "last_scanned_at": last_scanned_at,

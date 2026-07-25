@@ -1,24 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Enforcement — familink{% endblock %}
+{% block title %}{{ _('Enforcement') }} — familink{% endblock %}
 {% block content %}
-<p class="hint">{{ total_devices }} devices tracked. {{ pending|length }} out of sync with MikroTik.
-No bulk apply on purpose — open a device to review and apply it individually.</p>
+<p class="hint">{{ ngettext('%(n)s device tracked.', '%(n)s devices tracked.', total_devices) % {'n': total_devices} }}
+{{ ngettext('%(n)s out of sync with MikroTik.', '%(n)s out of sync with MikroTik.', pending|length) % {'n': pending|length} }}
+{{ _("No bulk apply on purpose — open a device to review and apply it individually.") }}</p>
 
 <div class="tcard">
 <table>
-  <thead><tr><th>Device</th><th>IP</th><th>MAC</th><th>Current group</th><th>What would change</th><th>Last seen</th></tr></thead>
+  <thead><tr><th>{{ _('Device') }}</th><th>{{ _('IP') }}</th><th>{{ _('MAC') }}</th><th>{{ _('Current group') }}</th><th>{{ _('What would change') }}</th><th>{{ _('Last seen') }}</th></tr></thead>
   <tbody>
     {% for p in pending %}
     <tr class="clickable" onclick="location.href='/devices/{{ p.device.mac }}'">
       <td><strong>{{ p.device.hostname or '—' }}</strong></td>
-      <td class="mono small">{{ p.device.current_ip or '—' }}{% if p.device.scan_results %} <span class="port-badge" title="{{ p.device.scan_results|length }} open port(s)">●{{ p.device.scan_results|length }}</span>{% endif %}</td>
+      <td class="mono small">{{ p.device.current_ip or '—' }}{% if p.device.scan_results %} <span class="port-badge" title="{{ ngettext('%(n)s open port', '%(n)s open ports', p.device.scan_results|length) % {'n': p.device.scan_results|length} }}">●{{ p.device.scan_results|length }}</span>{% endif %}</td>
       <td class="mono small">{{ p.device.mac }}</td>
       <td><span class="badge {{ 'b-hotspot' if p.device.group.hotspot_required else 'b-free' }}">{{ p.device.group.name }}</span></td>
       <td>{{ p.label }}</td>
       <td class="small">{{ p.device.last_seen | localtime }}</td>
     </tr>
     {% else %}
-    <tr><td colspan="6" class="empty">Nothing pending — every device's group matches what's enforced on MikroTik.</td></tr>
+    <tr><td colspan="6" class="empty">{{ _("Nothing pending — every device's group matches what's enforced on MikroTik.") }}</td></tr>
     {% endfor %}
   </tbody>
 </table>

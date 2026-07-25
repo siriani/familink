@@ -1,31 +1,31 @@
 {% extends "base.html" %}
 {% block title %}{{ device.hostname or device.mac }} — familink{% endblock %}
 {% block content %}
-<a class="back-btn" href="/devices">&larr; Back</a>
+<a class="back-btn" href="/devices">&larr; {{ _('Back') }}</a>
 
 <div class="detail-card">
   <div class="card-head">
     <span class="kname">{{ device.hostname or device.mac }}</span>
-    <span class="badge {{ 'b-online' if device.is_online else 'b-offline' }}">{{ 'Online' if device.is_online else 'Offline' }}</span>
+    <span class="badge {{ 'b-online' if device.is_online else 'b-offline' }}">{{ _('Online') if device.is_online else _('Offline') }}</span>
   </div>
   <div class="detail-grid">
-    <div><div class="detail-label">MAC</div><div class="detail-value mono">{{ device.mac }}</div></div>
-    <div><div class="detail-label">IP</div><div class="detail-value mono">{{ device.current_ip or '—' }}</div></div>
-    <div><div class="detail-label">First seen</div><div class="detail-value">{{ device.first_seen | localtime }}</div></div>
-    <div><div class="detail-label">Last seen</div><div class="detail-value">{{ device.last_seen | localtime }}</div></div>
-    <div><div class="detail-label">MikroTik ip-binding</div><div class="detail-value">{{ 'bound, bypassed' if device.mikrotik_bypassed else ('bound, not bypassed' if device.mikrotik_bound else 'no binding') }}</div></div>
-    <div><div class="detail-label">Guessed type</div><div class="detail-value">{{ device.vendor_guess or '—' }}</div></div>
+    <div><div class="detail-label">{{ _('MAC') }}</div><div class="detail-value mono">{{ device.mac }}</div></div>
+    <div><div class="detail-label">{{ _('IP') }}</div><div class="detail-value mono">{{ device.current_ip or '—' }}</div></div>
+    <div><div class="detail-label">{{ _('First seen') }}</div><div class="detail-value">{{ device.first_seen | localtime }}</div></div>
+    <div><div class="detail-label">{{ _('Last seen') }}</div><div class="detail-value">{{ device.last_seen | localtime }}</div></div>
+    <div><div class="detail-label">{{ _('MikroTik ip-binding') }}</div><div class="detail-value">{{ _('bound, bypassed') if device.mikrotik_bypassed else (_('bound, not bypassed') if device.mikrotik_bound else _('no binding')) }}</div></div>
+    <div><div class="detail-label">{{ _('Guessed type') }}</div><div class="detail-value">{{ vendor_guess_label or '—' }}</div></div>
   </div>
 
   <div class="assoc-section">
-    <h3>Group</h3>
+    <h3>{{ _('Group') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/group" class="inline-form">
       <select name="group_id">
         {% for g in groups %}
-        <option value="{{ g.id }}" {% if g.id == device.group_id %}selected{% endif %}>{{ g.name }}{% if g.hotspot_required %} (hotspot required){% endif %}</option>
+        <option value="{{ g.id }}" {% if g.id == device.group_id %}selected{% endif %}>{{ g.name }}{% if g.hotspot_required %} ({{ _('hotspot required') }}){% endif %}</option>
         {% endfor %}
       </select>
-      <button class="save-btn" type="submit">Save</button>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
 
     <div class="mikrotik-status {{ 'in-sync' if pending_action == 'none' else 'out-of-sync' }}">
@@ -33,8 +33,8 @@
       {% if pending_action != 'none' %}
       <form method="post" action="/devices/{{ device.mac }}/apply-mikrotik" style="display:inline">
         <button class="save-btn apply-btn" type="submit"
-          onclick="return confirm('This will write to the real MikroTik router right now. Continue?')">
-          Apply to MikroTik
+          onclick="return confirm('{{ _('This will write to the real MikroTik router right now. Continue?') }}')">
+          {{ _('Apply to MikroTik') }}
         </button>
       </form>
       {% endif %}
@@ -42,12 +42,12 @@
 
     {% if enforcement_logs %}
     <div class="log-list">
-      <div class="detail-label">Recent MikroTik apply attempts</div>
+      <div class="detail-label">{{ _('Recent MikroTik apply attempts') }}</div>
       {% for l in enforcement_logs %}
       <div class="log-row {{ 'ok' if l.success else 'fail' }}">
         <span class="small">{{ l.applied_at | localtime }}</span>
         <span class="small">{{ l.action }}</span>
-        <span class="small">{{ 'OK' if l.success else 'FAILED' }} — {{ l.detail }}</span>
+        <span class="small">{{ pgettext('log_result', 'OK') if l.success else _('FAILED') }} — {{ l.detail }}</span>
       </div>
       {% endfor %}
     </div>
@@ -55,41 +55,41 @@
   </div>
 
   <div class="assoc-section">
-    <h3>Owner</h3>
+    <h3>{{ _('Owner') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/user" class="inline-form">
       <select name="user_id">
-        <option value="">— unassigned —</option>
+        <option value="">{{ _('— unassigned —') }}</option>
         {% for u in users %}
         <option value="{{ u.id }}" {% if device.user_id == u.id %}selected{% endif %}>{{ u.name }}</option>
         {% endfor %}
       </select>
-      <button class="save-btn" type="submit">Save</button>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
   </div>
 
   <div class="assoc-section">
-    <h3>Notes</h3>
+    <h3>{{ _('Notes') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/notes" class="inline-form">
       <textarea name="notes" rows="3" style="width:100%">{{ device.notes or '' }}</textarea>
-      <button class="save-btn" type="submit">Save</button>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
   </div>
 
   <div class="assoc-section">
-    <h3>Port scan</h3>
+    <h3>{{ _('Port scan') }}</h3>
     <p class="hint" style="margin-top:0">
-      {% if last_scanned_at %}Last scanned: {{ last_scanned_at | localtime }}{% else %}Never scanned yet.{% endif %}
-      New devices are scanned automatically the first time they're discovered.
+      {% if last_scanned_at %}{{ _('Last scanned: %(when)s') % {'when': last_scanned_at | localtime} }}{% else %}{{ _('Never scanned yet.') }}{% endif %}
+      {{ _("New devices are scanned automatically the first time they're discovered.") }}
     </p>
     <form method="post" action="/devices/{{ device.mac }}/scan">
-      <button class="save-btn" type="submit" {% if not device.current_ip %}disabled title="no known IP"{% endif %}>
-        {{ 'Rescan' if scan_results else 'Scan now' }}
+      <button class="save-btn" type="submit" {% if not device.current_ip %}disabled title="{{ _('no known IP') }}"{% endif %}>
+        {{ _('Rescan') if scan_results else _('Scan now') }}
       </button>
     </form>
     {% if scan_results %}
     <div class="tcard" style="margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px">
       <table>
-        <thead><tr><th>Port</th><th>Protocol</th><th>Service</th></tr></thead>
+        <thead><tr><th>{{ _('Port') }}</th><th>{{ _('Protocol') }}</th><th>{{ _('Service') }}</th></tr></thead>
         <tbody>
           {% for r in scan_results %}
           {% set url = port_url(device.current_ip, r.port) if device.current_ip else None %}

@@ -41,6 +41,12 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
 # DISPLAY_TIMEZONE only affects how they're rendered in the admin UI.
 DISPLAY_TIMEZONE = os.environ.get("DISPLAY_TIMEZONE", "America/Sao_Paulo")
 
+# UI language for the admin panel's default/fallback (a visitor on /captive
+# always gets their own browser's Accept-Language instead -- see
+# app/i18n.py). One of pt-BR/en/es/de/zh-Hans; an unrecognized value falls
+# back to "en" with a startup warning (app/i18n.py), not a hard failure.
+DISPLAY_LANGUAGE = os.environ.get("DISPLAY_LANGUAGE", "pt-BR")
+
 # MQTT presence publisher (Home Assistant discovery). Empty MQTT_HOST =
 # disabled entirely -- not every familink install has a broker, this is
 # opt-in. See app/mqtt_publish.py.

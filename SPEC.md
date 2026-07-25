@@ -264,6 +264,59 @@ disabling them was deliberately left for a moment when someone's actually
 around to notice if a device unexpectedly loses access. Deactivate (not
 delete) once confirmed nothing still depends on them.
 
+## Internationalization (shipped)
+
+familink shifted from a personal project to open-source community
+software, so the UI (admin panel + `/captive`) is now translated into
+pt-BR, English, Spanish, German and Simplified Chinese, via standard
+gettext/Babel — `.po`/`.pot`, not a bespoke format, because that's what
+community translation tooling (Weblate, Poedit, Crowdin) already speaks.
+
+Templates call plain `_()`/`ngettext()`/`pgettext()` as ordinary Jinja2
+context variables (`{{ _('Save') }}`), not `{% trans %}`/`jinja2.ext.i18n`
+— that extension's newstyle-gettext support leans on private Jinja
+internals. Plain context variables are public API, per-request-safe (each
+`TemplateResponse()` call gets its own translations via
+`fastapi.templating.Jinja2Templates`'s `context_processors`, never mutating
+the shared `Environment`), and still fully discovered by `pybabel
+extract`'s AST scanner.
+
+Locale resolution is two different mechanisms, deliberately not unified
+(`app/i18n.py`'s `LocaleMiddleware`, registered after `BasicAuthMiddleware`
+so it still runs on a 401): the admin panel uses `?lang=xx` → a
+`familink_lang` cookie → `DISPLAY_LANGUAGE` env var (default `pt-BR`);
+`/captive` — a visitor's own device, never logged in — always parses their
+browser's `Accept-Language` header instead, since a cookie/query-param flow
+makes no sense for someone who just joined the network.
+
+**The `device.vendor_guess` migration.** `app/portscan.py`'s port-based
+type guesser used to persist the literal English display label directly
+onto the device row (`"Camera (ONVIF)"`) — great for a single-language app,
+impossible to translate afterward, since the value *is* the English text.
+It now stores a stable key (`camera_onvif`) and looks up/translates the
+label at render time (`TYPE_LABEL_MSGIDS`, `app/routers/devices.py`);
+`migrations/versions/0005_vendor_guess_keys.py` backfills the 13
+previously-stored English values to their keys with a deterministic
+`UPDATE ... WHERE vendor_guess = '<old label>'` per value — safe because
+`vendor_guess` is only ever written by the scanner, never hand-edited via
+any form.
+
+**Deliberately not translated:** `EnforcementLog.detail`/`QuotaLog.detail`
+(the "recent attempts" log tables) — 100% English today, developer-authored,
+and interpolate raw MikroTik HTTP responses and Python exception text; this
+is audit/debug output, not UI chrome, and not meaningfully translatable
+without losing the actual diagnostic content. Same reasoning for
+`DeviceScanResult.service_guess` (nmap's own raw text) and JSON API error
+bodies (`HTTPException` details in `devices.py`/`groups.py`/`users.py`,
+never template-rendered). The `"RESTRITO"`/`"23:00"`/`"05:00"` placeholders
+in the group form are literal example *values* for a MikroTik address-list
+name and HH:MM fields — format is language-invariant, left as-is.
+
+Tone/register (informal vs. formal address in es/de) and the MikroTik-jargon
+strings ("MikroTik ip-binding", the enforcement action labels) got a
+first-pass translation but are flagged for a native-speaker review pass,
+not treated as final.
+
 ## Roadmap — not built yet
 
 ### Bulk-apply on the /enforcement page

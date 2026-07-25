@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +10,17 @@
 <div class="topbar">
   <span class="logo">familink</span>
   <div class="nav">
-    <a class="nav-btn" href="/devices">Devices</a>
-    <a class="nav-btn" href="/groups">Groups</a>
-    <a class="nav-btn" href="/users">Users</a>
-    <a class="nav-btn" href="/enforcement">Enforcement</a>
+    <a class="nav-btn" href="/devices">{{ _('Devices') }}</a>
+    <a class="nav-btn" href="/groups">{{ _('Groups') }}</a>
+    <a class="nav-btn" href="/users">{{ _('Users') }}</a>
+    <a class="nav-btn" href="/enforcement">{{ _('Enforcement') }}</a>
+  </div>
+  <div class="lang-switcher">
+    <a href="?lang=pt-BR"{% if lang == 'pt-BR' %} class="active"{% endif %}>PT</a>
+    <a href="?lang=en"{% if lang == 'en' %} class="active"{% endif %}>EN</a>
+    <a href="?lang=es"{% if lang == 'es' %} class="active"{% endif %}>ES</a>
+    <a href="?lang=de"{% if lang == 'de' %} class="active"{% endif %}>DE</a>
+    <a href="?lang=zh-Hans"{% if lang == 'zh-Hans' %} class="active"{% endif %}>中文</a>
   </div>
 </div>
 <div class="content">
