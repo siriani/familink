@@ -58,9 +58,15 @@ def merge_mikrotik_views(
       camera with `NetWork.NetDHCP=false` and a hand-set address) — those
       never appear in `lease` but do show up in `hosts` with a real
       `address` field, so relying on `lease` alone silently drops their IP.
-    - is_online: MAC present in `active` (authenticated hotspot session) OR
-      `hosts` (broader "seen on network", covers bypassed devices too,
-      since those never show up in `active`)
+    - is_online: MAC present in `active` (authenticated hotspot session),
+      `hosts` (broader "seen on network"), OR has a `status=bound` DHCP
+      lease. The DHCP signal turned out to matter in practice, not just in
+      theory -- on a router with no wifi hardware of its own (this one:
+      APs bridged in separately), `active`/`hosts` only reflect traffic
+      MikroTik's own hotspot service tracked, which live testing showed
+      misses plenty of real devices; a *bypassed* ip-binding in particular
+      exempts a device from hotspot's tracking entirely, so it never shows
+      up in either table regardless of how connected it actually is.
     - mikrotik_bound / mikrotik_bypassed: presence + type=bypassed in
       ip-binding — informational only in this phase.
     """
@@ -85,6 +91,14 @@ def merge_mikrotik_views(
         e = entry(mac)
         e["ip"] = lease.get("address") or e["ip"]
         e["hostname"] = lease.get("host-name") or lease.get("comment") or e["hostname"]
+        # A bound DHCP lease is a stronger and more universal "on the
+        # network right now" signal than hotspot active/host below --
+        # those two only reflect traffic MikroTik's hotspot service itself
+        # tracked, which in practice misses plenty of real devices (seen
+        # live: every device in the Hotspot group, bypassed or not, showed
+        # up in neither table despite having a live lease).
+        if lease.get("status") == "bound":
+            e["is_online"] = True
 
     for row in (active or []) + (hosts or []):
         mac = normalize_mac(row.get("mac-address", ""))
