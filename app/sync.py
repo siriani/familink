@@ -172,7 +172,19 @@ def upsert_devices(merged: dict[str, dict]) -> list[tuple[int, str, str | None]]
                 device = Device(mac=mac, group_id=default_group_id)
                 session.add(device)
             device.current_ip = info["ip"] or device.current_ip
-            device.hostname = info["hostname"] or device.hostname
+            # Skip absorbing info["hostname"] when it exactly matches the
+            # device's own hostname_override: that's this loop's fallback
+            # (merge_mikrotik_views: lease "comment" -> hostname) reading
+            # back the exact text app/mikrotik_lease.py just wrote there
+            # on the admin's behalf, not an independently-learned name.
+            # Without this guard, setting an override permanently poisons
+            # the raw `hostname` (this field never reverts to None -- see
+            # module docstring/comment below), so clearing the override
+            # later doesn't actually revert the displayed "auto-detected"
+            # value -- found live (25/jul/2026) right after shipping the
+            # override feature.
+            if info["hostname"] and info["hostname"] != device.hostname_override:
+                device.hostname = info["hostname"]
             device.is_online = info["is_online"]
             device.mikrotik_bound = info["mikrotik_bound"]
             device.mikrotik_bypassed = info["mikrotik_bypassed"]
