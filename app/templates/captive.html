@@ -12,7 +12,6 @@
   .card { max-width: 420px; margin: 0 auto; background: #fff; border-radius: 12px;
     padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
   h1 { font-size: 1.3rem; margin: 0 0 16px; }
-  h2 { font-size: 1rem; margin: 20px 0 8px; color: #444; }
   p.hint { color: #666; font-size: .9rem; }
   input[type=text], input[type=email], input[type=date], input[type=password] {
     width: 100%; padding: 10px; margin: 6px 0 12px;
@@ -22,13 +21,22 @@
     border-radius: 8px; font-size: 1rem; cursor: pointer; }
   .error { color: #b91c1c; font-size: .9rem; margin-bottom: 10px; }
   .continue-link { display: block; margin-top: 16px; text-align: center; color: #2563eb; }
-  .person-list { margin-bottom: 4px; }
-  .person-option { display: flex; align-items: center; gap: 10px; width: 100%;
-    padding: 12px 14px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 8px;
-    background: #fafafa; font-size: 1rem; cursor: pointer; }
-  .person-option input[type=radio] { width: 20px; height: 20px; flex: none; margin: 0; }
-  .person-option:has(input:checked) { border-color: #2563eb; background: #eef4ff; }
-  .pin-input { text-align: center; letter-spacing: .4em; font-size: 1.3rem; max-width: 8em; }
+  .person-list { margin-bottom: 16px; }
+  .person-card { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px;
+    background: #fafafa; overflow: hidden; }
+  .person-card[open] { border-color: #2563eb; }
+  .person-card summary { display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; padding: 13px 14px; cursor: pointer; font-size: 1rem; list-style: none; }
+  .person-card summary::-webkit-details-marker { display: none; }
+  .person-name { font-weight: 500; }
+  .person-meta { font-size: .75rem; color: #888; white-space: nowrap; }
+  .pin-form { padding: 0 14px 14px; }
+  .pin-form input[type=password] { text-align: center; letter-spacing: .4em;
+    font-size: 1.2rem; margin: 0 0 8px; }
+  .pin-form .save-btn { padding: 10px; font-size: .95rem; }
+  .switch-links { text-align: center; margin-top: 8px; }
+  .switch-links a { display: block; padding: 10px; color: #2563eb; font-size: .9rem;
+    text-decoration: none; }
 </style>
 </head>
 <body>
@@ -45,33 +53,13 @@
   <a class="continue-link" href="{{ continue_url }}">{{ _('Continue browsing →') }}</a>
   {% endif %}
 
-{% elif state == "identify" %}
-  <h1>{{ _('Who are you?') }}</h1>
+{% elif state == "identify" and view == "new" %}
+  <h1>{{ _('Create account') }}</h1>
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
-
-  {% if users %}
-  <h2>{{ _('I already have an account') }}</h2>
-  <form method="post" action="/captive">
-    <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
-    <div class="person-list">
-      {% for u in users %}
-      <label class="person-option">
-        <input type="radio" name="existing_user_id" value="{{ u.id }}" required>
-        <span>{{ u.name }}</span>
-      </label>
-      {% endfor %}
-    </div>
-    <label>{{ _('PIN') }}</label>
-    <input type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" name="pin" required class="pin-input">
-    <button class="save-btn" type="submit">{{ _('Enter') }}</button>
-  </form>
-  {% endif %}
-
-  <h2>{{ _('Create account') }}</h2>
   <form method="post" action="/captive">
     <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
     <label>{{ _('Name') }}</label>
-    <input type="text" name="name" required>
+    <input type="text" name="name" required autofocus>
     <label>{{ _('Email (optional)') }}</label>
     <input type="email" name="email">
     <label>{{ _('Birthdate (optional)') }}</label>
@@ -80,6 +68,40 @@
     <input type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="new_pin" required>
     <button class="save-btn" type="submit">{{ _('Enter') }}</button>
   </form>
+  <div class="switch-links">
+    <a href="/captive{% if continue_url %}?link_orig={{ continue_url | urlencode }}{% endif %}">&larr; {{ _('I already have an account') }}</a>
+  </div>
+
+{% elif state == "identify" %}
+  <h1>{{ _('Who are you?') }}</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  {% if users %}
+  <div class="person-list">
+    {% for u in users %}
+    <details class="person-card">
+      <summary>
+        <span class="person-name">{{ u.name }}</span>
+        {% if u.last_seen_at %}<span class="person-meta">{{ _('Last seen: %(when)s') % {'when': u.last_seen_at | localtime} }}</span>{% endif %}
+      </summary>
+      <form method="post" action="/captive" class="pin-form">
+        <input type="hidden" name="existing_user_id" value="{{ u.id }}">
+        <input type="hidden" name="view" value="{{ view }}">
+        <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
+        <input type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" name="pin" placeholder="{{ _('PIN') }}" required autofocus>
+        <button class="save-btn" type="submit">{{ _('Enter') }}</button>
+      </form>
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="switch-links">
+    {% if has_more %}
+    <a href="/captive?view=all{% if continue_url %}&link_orig={{ continue_url | urlencode }}{% endif %}">{{ _('Other user') }}</a>
+    {% endif %}
+    <a href="/captive?view=new{% if continue_url %}&link_orig={{ continue_url | urlencode }}{% endif %}">{{ _("I don't have an account") }}</a>
+  </div>
 {% endif %}
 
 </div>

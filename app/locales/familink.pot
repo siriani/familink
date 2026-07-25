@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 07:57-0300\n"
+"POT-Creation-Date: 2026-07-25 08:12-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,23 +81,23 @@ msgstr ""
 msgid "Web device"
 msgstr ""
 
-#: app/routers/captive.py:196
+#: app/routers/captive.py:235
 msgid "Person not found."
 msgstr ""
 
-#: app/routers/captive.py:199
+#: app/routers/captive.py:239
 msgid "Too many attempts. Try again in a few minutes."
 msgstr ""
 
-#: app/routers/captive.py:203
+#: app/routers/captive.py:243
 msgid "Incorrect PIN."
 msgstr ""
 
-#: app/routers/captive.py:207
+#: app/routers/captive.py:247
 msgid "Please enter a name."
 msgstr ""
 
-#: app/routers/captive.py:209
+#: app/routers/captive.py:250
 msgid "PIN must be 4 digits."
 msgstr ""
 
@@ -122,67 +122,80 @@ msgstr ""
 msgid "Connect to the network"
 msgstr ""
 
-#: app/templates/captive.html:40
+#: app/templates/captive.html:46
 msgid "Identifying your device…"
 msgstr ""
 
-#: app/templates/captive.html:41
+#: app/templates/captive.html:47
 msgid ""
 "We haven't found you on the network yet. Wait a few seconds and reload "
 "the page."
 msgstr ""
 
-#: app/templates/captive.html:44
+#: app/templates/captive.html:50
 #, python-format
 msgid "Connected as %(name)s"
 msgstr ""
 
-#: app/templates/captive.html:45
+#: app/templates/captive.html:51
 msgid "You are already identified on this network."
 msgstr ""
 
-#: app/templates/captive.html:47
+#: app/templates/captive.html:53
 msgid "Continue browsing →"
 msgstr ""
 
-#: app/templates/captive.html:51
-msgid "Who are you?"
-msgstr ""
-
-#: app/templates/captive.html:55
-msgid "I already have an account"
-msgstr ""
-
-#: app/templates/captive.html:61 app/templates/users_list.html:10
-msgid "PIN"
-msgstr ""
-
-#: app/templates/captive.html:62 app/templates/captive.html:78
-msgid "Enter"
-msgstr ""
-
-#: app/templates/captive.html:67
+#: app/templates/captive.html:57
 msgid "Create account"
 msgstr ""
 
-#: app/templates/captive.html:70 app/templates/groups_form.html:12
+#: app/templates/captive.html:61 app/templates/groups_form.html:12
 #: app/templates/groups_list.html:10 app/templates/users_form.html:12
 #: app/templates/users_list.html:10
 msgid "Name"
 msgstr ""
 
-#: app/templates/captive.html:72
+#: app/templates/captive.html:63
 msgid "Email (optional)"
 msgstr ""
 
-#: app/templates/captive.html:74
+#: app/templates/captive.html:65
 msgid "Birthdate (optional)"
 msgstr ""
 
-#: app/templates/captive.html:76
+#: app/templates/captive.html:67
 msgid ""
 "Choose a 4-digit PIN — you'll need it to link future devices to this "
 "account"
+msgstr ""
+
+#: app/templates/captive.html:69 app/templates/captive.html:92
+msgid "Enter"
+msgstr ""
+
+#: app/templates/captive.html:72
+msgid "I already have an account"
+msgstr ""
+
+#: app/templates/captive.html:76
+msgid "Who are you?"
+msgstr ""
+
+#: app/templates/captive.html:85
+#, python-format
+msgid "Last seen: %(when)s"
+msgstr ""
+
+#: app/templates/captive.html:91 app/templates/users_list.html:10
+msgid "PIN"
+msgstr ""
+
+#: app/templates/captive.html:101
+msgid "Other user"
+msgstr ""
+
+#: app/templates/captive.html:103
+msgid "I don't have an account"
 msgstr ""
 
 #: app/templates/device_detail.html:4 app/templates/groups_form.html:4

@@ -18,13 +18,13 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import date
+from datetime import date, datetime
 from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.db import get_db
 from app.enforcement import desired_binding_state
@@ -72,12 +72,65 @@ def _clear_pin_attempts(user_id: int) -> None:
     _pin_attempts.pop(user_id, None)
 
 
+_TOP_N = 5
+
+
 def _pin_selectable_users(db: Session) -> list[User]:
     """Only people with a PIN set are offered on the /captive picker --
     see app/models.py:User's docstring for why a PIN is required here at
     all. A person with no PIN yet simply can't be self-selected; an admin
-    sets one from that person's edit page in the (authenticated) panel."""
-    return list(db.scalars(select(User).where(User.pin_hash.is_not(None)).order_by(User.name)))
+    sets one from that person's edit page in the (authenticated) panel.
+
+    Sorted by most-recently-active first (max `last_seen` across the
+    person's own devices, stashed on `.last_seen_at` -- not a mapped
+    column, just a plain attribute for the template) so whoever's most
+    likely trying to connect right now shows up first, ahead of anyone
+    who hasn't been online in a while. Nobody with a PIN starts with zero
+    devices in practice (self-registration links a device in the same
+    step that sets the PIN), but the None-safe sort key handles it anyway.
+    """
+    users = list(
+        db.scalars(
+            select(User)
+            .where(User.pin_hash.is_not(None))
+            .options(selectinload(User.devices))
+            .order_by(User.name)
+        )
+    )
+    for u in users:
+        seen = [d.last_seen for d in u.devices if d.last_seen is not None]
+        u.last_seen_at = max(seen) if seen else None
+    users.sort(key=lambda u: u.last_seen_at or datetime.min, reverse=True)
+    return users
+
+
+def _render_identify(
+    request: Request,
+    db: Session,
+    continue_url: str | None,
+    view: str,
+    error: str | None = None,
+):
+    if view == "new":
+        return templates.TemplateResponse(
+            request,
+            "captive.html",
+            {"state": "identify", "view": "new", "continue_url": continue_url, "error": error},
+        )
+    all_users = _pin_selectable_users(db)
+    show_all = view == "all"
+    return templates.TemplateResponse(
+        request,
+        "captive.html",
+        {
+            "state": "identify",
+            "view": "all" if show_all else "",
+            "users": all_users if show_all else all_users[:_TOP_N],
+            "has_more": not show_all and len(all_users) > _TOP_N,
+            "continue_url": continue_url,
+            "error": error,
+        },
+    )
 
 
 async def _resolve_mac_for_ip(client: MikroTikClient, ip: str) -> str | None:
@@ -120,7 +173,9 @@ def _safe_continue_url(link_orig: str | None) -> str | None:
 
 
 @router.get("/captive", response_class=HTMLResponse)
-async def page_captive(request: Request, link_orig: str = "", db: Session = Depends(get_db)):
+async def page_captive(
+    request: Request, link_orig: str = "", view: str = "", db: Session = Depends(get_db)
+):
     device = await _resolve_device(request, db)
     continue_url = _safe_continue_url(link_orig)
 
@@ -138,12 +193,7 @@ async def page_captive(request: Request, link_orig: str = "", db: Session = Depe
             {"state": "connected", "user": device.user, "continue_url": continue_url},
         )
 
-    users = _pin_selectable_users(db)
-    return templates.TemplateResponse(
-        request,
-        "captive.html",
-        {"state": "identify", "users": users, "continue_url": continue_url},
-    )
+    return _render_identify(request, db, continue_url, view)
 
 
 @router.post("/captive", response_class=HTMLResponse)
@@ -151,6 +201,7 @@ async def post_captive(
     request: Request,
     existing_user_id: str = Form(""),
     pin: str = Form(""),
+    view: str = Form(""),
     name: str = Form(""),
     email: str = Form(""),
     birthdate: str = Form(""),
@@ -178,35 +229,26 @@ async def post_captive(
 
     t = get_translations(request.state.locale)
 
-    def _identify_error(message: str):
-        return templates.TemplateResponse(
-            request,
-            "captive.html",
-            {
-                "state": "identify",
-                "users": _pin_selectable_users(db),
-                "continue_url": continue_url,
-                "error": message,
-            },
-        )
-
     if existing_user_id:
         user = db.get(User, int(existing_user_id))
         if user is None or user.pin_hash is None:
-            return _identify_error(t.gettext("Person not found."))
+            return _render_identify(request, db, continue_url, view, t.gettext("Person not found."))
         if _pin_locked_out(user.id):
-            return _identify_error(
-                t.gettext("Too many attempts. Try again in a few minutes.")
+            return _render_identify(
+                request, db, continue_url, view,
+                t.gettext("Too many attempts. Try again in a few minutes."),
             )
         if not verify_pin(pin, user.pin_hash):
             _record_pin_failure(user.id)
-            return _identify_error(t.gettext("Incorrect PIN."))
+            return _render_identify(request, db, continue_url, view, t.gettext("Incorrect PIN."))
         _clear_pin_attempts(user.id)
     else:
         if not name.strip():
-            return _identify_error(t.gettext("Please enter a name."))
+            return _render_identify(request, db, continue_url, "new", t.gettext("Please enter a name."))
         if not is_valid_pin_format(new_pin):
-            return _identify_error(t.gettext("PIN must be 4 digits."))
+            return _render_identify(
+                request, db, continue_url, "new", t.gettext("PIN must be 4 digits.")
+            )
         birthdate_val: date | None = None
         if birthdate.strip():
             birthdate_val = date.fromisoformat(birthdate.strip())
