@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}{{ device.hostname or device.mac }} — familink{% endblock %}
+{% block title %}{{ device.hostname_override or device.hostname or device.mac }} — familink{% endblock %}
 {% block content %}
 <a class="back-btn" href="/devices">&larr; {{ _('Back') }}</a>
 
 <div class="detail-card">
   <div class="card-head">
-    <span class="kname"><span class="sparkle" aria-hidden="true">✦</span> {{ device.hostname or device.mac }}</span>
+    <span class="kname"><span class="sparkle" aria-hidden="true">✦</span> {{ device.hostname_override or device.hostname or device.mac }}</span>
     <span class="badge {{ 'b-online' if device.is_online else 'b-offline' }}">{{ _('Online') if device.is_online else _('Offline') }}</span>
   </div>
   <div class="detail-grid">
@@ -18,16 +18,29 @@
 
   <div class="assoc-section">
     <h3>{{ _('Identification') }}</h3>
-    <div class="detail-grid">
-      <div><div class="detail-label">{{ _('Hostname') }}</div><div class="detail-value">{{ device.hostname or '—' }}</div></div>
-      <div><div class="detail-label">{{ _('MAC address type') }}</div><div class="detail-value">{{ _('Random') if device.mac_is_random else _('Fixed') }}</div></div>
-      <div><div class="detail-label">{{ _('Guessed type') }}</div><div class="detail-value">{{ vendor_guess_label or '—' }}</div></div>
-      <div><div class="detail-label">{{ _('Manufacturer') }}</div><div class="detail-value">{{ device.fingerbank_manufacturer or '—' }}</div></div>
-      <div><div class="detail-label">{{ _('Device') }}</div><div class="detail-value">{{ device.fingerbank_device_name or '—' }}</div></div>
-      {% if device.fingerbank_score is not none %}
-      <div><div class="detail-label">{{ _('Confidence') }}</div><div class="detail-value">{{ device.fingerbank_score }}%</div></div>
-      {% endif %}
-    </div>
+    <form method="post" action="/devices/{{ device.mac }}/identification">
+      <div class="detail-grid">
+        <div>
+          <div class="detail-label">{{ _('Hostname') }}</div>
+          <input class="search" type="text" name="hostname_override" value="{{ device.hostname_override or '' }}" placeholder="{{ device.hostname or '—' }}">
+        </div>
+        <div><div class="detail-label">{{ _('MAC address type') }}</div><div class="detail-value">{{ _('Random') if device.mac_is_random else _('Fixed') }}</div></div>
+        <div>
+          <div class="detail-label">{{ _('Guessed type') }}</div>
+          <input class="search" type="text" name="type_override" value="{{ device.type_override or '' }}" placeholder="{{ vendor_guess_label or '—' }}">
+        </div>
+        <div><div class="detail-label">{{ _('Manufacturer') }}</div><div class="detail-value">{{ device.fingerbank_manufacturer or '—' }}</div></div>
+        <div>
+          <div class="detail-label">{{ _('Device') }}</div>
+          <input class="search" type="text" name="device_name_override" value="{{ device.device_name_override or '' }}" placeholder="{{ device.fingerbank_device_name or '—' }}">
+        </div>
+        {% if device.fingerbank_score is not none %}
+        <div><div class="detail-label">{{ _('Confidence') }}</div><div class="detail-value">{{ device.fingerbank_score }}%</div></div>
+        {% endif %}
+      </div>
+      <p class="hint">{{ _('Leave a field blank to use the automatically detected value shown as placeholder. Hostname also updates the matching MikroTik DHCP lease.') }}</p>
+      <button class="save-btn" type="submit">{{ _('Save') }}</button>
+    </form>
     <p class="hint">
       {% if device.fingerbank_checked_at %}
         {% if device.fingerbank_device_name %}

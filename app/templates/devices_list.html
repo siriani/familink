@@ -19,11 +19,12 @@
   </thead>
   <tbody>
     {% for d in devices %}
-    {% set type_label = d.fingerbank_manufacturer or (_(TYPE_LABEL_MSGIDS[d.vendor_guess]) if d.vendor_guess in TYPE_LABEL_MSGIDS else none) %}
+    {% set display_hostname = d.hostname_override or d.hostname %}
+    {% set type_label = d.device_name_override or d.fingerbank_device_name or d.type_override or d.fingerbank_manufacturer or (_(TYPE_LABEL_MSGIDS[d.vendor_guess]) if d.vendor_guess in TYPE_LABEL_MSGIDS else none) %}
     <tr class="clickable" onclick="location.href='/devices/{{ d.mac }}'">
       <td>
-        <span class="avatar avatar-{{ (loop.index0 % 4) + 1 }}">{{ (d.hostname or d.mac)[0] | upper }}</span>
-        <strong>{{ d.hostname or '—' }}</strong><br>
+        <span class="avatar avatar-{{ (loop.index0 % 4) + 1 }}">{{ (display_hostname or d.mac)[0] | upper }}</span>
+        <strong>{{ display_hostname or '—' }}</strong><br>
         <span class="mono small">{{ d.mac }}</span>
         <div class="chip-row">
           {% if d.mac_is_random %}<span class="badge b-hotspot">{{ _('Random MAC') }}</span>{% endif %}

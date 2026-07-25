@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 11:09-0300\n"
+"POT-Creation-Date: 2026-07-25 11:43-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -204,11 +204,11 @@ msgstr "Ich habe kein Konto"
 msgid "Back"
 msgstr "Zurück"
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:35
 msgid "Online"
 msgstr "Online"
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:35
 msgid "Offline"
 msgstr "Offline"
 
@@ -249,153 +249,157 @@ msgstr "kein Binding"
 msgid "Identification"
 msgstr "Identifikation"
 
-#: app/templates/device_detail.html:22
+#: app/templates/device_detail.html:24
 msgid "Hostname"
 msgstr "Hostname"
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "MAC address type"
 msgstr "MAC-Adresstyp"
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "Random"
 msgstr "Zufällig"
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "Fixed"
 msgstr "Fest"
 
-#: app/templates/device_detail.html:24
+#: app/templates/device_detail.html:29
 msgid "Guessed type"
 msgstr "Vermuteter Typ"
 
-#: app/templates/device_detail.html:25
+#: app/templates/device_detail.html:32
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: app/templates/device_detail.html:26 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:34 app/templates/devices_list.html:18
 #: app/templates/enforcement_list.html:10
 msgid "Device"
 msgstr "Gerät"
 
-#: app/templates/device_detail.html:28
+#: app/templates/device_detail.html:38
 msgid "Confidence"
 msgstr "Konfidenz"
 
-#: app/templates/device_detail.html:34
+#: app/templates/device_detail.html:41
+msgid "Leave a field blank to use the automatically detected value shown as placeholder. Hostname also updates the matching MikroTik DHCP lease."
+msgstr "Lassen Sie ein Feld leer, um den automatisch erkannten Wert zu verwenden, der als Platzhalter angezeigt wird. Der Hostname aktualisiert auch den passenden MikroTik-DHCP-Lease."
+
+#: app/templates/device_detail.html:42 app/templates/device_detail.html:65
+#: app/templates/device_detail.html:77 app/templates/device_detail.html:115
+#: app/templates/device_detail.html:123 app/templates/groups_form.html:72
+#: app/templates/settings.html:21 app/templates/settings.html:55
+#: app/templates/users_form.html:93 app/templates/users_form.html:103
+msgid "Save"
+msgstr "Speichern"
+
+#: app/templates/device_detail.html:47
 #, python-format
 msgid "Last checked: %(when)s"
 msgstr "Zuletzt geprüft: %(when)s"
 
-#: app/templates/device_detail.html:36
+#: app/templates/device_detail.html:49
 #, python-format
 msgid "Last checked: %(when)s — no match."
 msgstr "Zuletzt geprüft: %(when)s — keine Übereinstimmung."
 
-#: app/templates/device_detail.html:39
+#: app/templates/device_detail.html:52
 msgid "Never checked yet."
 msgstr "Noch nicht geprüft."
 
-#: app/templates/device_detail.html:43
+#: app/templates/device_detail.html:56
 msgid "Refresh identification"
 msgstr "Identifikation aktualisieren"
 
-#: app/templates/device_detail.html:48 app/templates/settings.html:26
+#: app/templates/device_detail.html:61 app/templates/settings.html:26
 #: app/templates/users_form.html:99
 msgid "MQTT"
 msgstr "MQTT"
 
-#: app/templates/device_detail.html:51
+#: app/templates/device_detail.html:64
 msgid "Publish this device's presence via MQTT"
 msgstr "Anwesenheit dieses Geräts über MQTT veröffentlichen"
 
-#: app/templates/device_detail.html:52 app/templates/device_detail.html:64
-#: app/templates/device_detail.html:102 app/templates/device_detail.html:110
-#: app/templates/groups_form.html:72 app/templates/settings.html:21
-#: app/templates/settings.html:55 app/templates/users_form.html:93
-#: app/templates/users_form.html:103
-msgid "Save"
-msgstr "Speichern"
-
-#: app/templates/device_detail.html:57 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:70 app/templates/devices_list.html:18
 msgid "Group"
 msgstr "Gruppe"
 
-#: app/templates/device_detail.html:61
+#: app/templates/device_detail.html:74
 msgid "hotspot required"
 msgstr "Hotspot erforderlich"
 
-#: app/templates/device_detail.html:72
+#: app/templates/device_detail.html:85
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr "Dies schreibt jetzt sofort auf den echten MikroTik-Router. Fortfahren?"
 
-#: app/templates/device_detail.html:73
+#: app/templates/device_detail.html:86
 msgid "Apply to MikroTik"
 msgstr "Auf MikroTik anwenden"
 
-#: app/templates/device_detail.html:81
+#: app/templates/device_detail.html:94
 msgid "Recent MikroTik apply attempts"
 msgstr "Letzte MikroTik-Anwendungsversuche"
 
-#: app/templates/device_detail.html:86 app/templates/users_form.html:64
+#: app/templates/device_detail.html:99 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/device_detail.html:86
+#: app/templates/device_detail.html:99
 msgid "FAILED"
 msgstr "FEHLGESCHLAGEN"
 
-#: app/templates/device_detail.html:94
+#: app/templates/device_detail.html:107
 msgid "Owner"
 msgstr "Besitzer"
 
-#: app/templates/device_detail.html:97
+#: app/templates/device_detail.html:110
 msgid "— unassigned —"
 msgstr "— nicht zugewiesen —"
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:120
 msgid "Notes"
 msgstr "Notizen"
 
-#: app/templates/device_detail.html:115
+#: app/templates/device_detail.html:128
 msgid "Port scan"
 msgstr "Portscan"
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:130
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr "Zuletzt gescannt: %(when)s"
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:130
 msgid "Never scanned yet."
 msgstr "Noch nicht gescannt."
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:131
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr "Neue Geräte werden automatisch gescannt, sobald sie erstmals erkannt werden."
 
-#: app/templates/device_detail.html:121
+#: app/templates/device_detail.html:134
 msgid "no known IP"
 msgstr "keine bekannte IP"
 
-#: app/templates/device_detail.html:122
+#: app/templates/device_detail.html:135
 msgid "Rescan"
 msgstr "Erneut scannen"
 
-#: app/templates/device_detail.html:122
+#: app/templates/device_detail.html:135
 msgid "Scan now"
 msgstr "Jetzt scannen"
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Port"
 msgstr "Port"
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Service"
 msgstr "Dienst"
 
@@ -420,18 +424,18 @@ msgstr "Status"
 msgid "User"
 msgstr "Person"
 
-#: app/templates/devices_list.html:29
+#: app/templates/devices_list.html:30
 msgid "Random MAC"
 msgstr "Zufällige MAC"
 
-#: app/templates/devices_list.html:37 app/templates/enforcement_list.html:18
+#: app/templates/devices_list.html:38 app/templates/enforcement_list.html:19
 #, python-format
 msgid "%(n)s open port"
 msgid_plural "%(n)s open ports"
 msgstr[0] "%(n)s offener Port"
 msgstr[1] "%(n)s offene Ports"
 
-#: app/templates/devices_list.html:42
+#: app/templates/devices_list.html:43
 msgid "No devices yet — waiting for the first MikroTik discovery cycle."
 msgstr "Noch keine Geräte — warte auf den ersten MikroTik-Erkennungszyklus."
 
@@ -461,7 +465,7 @@ msgstr "Aktuelle Gruppe"
 msgid "What would change"
 msgstr "Was sich ändern würde"
 
-#: app/templates/enforcement_list.html:24
+#: app/templates/enforcement_list.html:25
 msgid "Nothing pending — every device's group matches what's enforced on MikroTik."
 msgstr "Nichts ausstehend — die Gruppe jedes Geräts stimmt mit dem überein, was auf MikroTik durchgesetzt wird."
 

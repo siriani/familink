@@ -1,14 +1,14 @@
-# Translations template for PROJECT.
+# Translations template for familink.
 # Copyright (C) 2026 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the familink project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version: familink VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 11:09-0300\n"
+"POT-Creation-Date: 2026-07-25 11:43-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,9 +131,7 @@ msgid "Identifying your device…"
 msgstr ""
 
 #: app/templates/captive.html:15
-msgid ""
-"We haven't found you on the network yet. Wait a few seconds and reload "
-"the page."
+msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
 msgstr ""
 
 #: app/templates/captive.html:18
@@ -168,9 +166,7 @@ msgid "Birthdate (optional)"
 msgstr ""
 
 #: app/templates/captive.html:35
-msgid ""
-"Choose a 4-digit PIN — you'll need it to link future devices to this "
-"account"
+msgid "Choose a 4-digit PIN — you'll need it to link future devices to this account"
 msgstr ""
 
 #: app/templates/captive.html:37 app/templates/captive.html:61
@@ -207,11 +203,11 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:35
 msgid "Online"
 msgstr ""
 
-#: app/templates/device_detail.html:9 app/templates/devices_list.html:34
+#: app/templates/device_detail.html:9 app/templates/devices_list.html:35
 msgid "Offline"
 msgstr ""
 
@@ -252,153 +248,157 @@ msgstr ""
 msgid "Identification"
 msgstr ""
 
-#: app/templates/device_detail.html:22
+#: app/templates/device_detail.html:24
 msgid "Hostname"
 msgstr ""
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "MAC address type"
 msgstr ""
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "Random"
 msgstr ""
 
-#: app/templates/device_detail.html:23
+#: app/templates/device_detail.html:27
 msgid "Fixed"
 msgstr ""
 
-#: app/templates/device_detail.html:24
+#: app/templates/device_detail.html:29
 msgid "Guessed type"
 msgstr ""
 
-#: app/templates/device_detail.html:25
+#: app/templates/device_detail.html:32
 msgid "Manufacturer"
 msgstr ""
 
-#: app/templates/device_detail.html:26 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:34 app/templates/devices_list.html:18
 #: app/templates/enforcement_list.html:10
 msgid "Device"
 msgstr ""
 
-#: app/templates/device_detail.html:28
+#: app/templates/device_detail.html:38
 msgid "Confidence"
 msgstr ""
 
-#: app/templates/device_detail.html:34
+#: app/templates/device_detail.html:41
+msgid "Leave a field blank to use the automatically detected value shown as placeholder. Hostname also updates the matching MikroTik DHCP lease."
+msgstr ""
+
+#: app/templates/device_detail.html:42 app/templates/device_detail.html:65
+#: app/templates/device_detail.html:77 app/templates/device_detail.html:115
+#: app/templates/device_detail.html:123 app/templates/groups_form.html:72
+#: app/templates/settings.html:21 app/templates/settings.html:55
+#: app/templates/users_form.html:93 app/templates/users_form.html:103
+msgid "Save"
+msgstr ""
+
+#: app/templates/device_detail.html:47
 #, python-format
 msgid "Last checked: %(when)s"
 msgstr ""
 
-#: app/templates/device_detail.html:36
+#: app/templates/device_detail.html:49
 #, python-format
 msgid "Last checked: %(when)s — no match."
 msgstr ""
 
-#: app/templates/device_detail.html:39
+#: app/templates/device_detail.html:52
 msgid "Never checked yet."
 msgstr ""
 
-#: app/templates/device_detail.html:43
+#: app/templates/device_detail.html:56
 msgid "Refresh identification"
 msgstr ""
 
-#: app/templates/device_detail.html:48 app/templates/settings.html:26
+#: app/templates/device_detail.html:61 app/templates/settings.html:26
 #: app/templates/users_form.html:99
 msgid "MQTT"
 msgstr ""
 
-#: app/templates/device_detail.html:51
+#: app/templates/device_detail.html:64
 msgid "Publish this device's presence via MQTT"
 msgstr ""
 
-#: app/templates/device_detail.html:52 app/templates/device_detail.html:64
-#: app/templates/device_detail.html:102 app/templates/device_detail.html:110
-#: app/templates/groups_form.html:72 app/templates/settings.html:21
-#: app/templates/settings.html:55 app/templates/users_form.html:93
-#: app/templates/users_form.html:103
-msgid "Save"
-msgstr ""
-
-#: app/templates/device_detail.html:57 app/templates/devices_list.html:18
+#: app/templates/device_detail.html:70 app/templates/devices_list.html:18
 msgid "Group"
 msgstr ""
 
-#: app/templates/device_detail.html:61
+#: app/templates/device_detail.html:74
 msgid "hotspot required"
 msgstr ""
 
-#: app/templates/device_detail.html:72
+#: app/templates/device_detail.html:85
 msgid "This will write to the real MikroTik router right now. Continue?"
 msgstr ""
 
-#: app/templates/device_detail.html:73
+#: app/templates/device_detail.html:86
 msgid "Apply to MikroTik"
 msgstr ""
 
-#: app/templates/device_detail.html:81
+#: app/templates/device_detail.html:94
 msgid "Recent MikroTik apply attempts"
 msgstr ""
 
-#: app/templates/device_detail.html:86 app/templates/users_form.html:64
+#: app/templates/device_detail.html:99 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr ""
 
-#: app/templates/device_detail.html:86
+#: app/templates/device_detail.html:99
 msgid "FAILED"
 msgstr ""
 
-#: app/templates/device_detail.html:94
+#: app/templates/device_detail.html:107
 msgid "Owner"
 msgstr ""
 
-#: app/templates/device_detail.html:97
+#: app/templates/device_detail.html:110
 msgid "— unassigned —"
 msgstr ""
 
-#: app/templates/device_detail.html:107
+#: app/templates/device_detail.html:120
 msgid "Notes"
 msgstr ""
 
-#: app/templates/device_detail.html:115
+#: app/templates/device_detail.html:128
 msgid "Port scan"
 msgstr ""
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:130
 #, python-format
 msgid "Last scanned: %(when)s"
 msgstr ""
 
-#: app/templates/device_detail.html:117
+#: app/templates/device_detail.html:130
 msgid "Never scanned yet."
 msgstr ""
 
-#: app/templates/device_detail.html:118
+#: app/templates/device_detail.html:131
 msgid "New devices are scanned automatically the first time they're discovered."
 msgstr ""
 
-#: app/templates/device_detail.html:121
+#: app/templates/device_detail.html:134
 msgid "no known IP"
 msgstr ""
 
-#: app/templates/device_detail.html:122
+#: app/templates/device_detail.html:135
 msgid "Rescan"
 msgstr ""
 
-#: app/templates/device_detail.html:122
+#: app/templates/device_detail.html:135
 msgid "Scan now"
 msgstr ""
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Port"
 msgstr ""
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Protocol"
 msgstr ""
 
-#: app/templates/device_detail.html:128
+#: app/templates/device_detail.html:141
 msgid "Service"
 msgstr ""
 
@@ -423,18 +423,18 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: app/templates/devices_list.html:29
+#: app/templates/devices_list.html:30
 msgid "Random MAC"
 msgstr ""
 
-#: app/templates/devices_list.html:37 app/templates/enforcement_list.html:18
+#: app/templates/devices_list.html:38 app/templates/enforcement_list.html:19
 #, python-format
 msgid "%(n)s open port"
 msgid_plural "%(n)s open ports"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/templates/devices_list.html:42
+#: app/templates/devices_list.html:43
 msgid "No devices yet — waiting for the first MikroTik discovery cycle."
 msgstr ""
 
@@ -453,9 +453,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: app/templates/enforcement_list.html:6
-msgid ""
-"No bulk apply on purpose — open a device to review and apply it "
-"individually."
+msgid "No bulk apply on purpose — open a device to review and apply it individually."
 msgstr ""
 
 #: app/templates/enforcement_list.html:10
@@ -466,10 +464,8 @@ msgstr ""
 msgid "What would change"
 msgstr ""
 
-#: app/templates/enforcement_list.html:24
-msgid ""
-"Nothing pending — every device's group matches what's enforced on "
-"MikroTik."
+#: app/templates/enforcement_list.html:25
+msgid "Nothing pending — every device's group matches what's enforced on MikroTik."
 msgstr ""
 
 #: app/templates/groups_form.html:2
@@ -499,8 +495,7 @@ msgstr ""
 #: app/templates/groups_form.html:28
 msgid ""
 "Hours per day. familink tracks each person's online time\n"
-"        itself and blocks their devices directly on MikroTik once they "
-"hit the limit — leave blank for\n"
+"        itself and blocks their devices directly on MikroTik once they hit the limit — leave blank for\n"
 "        no quota. A person's own override (set on their"
 msgstr ""
 
@@ -511,8 +506,7 @@ msgstr ""
 #: app/templates/groups_form.html:30
 msgid ""
 "record) wins over\n"
-"        this default. Only applies to devices linked to a person (device "
-"detail page → Owner)."
+"        this default. Only applies to devices linked to a person (device detail page → Owner)."
 msgstr ""
 
 #: app/templates/groups_form.html:34 app/templates/users_form.html:80
@@ -524,20 +518,15 @@ msgid "Weekend limit (seconds)"
 msgstr ""
 
 #: app/templates/groups_form.html:47
-msgid ""
-"Night block (independent of quota/hotspot -- works for device-only groups"
-" too, e.g. TV/Playstation)"
+msgid "Night block (independent of quota/hotspot -- works for device-only groups too, e.g. TV/Playstation)"
 msgstr ""
 
 #: app/templates/groups_form.html:48
 msgid ""
 "familink only keeps this MikroTik address-list's membership\n"
-"        in sync with the group's devices' current IPs (comment=familink "
-"entries only) -- it does NOT\n"
-"        create the firewall rule that actually drops traffic during this "
-"window. Create that rule on\n"
-"        the router once, then point it here (e.g. reuse the existing "
-"\"RESTRITO\" list)."
+"        in sync with the group's devices' current IPs (comment=familink entries only) -- it does NOT\n"
+"        create the firewall rule that actually drops traffic during this window. Create that rule on\n"
+"        the router once, then point it here (e.g. reuse the existing \"RESTRITO\" list)."
 msgstr ""
 
 #: app/templates/groups_form.html:54
@@ -596,8 +585,7 @@ msgstr ""
 
 #: app/templates/settings.html:8
 msgid ""
-", looked up by MAC address. Get a free key at fingerbank.org and paste it"
-" below --\n"
+", looked up by MAC address. Get a free key at fingerbank.org and paste it below --\n"
 "      leave it blank if you don't want this."
 msgstr ""
 
@@ -610,9 +598,7 @@ msgid "configured"
 msgstr ""
 
 #: app/templates/settings.html:16
-msgid ""
-"A key is already configured. Leave blank to keep it, or paste a new one "
-"to replace it."
+msgid "A key is already configured. Leave blank to keep it, or paste a new one to replace it."
 msgstr ""
 
 #: app/templates/settings.html:18
@@ -621,10 +607,8 @@ msgstr ""
 
 #: app/templates/settings.html:27
 msgid ""
-"Optional. Publishes each device or person you enable (see their own page "
-"--\n"
-"      look for the MQTT checkbox) as a retained JSON message on this "
-"broker, one topic per\n"
+"Optional. Publishes each device or person you enable (see their own page --\n"
+"      look for the MQTT checkbox) as a retained JSON message on this broker, one topic per\n"
 "      device/person. Leave the host blank to disable entirely."
 msgstr ""
 
@@ -673,15 +657,11 @@ msgid "PIN (4 digits)"
 msgstr ""
 
 #: app/templates/users_form.html:28
-msgid ""
-"Required for this person to be selectable on /captive. Leave blank to "
-"keep the current PIN."
+msgid "Required for this person to be selectable on /captive. Leave blank to keep the current PIN."
 msgstr ""
 
 #: app/templates/users_form.html:30
-msgid ""
-"Required for this person to be selectable on /captive. Leave blank to set"
-" it later."
+msgid "Required for this person to be selectable on /captive. Leave blank to set it later."
 msgstr ""
 
 #: app/templates/users_form.html:39

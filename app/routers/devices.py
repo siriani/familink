@@ -7,6 +7,8 @@ what's enforced on the router.
 """
 from __future__ import annotations
 
+import logging
+
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy import delete, desc, or_, select
@@ -17,11 +19,14 @@ from app.enforcement import pending_action, pending_action_label
 from app.fingerbank import enrich_and_store
 from app.i18n import get_translations
 from app.mikrotik_enforce import apply_device
+from app.mikrotik_lease import push_hostname_to_lease
 from app.models import Device, DeviceScanResult, EnforcementLog, Group, User
 from app.portscan import TYPE_LABEL_MSGIDS, scan_and_store
 from app.schemas import DeviceOut, DeviceUpdate
 from app.sync import get_mikrotik_client
 from app.templating import templates
+
+logger = logging.getLogger("familink.devices")
 
 router = APIRouter()
 
@@ -43,6 +48,7 @@ def _query_devices(db: Session, q: str | None, group_id: int | None) -> list[Dev
         stmt = stmt.where(
             or_(
                 Device.hostname.ilike(like),
+                Device.hostname_override.ilike(like),
                 Device.mac.ilike(like),
                 Device.current_ip.ilike(like),
             )
@@ -50,7 +56,7 @@ def _query_devices(db: Session, q: str | None, group_id: int | None) -> list[Dev
     if group_id:
         stmt = stmt.where(Device.group_id == group_id)
     devices = list(db.scalars(stmt))
-    devices.sort(key=lambda d: (not d.is_online, (d.hostname or d.mac).lower()))
+    devices.sort(key=lambda d: (not d.is_online, (d.hostname_override or d.hostname or d.mac).lower()))
     return devices
 
 
@@ -168,6 +174,41 @@ async def post_scan_device(mac: str, db: Session = Depends(get_db)):
 async def post_fingerbank_device(mac: str, db: Session = Depends(get_db)):
     device = _get_device_or_404(db, mac)
     await enrich_and_store(device.id, device.mac)
+    return RedirectResponse(f"/devices/{mac}", status_code=303)
+
+
+@router.post("/devices/{mac}/identification")
+async def post_device_identification(
+    mac: str,
+    hostname_override: str = Form(""),
+    type_override: str = Form(""),
+    device_name_override: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    device = _get_device_or_404(db, mac)
+    device.hostname_override = hostname_override.strip() or None
+    device.type_override = type_override.strip() or None
+    device.device_name_override = device_name_override.strip() or None
+    db.commit()
+
+    # Only Hostname has a real MikroTik-side equivalent (the DHCP lease's
+    # comment field) -- Tipo/Dispositivo are familink-only corrections,
+    # there's nothing on MikroTik to push them to. Best-effort: a failed
+    # push doesn't undo the save above, just logs a warning.
+    if device.hostname_override:
+        client = get_mikrotik_client()
+        try:
+            result = await push_hostname_to_lease(client, device.mac, device.hostname_override)
+        except Exception:
+            logger.warning(
+                "failed to push hostname override to MikroTik lease for %s", mac, exc_info=True
+            )
+        else:
+            if not result.success:
+                logger.warning(
+                    "hostname override push to MikroTik lease for %s: %s", mac, result.detail
+                )
+
     return RedirectResponse(f"/devices/{mac}", status_code=303)
 
 

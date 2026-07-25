@@ -10,9 +10,10 @@
   <thead><tr><th>{{ _('Device') }}</th><th>{{ _('IP') }}</th><th>{{ _('Current group') }}</th><th>{{ _('What would change') }}</th><th>{{ _('Last seen') }}</th></tr></thead>
   <tbody>
     {% for p in pending %}
+    {% set display_hostname = p.device.hostname_override or p.device.hostname %}
     <tr class="clickable" onclick="location.href='/devices/{{ p.device.mac }}'">
       <td>
-        <strong>{{ p.device.hostname or '—' }}</strong><br>
+        <strong>{{ display_hostname or '—' }}</strong><br>
         <span class="mono small">{{ p.device.mac }}</span>
       </td>
       <td class="mono small">{{ p.device.current_ip or '—' }}{% if p.device.scan_results %} <span class="port-badge" title="{{ ngettext('%(n)s open port', '%(n)s open ports', p.device.scan_results|length) % {'n': p.device.scan_results|length} }}">●{{ p.device.scan_results|length }}</span>{% endif %}</td>

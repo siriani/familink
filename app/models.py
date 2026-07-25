@@ -127,6 +127,20 @@ class Device(Base):
     fingerbank_manufacturer: Mapped[str | None] = mapped_column(String(255))
     fingerbank_score: Mapped[int | None] = mapped_column(Integer)
     fingerbank_checked_at: Mapped[datetime | None] = mapped_column(DateTime)
+    # Admin-owned corrections (same ownership class as `notes` below --
+    # the sync loop and Fingerbank/portscan never touch these), shown in
+    # place of the auto-detected hostname/type/device-name wherever those
+    # are displayed. A set override also "locks" that field: a later
+    # auto-refresh (port scan, Fingerbank "Refresh identification") does
+    # not overwrite it -- only clearing the override (blank field, save)
+    # goes back to auto-detected. hostname_override is also pushed to the
+    # matching MikroTik DHCP lease's `comment` field (app/mikrotik_lease.py)
+    # since that one has a real MikroTik-side equivalent; type_override/
+    # device_name_override don't (MikroTik has no native "device type" or
+    # "manufacturer/model" concept), so those stay familink-only.
+    hostname_override: Mapped[str | None] = mapped_column(String(255))
+    type_override: Mapped[str | None] = mapped_column(String(255))
+    device_name_override: Mapped[str | None] = mapped_column(String(255))
     # Opt-in per device -- app/mqtt_publish.py only publishes this
     # device's presence over MQTT for devices where this is true.
     # Defaults false: a family's whole device list showing up on the
