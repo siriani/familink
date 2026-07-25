@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:35-0300\n"
+"POT-Creation-Date: 2026-07-25 10:51-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans\n"
@@ -290,12 +290,12 @@ msgstr "刷新识别"
 
 #: app/templates/device_detail.html:47 app/templates/settings.html:26
 #: app/templates/users_form.html:99
-msgid "MQTT / Home Assistant"
-msgstr "MQTT / Home Assistant"
+msgid "MQTT"
+msgstr "MQTT"
 
 #: app/templates/device_detail.html:50
-msgid "Publish this device to Home Assistant via MQTT"
-msgstr "通过 MQTT 将此设备发布到 Home Assistant"
+msgid "Publish this device's presence via MQTT"
+msgstr "通过 MQTT 发布此设备的在线状态"
 
 #: app/templates/device_detail.html:51 app/templates/device_detail.html:63
 #: app/templates/device_detail.html:101 app/templates/device_detail.html:109
@@ -586,9 +586,9 @@ msgstr "尚未配置密钥 -- 在设置密钥之前将跳过 Fingerbank 查询�
 #: app/templates/settings.html:27
 msgid ""
 "Optional. Publishes each device or person you enable (see their own page --\n"
-"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
-"      Leave the host blank to disable entirely."
-msgstr "可选。将你启用的每个设备或用户(在其各自页面上寻找 MQTT 复选框)通过 MQTT Discovery 发布为 Home Assistant 实体。将主机留空可完全禁用此功能。"
+"      look for the MQTT checkbox) as a retained JSON message on this broker, one topic per\n"
+"      device/person. Leave the host blank to disable entirely."
+msgstr "可选。将你启用的每个设备或用户(在其各自页面上寻找 MQTT 复选框)作为保留的 JSON 消息发布到此 Broker,每个设备/用户对应一个主题。将主机留空可完全禁用此功能。"
 
 #: app/templates/settings.html:33
 msgid "Broker host"
@@ -712,8 +712,8 @@ msgid "Create user"
 msgstr "创建用户"
 
 #: app/templates/users_form.html:102
-msgid "Publish this person to Home Assistant via MQTT"
-msgstr "通过 MQTT 将此人发布到 Home Assistant"
+msgid "Publish this person's presence via MQTT"
+msgstr "通过 MQTT 发布此人的在线状态"
 
 #: app/templates/users_list.html:10
 msgid "Quota override"
@@ -741,4 +741,7 @@ msgstr "暂无用户。请在设备详情页将设备关联到某个用户。"
 
 #~ msgid "Fingerbank identification"
 #~ msgstr "Fingerbank 识别"
+
+#~ msgid "MQTT / Home Assistant"
+#~ msgstr "MQTT / Home Assistant"
 

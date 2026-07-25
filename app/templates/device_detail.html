@@ -44,10 +44,10 @@
   </div>
 
   <div class="assoc-section">
-    <h3>{{ _('MQTT / Home Assistant') }}</h3>
+    <h3>{{ _('MQTT') }}</h3>
     <form method="post" action="/devices/{{ device.mac }}/mqtt" class="inline-form">
       <label><input type="checkbox" name="mqtt_enabled" {% if device.mqtt_enabled %}checked{% endif %}>
-      {{ _('Publish this device to Home Assistant via MQTT') }}</label>
+      {{ _("Publish this device's presence via MQTT") }}</label>
       <button class="save-btn" type="submit">{{ _('Save') }}</button>
     </form>
   </div>

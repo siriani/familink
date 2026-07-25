@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:35-0300\n"
+"POT-Creation-Date: 2026-07-25 10:51-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -290,12 +290,12 @@ msgstr "Identifikation aktualisieren"
 
 #: app/templates/device_detail.html:47 app/templates/settings.html:26
 #: app/templates/users_form.html:99
-msgid "MQTT / Home Assistant"
-msgstr "MQTT / Home Assistant"
+msgid "MQTT"
+msgstr "MQTT"
 
 #: app/templates/device_detail.html:50
-msgid "Publish this device to Home Assistant via MQTT"
-msgstr "Dieses Gerät über MQTT an Home Assistant übermitteln"
+msgid "Publish this device's presence via MQTT"
+msgstr "Anwesenheit dieses Geräts über MQTT veröffentlichen"
 
 #: app/templates/device_detail.html:51 app/templates/device_detail.html:63
 #: app/templates/device_detail.html:101 app/templates/device_detail.html:109
@@ -589,9 +589,9 @@ msgstr "Noch kein Schlüssel konfiguriert -- Fingerbank-Abfragen werden überspr
 #: app/templates/settings.html:27
 msgid ""
 "Optional. Publishes each device or person you enable (see their own page --\n"
-"      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.\n"
-"      Leave the host blank to disable entirely."
-msgstr "Optional. Veröffentlicht jedes von dir aktivierte Gerät oder jede Person (siehe die jeweilige Seite -- achte auf das MQTT-Kästchen) als Home-Assistant-Entität über MQTT Discovery. Host leer lassen, um alles zu deaktivieren."
+"      look for the MQTT checkbox) as a retained JSON message on this broker, one topic per\n"
+"      device/person. Leave the host blank to disable entirely."
+msgstr "Optional. Veröffentlicht jedes von dir aktivierte Gerät oder jede Person (siehe die jeweilige Seite -- achte auf das MQTT-Kästchen) als retained JSON-Nachricht auf diesem Broker, ein Topic pro Gerät/Person. Host leer lassen, um alles zu deaktivieren."
 
 #: app/templates/settings.html:33
 msgid "Broker host"
@@ -715,8 +715,8 @@ msgid "Create user"
 msgstr "Person erstellen"
 
 #: app/templates/users_form.html:102
-msgid "Publish this person to Home Assistant via MQTT"
-msgstr "Diese Person über MQTT an Home Assistant übermitteln"
+msgid "Publish this person's presence via MQTT"
+msgstr "Anwesenheit dieser Person über MQTT veröffentlichen"
 
 #: app/templates/users_list.html:10
 msgid "Quota override"
@@ -744,4 +744,7 @@ msgstr "Noch keine Personen. Verknüpfe ein Gerät mit einer Person auf der Ger�
 
 #~ msgid "Fingerbank identification"
 #~ msgstr "Fingerbank-Identifikation"
+
+#~ msgid "MQTT / Home Assistant"
+#~ msgstr "MQTT / Home Assistant"
 

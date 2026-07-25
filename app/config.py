@@ -47,10 +47,10 @@ DISPLAY_TIMEZONE = os.environ.get("DISPLAY_TIMEZONE", "America/Sao_Paulo")
 # back to "en" with a startup warning (app/i18n.py), not a hard failure.
 DISPLAY_LANGUAGE = os.environ.get("DISPLAY_LANGUAGE", "pt-BR")
 
-# MQTT presence publisher (Home Assistant discovery) -- deliberately NOT
-# configured here. Unlike every other credential in this file, the
-# broker host/port/user/password/topic-prefix are admin-configured at
-# /settings (app/routers/settings.py, app/models.py:Setting), same
+# MQTT presence publisher -- deliberately NOT configured here. Unlike
+# every other credential in this file, the broker host/port/user/
+# password/topic-prefix are admin-configured at /settings
+# (app/routers/settings.py, app/models.py:Setting), same
 # reasoning as the Fingerbank API key: a non-technical admin running
 # someone else's familink install may not have shell access to edit
 # .env. See app/mqtt_publish.py.

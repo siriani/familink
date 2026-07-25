@@ -23,10 +23,10 @@
   </div>
 
   <div class="assoc-section">
-    <h3>{{ _('MQTT / Home Assistant') }}</h3>
+    <h3>{{ _('MQTT') }}</h3>
     <p class="hint">{{ _('Optional. Publishes each device or person you enable (see their own page --
-      look for the MQTT checkbox) as a Home Assistant entity over MQTT Discovery.
-      Leave the host blank to disable entirely.') }}</p>
+      look for the MQTT checkbox) as a retained JSON message on this broker, one topic per
+      device/person. Leave the host blank to disable entirely.') }}</p>
     <form method="post" action="/settings">
       <div class="detail-grid detail-grid-3">
         <div>

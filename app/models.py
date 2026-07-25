@@ -94,9 +94,9 @@ class User(Base):
     seconds_used_today: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     blocked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    # Opt-in, same reasoning as Device.mqtt_enabled -- publishes a
-    # presence binary_sensor to Home Assistant (online if any of this
-    # person's devices is online) only when explicitly turned on.
+    # Opt-in, same reasoning as Device.mqtt_enabled -- publishes this
+    # person's presence over MQTT (online if any of their devices is
+    # online) only when explicitly turned on.
     mqtt_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     devices: Mapped[list["Device"]] = relationship(back_populates="user")
@@ -127,10 +127,10 @@ class Device(Base):
     fingerbank_manufacturer: Mapped[str | None] = mapped_column(String(255))
     fingerbank_score: Mapped[int | None] = mapped_column(Integer)
     fingerbank_checked_at: Mapped[datetime | None] = mapped_column(DateTime)
-    # Opt-in per device -- app/mqtt_publish.py only publishes a Home
-    # Assistant entity for devices where this is true. Defaults false: a
-    # family's whole device list showing up in someone's HA instance
-    # without being asked is exactly the kind of silent-by-default
+    # Opt-in per device -- app/mqtt_publish.py only publishes this
+    # device's presence over MQTT for devices where this is true.
+    # Defaults false: a family's whole device list showing up on the
+    # broker without being asked is exactly the kind of silent-by-default
     # behavior familink avoids elsewhere (see MIKROTIK write discipline).
     mqtt_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     first_seen: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
@@ -173,10 +173,13 @@ class DeviceScanResult(Base):
 
 
 class DeviceMqttState(Base):
-    """MQTT / Home Assistant discovery publisher state (app/mqtt_publish.py,
-    SPEC.md). Tracks whether a device's HA discovery config has already
-    been published, so the publisher doesn't resend it every cycle --
-    only re-publishes the (cheap, idempotent) state topic each time.
+    """MQTT presence-publisher state (app/mqtt_publish.py, SPEC.md).
+    Tracks which devices currently have a retained state topic on the
+    broker (`object_id`, `last_state_published_at`) so that when a
+    device's mqtt_enabled flips off, the publisher knows to clear that
+    topic instead of leaving it retained forever -- and so it knows NOT
+    to bother clearing a topic that was never published in the first
+    place.
     """
 
     __tablename__ = "device_mqtt_state"
@@ -185,12 +188,11 @@ class DeviceMqttState(Base):
         ForeignKey("devices.id", ondelete="CASCADE"), primary_key=True
     )
     object_id: Mapped[str | None] = mapped_column(String(100))
-    discovery_published_at: Mapped[datetime | None] = mapped_column(DateTime)
     last_state_published_at: Mapped[datetime | None] = mapped_column(DateTime)
 
 
 class UserMqttState(Base):
-    """Same as DeviceMqttState, for the per-person presence binary_sensor
+    """Same as DeviceMqttState, for per-person presence publishing
     (app/mqtt_publish.py) -- a separate table rather than a shared one
     keyed by a polymorphic type column, matching the rest of this schema's
     preference for one obvious table per concern over a generic one.
@@ -202,7 +204,6 @@ class UserMqttState(Base):
         ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
     object_id: Mapped[str | None] = mapped_column(String(100))
-    discovery_published_at: Mapped[datetime | None] = mapped_column(DateTime)
     last_state_published_at: Mapped[datetime | None] = mapped_column(DateTime)
 
 

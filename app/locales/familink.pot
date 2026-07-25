@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 10:35-0300\n"
+"POT-Creation-Date: 2026-07-25 10:51-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,11 +293,11 @@ msgstr ""
 
 #: app/templates/device_detail.html:47 app/templates/settings.html:26
 #: app/templates/users_form.html:99
-msgid "MQTT / Home Assistant"
+msgid "MQTT"
 msgstr ""
 
 #: app/templates/device_detail.html:50
-msgid "Publish this device to Home Assistant via MQTT"
+msgid "Publish this device's presence via MQTT"
 msgstr ""
 
 #: app/templates/device_detail.html:51 app/templates/device_detail.html:63
@@ -607,9 +607,9 @@ msgstr ""
 msgid ""
 "Optional. Publishes each device or person you enable (see their own page "
 "--\n"
-"      look for the MQTT checkbox) as a Home Assistant entity over MQTT "
-"Discovery.\n"
-"      Leave the host blank to disable entirely."
+"      look for the MQTT checkbox) as a retained JSON message on this "
+"broker, one topic per\n"
+"      device/person. Leave the host blank to disable entirely."
 msgstr ""
 
 #: app/templates/settings.html:33
@@ -738,7 +738,7 @@ msgid "Create user"
 msgstr ""
 
 #: app/templates/users_form.html:102
-msgid "Publish this person to Home Assistant via MQTT"
+msgid "Publish this person's presence via MQTT"
 msgstr ""
 
 #: app/templates/users_list.html:10

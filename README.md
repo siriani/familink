@@ -11,9 +11,10 @@ The background sync that discovers devices is always read-only. Changing
 what's actually enforced on your router is a separate, deliberate step: the
 device page shows whether MikroTik matches the assigned group, and an
 **Apply to MikroTik** button applies it — one explicit click at a time,
-logged, never automatic. See [SPEC.md](SPEC.md) for the full vision and
-what's still on the roadmap (port scanning, MQTT/Home Assistant presence
-publishing, a captive-portal self-registration flow).
+logged, never automatic. See [SPEC.md](SPEC.md) for the full vision,
+including what's shipped (port scanning, MQTT presence publishing,
+captive-portal self-registration, Fingerbank device identification) and
+what's still on the roadmap.
 
 ## Requirements
 
