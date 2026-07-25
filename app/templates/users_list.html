@@ -7,7 +7,7 @@
 </div>
 <div class="tcard">
 <table>
-  <thead><tr><th>{{ _('Name') }}</th><th>{{ _('Quota override') }}</th><th>{{ _("Today's usage") }}</th><th>{{ _('Status') }}</th><th>{{ _('Devices') }}</th><th></th></tr></thead>
+  <thead><tr><th>{{ _('Name') }}</th><th>{{ _('Quota override') }}</th><th>{{ _("Today's usage") }}</th><th>{{ _('Status') }}</th><th>{{ _('PIN') }}</th><th>{{ _('Devices') }}</th><th></th></tr></thead>
   <tbody>
     {% for u in users %}
     <tr>
@@ -20,11 +20,15 @@
       </td>
       <td class="small">{{ (u.seconds_used_today / 3600) | localnumber(1) }}h</td>
       <td><span class="badge {{ 'b-hotspot' if u.blocked else 'b-free' }}">{{ _('Blocked') if u.blocked else pgettext('user_status', 'OK') }}</span></td>
+      <td>
+        {% if u.pin_hash %}<span class="badge b-free">{{ _('Set') }}</span>
+        {% else %}<span class="badge b-hotspot">{{ _('Not set') }}</span>{% endif %}
+      </td>
       <td>{{ u.devices | length }}</td>
       <td><a href="/users/{{ u.id }}/edit">{{ _('Edit') }}</a></td>
     </tr>
     {% else %}
-    <tr><td colspan="6" class="empty">{{ _('No users yet. Link a device to a user from the device detail page.') }}</td></tr>
+    <tr><td colspan="7" class="empty">{{ _('No users yet. Link a device to a user from the device detail page.') }}</td></tr>
     {% endfor %}
   </tbody>
 </table>

@@ -234,6 +234,29 @@ actually reads/writes it — `app/mikrotik_enforce.py`, `app/mikrotik_quota.py`,
 and `app/routers/captive.py` are all thin callers now, all using the same
 `comment=familink` tag.
 
+**Security gap found live (25/jul/2026):** the "I already have an account"
+picker originally let anyone tap an existing person's name to link a new
+device to them — zero verification. On a home LAN that's mostly benign
+(family members trust each other), but the same picker is reachable by
+anyone who joins the Wi-Fi, guest included, and it silently reassigns
+whatever access class (including an unlimited/bypassed adult account) to
+whoever clicks. Fixed with a 4-digit PIN per person (`User.pin_hash`,
+`app/pin.py` — PBKDF2-SHA256, stdlib only, no new dependency): the picker
+now only lists people who have a PIN set (`app/routers/captive.py:
+_pin_selectable_users`), and selecting one requires it. A person with no
+PIN yet is simply invisible on `/captive` until an admin sets one from
+their edit page — not a hard failure, just excluded, so migrating a
+pre-existing family (all starting with `pin_hash=NULL`, see migrations/
+versions/0006_user_pin.py) doesn't require touching every row at once.
+Self-registering via "Create account" requires setting a PIN in the same
+step, so new accounts are never left unprotected. Failed attempts are
+rate-limited in-process, keyed by *target user id* (not device/IP, which a
+LAN attacker can trivially spoof) — 5 wrong guesses locks that person out
+of the picker for 15 minutes, reset on a correct guess. Deliberately not a
+general login/session system (see the `User` model docstring) — this PIN
+protects exactly one action (linking a new device to an existing person)
+and nothing else about familink's admin surface.
+
 **Real gap found live (24/jul/2026), not anticipated by the design above:**
 several `Hotspot`-group family devices already had a MikroTik ip-binding
 predating familink entirely (hand-created by the retired hotspot-admin

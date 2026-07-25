@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:54-0300\n"
+"POT-Creation-Date: 2026-07-25 07:57-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans\n"
@@ -82,13 +82,25 @@ msgstr "Linux/SSH 主机"
 msgid "Web device"
 msgstr "网页设备"
 
-#: app/routers/captive.py:148
+#: app/routers/captive.py:196
 msgid "Person not found."
 msgstr "未找到该人员。"
 
-#: app/routers/captive.py:161
+#: app/routers/captive.py:199
+msgid "Too many attempts. Try again in a few minutes."
+msgstr "尝试次数过多。请几分钟后再试。"
+
+#: app/routers/captive.py:203
+msgid "Incorrect PIN."
+msgstr "PIN 错误。"
+
+#: app/routers/captive.py:207
 msgid "Please enter a name."
 msgstr "请输入姓名。"
+
+#: app/routers/captive.py:209
+msgid "PIN must be 4 digits."
+msgstr "PIN 必须为 4 位数字。"
 
 #: app/templates/base.html:13 app/templates/devices_list.html:2
 #: app/templates/groups_list.html:10 app/templates/users_list.html:10
@@ -111,56 +123,64 @@ msgstr "强制执行"
 msgid "Connect to the network"
 msgstr "连接网络"
 
-#: app/templates/captive.html:34
+#: app/templates/captive.html:40
 msgid "Identifying your device…"
 msgstr "正在识别你的设备…"
 
-#: app/templates/captive.html:35
+#: app/templates/captive.html:41
 msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
 msgstr "我们还没有在网络中找到你的设备。请稍等几秒后刷新页面。"
 
-#: app/templates/captive.html:38
+#: app/templates/captive.html:44
 #, python-format
 msgid "Connected as %(name)s"
 msgstr "已作为 %(name)s 连接"
 
-#: app/templates/captive.html:39
+#: app/templates/captive.html:45
 msgid "You are already identified on this network."
 msgstr "你已在此网络中完成身份识别。"
 
-#: app/templates/captive.html:41
+#: app/templates/captive.html:47
 msgid "Continue browsing →"
 msgstr "继续浏览 →"
 
-#: app/templates/captive.html:45
+#: app/templates/captive.html:51
 msgid "Who are you?"
 msgstr "你是谁?"
 
-#: app/templates/captive.html:49
+#: app/templates/captive.html:55
 msgid "I already have an account"
 msgstr "我已经有账号"
 
-#: app/templates/captive.html:59
+#: app/templates/captive.html:61 app/templates/users_list.html:10
+msgid "PIN"
+msgstr "PIN"
+
+#: app/templates/captive.html:62 app/templates/captive.html:78
+msgid "Enter"
+msgstr "进入"
+
+#: app/templates/captive.html:67
 msgid "Create account"
 msgstr "创建账号"
 
-#: app/templates/captive.html:62 app/templates/groups_form.html:12
+#: app/templates/captive.html:70 app/templates/groups_form.html:12
 #: app/templates/groups_list.html:10 app/templates/users_form.html:12
 #: app/templates/users_list.html:10
 msgid "Name"
 msgstr "姓名"
 
-#: app/templates/captive.html:64
+#: app/templates/captive.html:72
 msgid "Email (optional)"
 msgstr "电子邮箱(可选)"
 
-#: app/templates/captive.html:66
+#: app/templates/captive.html:74
 msgid "Birthdate (optional)"
 msgstr "出生日期(可选)"
 
-#: app/templates/captive.html:68
-msgid "Enter"
-msgstr "进入"
+#: app/templates/captive.html:76
+msgid "Choose a 4-digit PIN — you'll need it to link future devices to this account"
+msgstr "设置一个 4 位 PIN 码 — 以后关联新设备时需要用到"
 
 #: app/templates/device_detail.html:4 app/templates/groups_form.html:4
 #: app/templates/users_form.html:4
@@ -224,7 +244,7 @@ msgstr "需要热点登录"
 
 #: app/templates/device_detail.html:28 app/templates/device_detail.html:66
 #: app/templates/device_detail.html:74 app/templates/groups_form.html:72
-#: app/templates/users_form.html:82
+#: app/templates/users_form.html:93
 msgid "Save"
 msgstr "保存"
 
@@ -240,7 +260,7 @@ msgstr "应用到 MikroTik"
 msgid "Recent MikroTik apply attempts"
 msgstr "最近的 MikroTik 应用尝试"
 
-#: app/templates/device_detail.html:50 app/templates/users_form.html:53
+#: app/templates/device_detail.html:50 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
@@ -314,7 +334,7 @@ msgstr "所有分组"
 msgid "Filter"
 msgstr "筛选"
 
-#: app/templates/devices_list.html:18 app/templates/users_form.html:31
+#: app/templates/devices_list.html:18 app/templates/users_form.html:42
 #: app/templates/users_list.html:10
 msgid "Status"
 msgstr "状态"
@@ -410,11 +430,11 @@ msgid ""
 "        this default. Only applies to devices linked to a person (device detail page → Owner)."
 msgstr "的记录中设置)优先于此默认值。仅适用于已关联到某人的设备(设备详情页 → 所有者)。"
 
-#: app/templates/groups_form.html:34 app/templates/users_form.html:69
+#: app/templates/groups_form.html:34 app/templates/users_form.html:80
 msgid "Weekday limit (seconds)"
 msgstr "工作日限额(秒)"
 
-#: app/templates/groups_form.html:39 app/templates/users_form.html:74
+#: app/templates/groups_form.html:39 app/templates/users_form.html:85
 msgid "Weekend limit (seconds)"
 msgstr "周末限额(秒)"
 
@@ -470,7 +490,7 @@ msgstr "是"
 msgid "No"
 msgstr "否"
 
-#: app/templates/groups_list.html:26 app/templates/users_list.html:24
+#: app/templates/groups_list.html:26 app/templates/users_list.html:28
 msgid "Edit"
 msgstr "编辑"
 
@@ -490,72 +510,84 @@ msgstr "电子邮箱"
 msgid "Birthdate"
 msgstr "出生日期"
 
+#: app/templates/users_form.html:24
+msgid "PIN (4 digits)"
+msgstr "PIN(4 位数字)"
+
 #: app/templates/users_form.html:28
+msgid "Required for this person to be selectable on /captive. Leave blank to keep the current PIN."
+msgstr "只有设置了 PIN,此人才能在 /captive 中被选择。留空则保留当前 PIN。"
+
+#: app/templates/users_form.html:30
+msgid "Required for this person to be selectable on /captive. Leave blank to set it later."
+msgstr "只有设置了 PIN,此人才能在 /captive 中被选择。留空可稍后设置。"
+
+#: app/templates/users_form.html:39
 msgid "Today's usage (familink-tracked, no MikroTik login involved)"
 msgstr "今日使用情况(由 familink 追踪,不涉及 MikroTik 登录)"
 
-#: app/templates/users_form.html:30
+#: app/templates/users_form.html:41
 msgid "Used today"
 msgstr "今日已用"
 
-#: app/templates/users_form.html:32 app/templates/users_list.html:22
+#: app/templates/users_form.html:43 app/templates/users_list.html:22
 msgid "Blocked"
 msgstr "已封锁"
 
-#: app/templates/users_form.html:32 app/templates/users_list.html:22
+#: app/templates/users_form.html:43 app/templates/users_list.html:22
 msgctxt "user_status"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/users_form.html:37
+#: app/templates/users_form.html:48
 msgid "Zero today's usage and unblock this person right now?"
 msgstr "现在将今日使用时长清零并解除此人的封锁?"
 
-#: app/templates/users_form.html:38
+#: app/templates/users_form.html:49
 msgid "Reset today's usage now"
 msgstr "立即重置今日使用时长"
 
-#: app/templates/users_form.html:45
+#: app/templates/users_form.html:56
 msgid "Recent quota events"
 msgstr "最近的配额事件"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "When"
 msgstr "时间"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Limit"
 msgstr "限额"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Result"
 msgstr "结果"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Detail"
 msgstr "详情"
 
-#: app/templates/users_form.html:53
+#: app/templates/users_form.html:64
 msgid "Failed"
 msgstr "失败"
 
-#: app/templates/users_form.html:64
+#: app/templates/users_form.html:75
 msgid "Personal quota override"
 msgstr "个人配额覆盖"
 
-#: app/templates/users_form.html:65
+#: app/templates/users_form.html:76
 msgid "Leave blank to just use whatever their devices'"
 msgstr "留空则直接使用其设备所属"
 
-#: app/templates/users_form.html:66
+#: app/templates/users_form.html:77
 msgid "group"
 msgstr "分组"
 
-#: app/templates/users_form.html:66
+#: app/templates/users_form.html:77
 msgid "specifies. Fill in to override it for this person specifically."
 msgstr "中设定的值。填写此项可为该人员单独覆盖该设置。"
 
-#: app/templates/users_form.html:82
+#: app/templates/users_form.html:93
 msgid "Create user"
 msgstr "创建用户"
 
@@ -571,7 +603,15 @@ msgstr "今日使用"
 msgid "uses group default"
 msgstr "使用分组默认值"
 
-#: app/templates/users_list.html:27
+#: app/templates/users_list.html:24
+msgid "Set"
+msgstr "已设置"
+
+#: app/templates/users_list.html:25
+msgid "Not set"
+msgstr "未设置"
+
+#: app/templates/users_list.html:31
 msgid "No users yet. Link a device to a user from the device detail page."
 msgstr "暂无用户。请在设备详情页将设备关联到某个用户。"
 

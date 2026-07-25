@@ -17,6 +17,7 @@ are authoritative everywhere else too).
 from __future__ import annotations
 
 import logging
+import time
 from datetime import date
 from urllib.parse import urlparse
 
@@ -31,12 +32,52 @@ from app.i18n import get_translations
 from app.mikrotik import MikroTikClient
 from app.mikrotik_binding import apply_binding_state
 from app.models import Device, EnforcementLog, User
+from app.pin import hash_pin, is_valid_pin_format, verify_pin
 from app.sync import get_mikrotik_client
 from app.templating import templates
 
 logger = logging.getLogger("familink.captive")
 
 router = APIRouter()
+
+# Keyed by target user_id, not by device/IP -- a determined attacker can
+# spoof a MAC trivially, so per-device keying would be no real defense;
+# per-user keying protects the person regardless of which "device" is
+# doing the guessing, at the minor cost of a family member's own typos
+# counting toward the same lockout. In-memory and process-local (not
+# DB-backed) is a deliberate trade-off, same class of decision as the
+# rest of familink's read-mostly runtime state -- a restart resetting
+# everyone's attempt counters is harmless, unlike losing quota data.
+_PIN_MAX_ATTEMPTS = 5
+_PIN_LOCKOUT_S = 15 * 60
+_pin_attempts: dict[int, tuple[int, float]] = {}
+
+
+def _pin_locked_out(user_id: int) -> bool:
+    count, first_attempt = _pin_attempts.get(user_id, (0, 0.0))
+    if count < _PIN_MAX_ATTEMPTS:
+        return False
+    if time.monotonic() - first_attempt > _PIN_LOCKOUT_S:
+        del _pin_attempts[user_id]
+        return False
+    return True
+
+
+def _record_pin_failure(user_id: int) -> None:
+    count, first_attempt = _pin_attempts.get(user_id, (0, time.monotonic()))
+    _pin_attempts[user_id] = (count + 1, first_attempt)
+
+
+def _clear_pin_attempts(user_id: int) -> None:
+    _pin_attempts.pop(user_id, None)
+
+
+def _pin_selectable_users(db: Session) -> list[User]:
+    """Only people with a PIN set are offered on the /captive picker --
+    see app/models.py:User's docstring for why a PIN is required here at
+    all. A person with no PIN yet simply can't be self-selected; an admin
+    sets one from that person's edit page in the (authenticated) panel."""
+    return list(db.scalars(select(User).where(User.pin_hash.is_not(None)).order_by(User.name)))
 
 
 async def _resolve_mac_for_ip(client: MikroTikClient, ip: str) -> str | None:
@@ -97,7 +138,7 @@ async def page_captive(request: Request, link_orig: str = "", db: Session = Depe
             {"state": "connected", "user": device.user, "continue_url": continue_url},
         )
 
-    users = list(db.scalars(select(User).order_by(User.name)))
+    users = _pin_selectable_users(db)
     return templates.TemplateResponse(
         request,
         "captive.html",
@@ -109,9 +150,11 @@ async def page_captive(request: Request, link_orig: str = "", db: Session = Depe
 async def post_captive(
     request: Request,
     existing_user_id: str = Form(""),
+    pin: str = Form(""),
     name: str = Form(""),
     email: str = Form(""),
     birthdate: str = Form(""),
+    new_pin: str = Form(""),
     link_orig: str = Form(""),
     db: Session = Depends(get_db),
 ):
@@ -134,37 +177,45 @@ async def post_captive(
         )
 
     t = get_translations(request.state.locale)
+
+    def _identify_error(message: str):
+        return templates.TemplateResponse(
+            request,
+            "captive.html",
+            {
+                "state": "identify",
+                "users": _pin_selectable_users(db),
+                "continue_url": continue_url,
+                "error": message,
+            },
+        )
+
     if existing_user_id:
         user = db.get(User, int(existing_user_id))
-        if user is None:
-            users = list(db.scalars(select(User).order_by(User.name)))
-            return templates.TemplateResponse(
-                request,
-                "captive.html",
-                {
-                    "state": "identify",
-                    "users": users,
-                    "continue_url": continue_url,
-                    "error": t.gettext("Person not found."),
-                },
+        if user is None or user.pin_hash is None:
+            return _identify_error(t.gettext("Person not found."))
+        if _pin_locked_out(user.id):
+            return _identify_error(
+                t.gettext("Too many attempts. Try again in a few minutes.")
             )
+        if not verify_pin(pin, user.pin_hash):
+            _record_pin_failure(user.id)
+            return _identify_error(t.gettext("Incorrect PIN."))
+        _clear_pin_attempts(user.id)
     else:
         if not name.strip():
-            users = list(db.scalars(select(User).order_by(User.name)))
-            return templates.TemplateResponse(
-                request,
-                "captive.html",
-                {
-                    "state": "identify",
-                    "users": users,
-                    "continue_url": continue_url,
-                    "error": t.gettext("Please enter a name."),
-                },
-            )
+            return _identify_error(t.gettext("Please enter a name."))
+        if not is_valid_pin_format(new_pin):
+            return _identify_error(t.gettext("PIN must be 4 digits."))
         birthdate_val: date | None = None
         if birthdate.strip():
             birthdate_val = date.fromisoformat(birthdate.strip())
-        user = User(name=name.strip(), email=(email.strip() or None), birthdate=birthdate_val)
+        user = User(
+            name=name.strip(),
+            email=(email.strip() or None),
+            birthdate=birthdate_val,
+            pin_hash=hash_pin(new_pin),
+        )
         db.add(user)
         db.flush()
 

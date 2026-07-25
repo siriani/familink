@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.models import QuotaLog, User
+from app.pin import hash_pin, is_valid_pin_format
 from app.schemas import UserOut
 from app.templating import templates
 
@@ -81,14 +82,19 @@ def post_create_user(
     birthdate: str = Form(""),
     daily_limit_weekday_s: str = Form(""),
     daily_limit_weekend_s: str = Form(""),
+    pin: str = Form(""),
     db: Session = Depends(get_db),
 ):
+    pin = pin.strip()
+    if pin and not is_valid_pin_format(pin):
+        raise HTTPException(422, "pin must be exactly 4 digits")
     user = User(
         name=name.strip(),
         email=_str_or_none(email),
         birthdate=_date_or_none(birthdate),
         daily_limit_weekday_s=_int_or_none(daily_limit_weekday_s),
         daily_limit_weekend_s=_int_or_none(daily_limit_weekend_s),
+        pin_hash=hash_pin(pin) if pin else None,
     )
     db.add(user)
     db.commit()
@@ -103,14 +109,24 @@ def post_update_user(
     birthdate: str = Form(""),
     daily_limit_weekday_s: str = Form(""),
     daily_limit_weekend_s: str = Form(""),
+    pin: str = Form(""),
     db: Session = Depends(get_db),
 ):
     user = _get_user_or_404(db, user_id)
+    pin = pin.strip()
+    if pin and not is_valid_pin_format(pin):
+        raise HTTPException(422, "pin must be exactly 4 digits")
     user.name = name.strip()
     user.email = _str_or_none(email)
     user.birthdate = _date_or_none(birthdate)
     user.daily_limit_weekday_s = _int_or_none(daily_limit_weekday_s)
     user.daily_limit_weekend_s = _int_or_none(daily_limit_weekend_s)
+    # Blank means "don't touch the existing PIN" -- there's no separate
+    # "clear PIN" control in the form; leaving it out of the request
+    # entirely is not how HTML forms submit an unchecked text input (it
+    # always sends the field, empty or not), so blank is unambiguous here.
+    if pin:
+        user.pin_hash = hash_pin(pin)
     db.commit()
     return RedirectResponse(f"/users/{user.id}/edit", status_code=303)
 

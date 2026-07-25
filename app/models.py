@@ -56,9 +56,17 @@ class Group(Base):
 
 class User(Base):
     """A family member / registered person. NOT an app-login account — no
-    password here. A future captive-portal auth phase needs its own
-    mechanism (session token, magic link, whatever) rather than bolting a
-    password onto this table.
+    password here, and `pin_hash` isn't one either. It exists for exactly
+    one purpose: on the unauthenticated /captive page, picking an existing
+    person from the list to link a new device to (see app/pin.py,
+    app/routers/captive.py) used to require zero verification — anyone on
+    the LAN, including a guest, could claim to be any family member. A
+    4-digit PIN is deliberately not a general session/login credential (no
+    session token, no "log in to the admin panel" implications) — just
+    enough friction that impersonating someone on /captive takes more than
+    a tap. Null means the person has no PIN set and is therefore excluded
+    from the /captive picker entirely (existing rows all start null; see
+    migrations/versions/0006_user_pin.py).
     """
 
     __tablename__ = "users"
@@ -67,6 +75,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str | None] = mapped_column(String(255), unique=True)
     birthdate: Mapped[date | None] = mapped_column(Date)
+    pin_hash: Mapped[str | None] = mapped_column(String(160))
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     # Personal quota override -- wins over the applicable group's default

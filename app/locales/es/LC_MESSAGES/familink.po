@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-07-25 06:54-0300\n"
+"POT-Creation-Date: 2026-07-25 07:57-0300\n"
 "PO-Revision-Date: 2026-07-25 06:54-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -82,13 +82,25 @@ msgstr "Host Linux/SSH"
 msgid "Web device"
 msgstr "Dispositivo web"
 
-#: app/routers/captive.py:148
+#: app/routers/captive.py:196
 msgid "Person not found."
 msgstr "Persona no encontrada."
 
-#: app/routers/captive.py:161
+#: app/routers/captive.py:199
+msgid "Too many attempts. Try again in a few minutes."
+msgstr "Demasiados intentos. Intenta de nuevo en unos minutos."
+
+#: app/routers/captive.py:203
+msgid "Incorrect PIN."
+msgstr "PIN incorrecto."
+
+#: app/routers/captive.py:207
 msgid "Please enter a name."
 msgstr "Ingresa un nombre."
+
+#: app/routers/captive.py:209
+msgid "PIN must be 4 digits."
+msgstr "El PIN debe tener 4 dígitos."
 
 #: app/templates/base.html:13 app/templates/devices_list.html:2
 #: app/templates/groups_list.html:10 app/templates/users_list.html:10
@@ -111,56 +123,64 @@ msgstr "Aplicación"
 msgid "Connect to the network"
 msgstr "Conectar a la red"
 
-#: app/templates/captive.html:34
+#: app/templates/captive.html:40
 msgid "Identifying your device…"
 msgstr "Identificando tu dispositivo…"
 
-#: app/templates/captive.html:35
+#: app/templates/captive.html:41
 msgid "We haven't found you on the network yet. Wait a few seconds and reload the page."
 msgstr "Aún no te encontramos en la red. Espera unos segundos y recarga la página."
 
-#: app/templates/captive.html:38
+#: app/templates/captive.html:44
 #, python-format
 msgid "Connected as %(name)s"
 msgstr "Conectado como %(name)s"
 
-#: app/templates/captive.html:39
+#: app/templates/captive.html:45
 msgid "You are already identified on this network."
 msgstr "Ya estás identificado en esta red."
 
-#: app/templates/captive.html:41
+#: app/templates/captive.html:47
 msgid "Continue browsing →"
 msgstr "Continuar navegando →"
 
-#: app/templates/captive.html:45
+#: app/templates/captive.html:51
 msgid "Who are you?"
 msgstr "¿Quién eres?"
 
-#: app/templates/captive.html:49
+#: app/templates/captive.html:55
 msgid "I already have an account"
 msgstr "Ya tengo una cuenta"
 
-#: app/templates/captive.html:59
+#: app/templates/captive.html:61 app/templates/users_list.html:10
+msgid "PIN"
+msgstr "PIN"
+
+#: app/templates/captive.html:62 app/templates/captive.html:78
+msgid "Enter"
+msgstr "Entrar"
+
+#: app/templates/captive.html:67
 msgid "Create account"
 msgstr "Crear cuenta"
 
-#: app/templates/captive.html:62 app/templates/groups_form.html:12
+#: app/templates/captive.html:70 app/templates/groups_form.html:12
 #: app/templates/groups_list.html:10 app/templates/users_form.html:12
 #: app/templates/users_list.html:10
 msgid "Name"
 msgstr "Nombre"
 
-#: app/templates/captive.html:64
+#: app/templates/captive.html:72
 msgid "Email (optional)"
 msgstr "Correo electrónico (opcional)"
 
-#: app/templates/captive.html:66
+#: app/templates/captive.html:74
 msgid "Birthdate (optional)"
 msgstr "Fecha de nacimiento (opcional)"
 
-#: app/templates/captive.html:68
-msgid "Enter"
-msgstr "Entrar"
+#: app/templates/captive.html:76
+msgid "Choose a 4-digit PIN — you'll need it to link future devices to this account"
+msgstr "Elige un PIN de 4 dígitos — lo necesitarás para vincular futuros dispositivos a esta cuenta"
 
 #: app/templates/device_detail.html:4 app/templates/groups_form.html:4
 #: app/templates/users_form.html:4
@@ -224,7 +244,7 @@ msgstr "requiere hotspot"
 
 #: app/templates/device_detail.html:28 app/templates/device_detail.html:66
 #: app/templates/device_detail.html:74 app/templates/groups_form.html:72
-#: app/templates/users_form.html:82
+#: app/templates/users_form.html:93
 msgid "Save"
 msgstr "Guardar"
 
@@ -240,7 +260,7 @@ msgstr "Aplicar en MikroTik"
 msgid "Recent MikroTik apply attempts"
 msgstr "Intentos recientes de aplicación en MikroTik"
 
-#: app/templates/device_detail.html:50 app/templates/users_form.html:53
+#: app/templates/device_detail.html:50 app/templates/users_form.html:64
 msgctxt "log_result"
 msgid "OK"
 msgstr "OK"
@@ -314,7 +334,7 @@ msgstr "Todos los grupos"
 msgid "Filter"
 msgstr "Filtrar"
 
-#: app/templates/devices_list.html:18 app/templates/users_form.html:31
+#: app/templates/devices_list.html:18 app/templates/users_form.html:42
 #: app/templates/users_list.html:10
 msgid "Status"
 msgstr "Estado"
@@ -413,11 +433,11 @@ msgid ""
 "        this default. Only applies to devices linked to a person (device detail page → Owner)."
 msgstr ") tiene prioridad sobre este valor por defecto. Solo se aplica a dispositivos vinculados a una persona (página de detalle del dispositivo → Responsable)."
 
-#: app/templates/groups_form.html:34 app/templates/users_form.html:69
+#: app/templates/groups_form.html:34 app/templates/users_form.html:80
 msgid "Weekday limit (seconds)"
 msgstr "Límite entre semana (segundos)"
 
-#: app/templates/groups_form.html:39 app/templates/users_form.html:74
+#: app/templates/groups_form.html:39 app/templates/users_form.html:85
 msgid "Weekend limit (seconds)"
 msgstr "Límite de fin de semana (segundos)"
 
@@ -473,7 +493,7 @@ msgstr "Sí"
 msgid "No"
 msgstr "No"
 
-#: app/templates/groups_list.html:26 app/templates/users_list.html:24
+#: app/templates/groups_list.html:26 app/templates/users_list.html:28
 msgid "Edit"
 msgstr "Editar"
 
@@ -493,72 +513,84 @@ msgstr "Correo electrónico"
 msgid "Birthdate"
 msgstr "Fecha de nacimiento"
 
+#: app/templates/users_form.html:24
+msgid "PIN (4 digits)"
+msgstr "PIN (4 dígitos)"
+
 #: app/templates/users_form.html:28
+msgid "Required for this person to be selectable on /captive. Leave blank to keep the current PIN."
+msgstr "Necesario para que esta persona pueda seleccionarse en /captive. Déjalo en blanco para mantener el PIN actual."
+
+#: app/templates/users_form.html:30
+msgid "Required for this person to be selectable on /captive. Leave blank to set it later."
+msgstr "Necesario para que esta persona pueda seleccionarse en /captive. Déjalo en blanco para definirlo después."
+
+#: app/templates/users_form.html:39
 msgid "Today's usage (familink-tracked, no MikroTik login involved)"
 msgstr "Uso de hoy (monitoreado por familink, sin involucrar inicio de sesión en MikroTik)"
 
-#: app/templates/users_form.html:30
+#: app/templates/users_form.html:41
 msgid "Used today"
 msgstr "Usado hoy"
 
-#: app/templates/users_form.html:32 app/templates/users_list.html:22
+#: app/templates/users_form.html:43 app/templates/users_list.html:22
 msgid "Blocked"
 msgstr "Bloqueado"
 
-#: app/templates/users_form.html:32 app/templates/users_list.html:22
+#: app/templates/users_form.html:43 app/templates/users_list.html:22
 msgctxt "user_status"
 msgid "OK"
 msgstr "OK"
 
-#: app/templates/users_form.html:37
+#: app/templates/users_form.html:48
 msgid "Zero today's usage and unblock this person right now?"
 msgstr "¿Poner en cero el uso de hoy y desbloquear a esta persona ahora?"
 
-#: app/templates/users_form.html:38
+#: app/templates/users_form.html:49
 msgid "Reset today's usage now"
 msgstr "Restablecer el uso de hoy ahora"
 
-#: app/templates/users_form.html:45
+#: app/templates/users_form.html:56
 msgid "Recent quota events"
 msgstr "Eventos recientes de cuota"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "When"
 msgstr "Cuándo"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Limit"
 msgstr "Límite"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Result"
 msgstr "Resultado"
 
-#: app/templates/users_form.html:47
+#: app/templates/users_form.html:58
 msgid "Detail"
 msgstr "Detalle"
 
-#: app/templates/users_form.html:53
+#: app/templates/users_form.html:64
 msgid "Failed"
 msgstr "Falló"
 
-#: app/templates/users_form.html:64
+#: app/templates/users_form.html:75
 msgid "Personal quota override"
 msgstr "Cuota personalizada"
 
-#: app/templates/users_form.html:65
+#: app/templates/users_form.html:76
 msgid "Leave blank to just use whatever their devices'"
 msgstr "Deja en blanco para usar simplemente lo que el"
 
-#: app/templates/users_form.html:66
+#: app/templates/users_form.html:77
 msgid "group"
 msgstr "grupo"
 
-#: app/templates/users_form.html:66
+#: app/templates/users_form.html:77
 msgid "specifies. Fill in to override it for this person specifically."
 msgstr " de sus dispositivos especifica. Complétalo para anularlo específicamente para esta persona."
 
-#: app/templates/users_form.html:82
+#: app/templates/users_form.html:93
 msgid "Create user"
 msgstr "Crear persona"
 
@@ -574,7 +606,15 @@ msgstr "Uso de hoy"
 msgid "uses group default"
 msgstr "usa el valor predeterminado del grupo"
 
-#: app/templates/users_list.html:27
+#: app/templates/users_list.html:24
+msgid "Set"
+msgstr "Definido"
+
+#: app/templates/users_list.html:25
+msgid "Not set"
+msgstr "No definido"
+
+#: app/templates/users_list.html:31
 msgid "No users yet. Link a device to a user from the device detail page."
 msgstr "Aún no hay personas. Vincula un dispositivo a una persona desde la página de detalle del dispositivo."
 

@@ -20,6 +20,17 @@
           <div class="detail-label">{{ _('Birthdate') }}</div>
           <input class="search" style="margin-top:4px" type="date" name="birthdate" value="{{ user.birthdate if user else '' }}">
         </div>
+        <div>
+          <div class="detail-label">{{ _('PIN (4 digits)') }}</div>
+          <input class="search" style="margin-top:4px" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="pin" placeholder="{{ '••••' if user and user.pin_hash else '' }}">
+          <p class="hint" style="margin-top:4px">
+            {% if user %}
+              {{ _('Required for this person to be selectable on /captive. Leave blank to keep the current PIN.') }}
+            {% else %}
+              {{ _('Required for this person to be selectable on /captive. Leave blank to set it later.') }}
+            {% endif %}
+          </p>
+        </div>
       </div>
     </div>
 
