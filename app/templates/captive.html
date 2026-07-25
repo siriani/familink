@@ -12,11 +12,11 @@
 
 {% if state == "unknown" %}
   <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Identifying your device…') }}</h1>
-  <p class="captive-hint">{{ _("We haven't found you on the network yet. Wait a few seconds and reload the page.") }}</p>
+  <p class="hint">{{ _("We haven't found you on the network yet. Wait a few seconds and reload the page.") }}</p>
 
 {% elif state == "connected" %}
   <h1><span class="sparkle" aria-hidden="true">✦</span> {{ _('Connected as %(name)s') % {'name': user.name} }}</h1>
-  <p class="captive-hint">{{ _('You are already identified on this network.') }}</p>
+  <p class="hint">{{ _('You are already identified on this network.') }}</p>
   {% if continue_url %}
   <a class="continue-link" href="{{ continue_url }}">{{ _('Continue browsing →') }}</a>
   {% endif %}
@@ -34,7 +34,7 @@
     <input type="date" name="birthdate">
     <label>{{ _('Choose a 4-digit PIN — you\'ll need it to link future devices to this account') }}</label>
     <input type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" name="new_pin" required>
-    <button class="captive-btn" type="submit">{{ _('Enter') }}</button>
+    <button class="save-btn" type="submit">{{ _('Enter') }}</button>
   </form>
   <div class="switch-links">
     <a href="/captive{% if continue_url %}?link_orig={{ continue_url | urlencode }}{% endif %}">&larr; {{ _('I already have an account') }}</a>
@@ -58,7 +58,7 @@
         <input type="hidden" name="view" value="{{ view }}">
         <input type="hidden" name="link_orig" value="{{ continue_url or '' }}">
         <input type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" name="pin" placeholder="{{ _('PIN') }}" required autofocus>
-        <button class="captive-btn" type="submit">{{ _('Enter') }}</button>
+        <button class="save-btn" type="submit">{{ _('Enter') }}</button>
       </form>
     </details>
     {% endfor %}

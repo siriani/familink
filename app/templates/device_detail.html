@@ -5,7 +5,7 @@
 
 <div class="detail-card">
   <div class="card-head">
-    <span class="kname">{{ device.hostname or device.mac }}</span>
+    <span class="kname"><span class="sparkle" aria-hidden="true">✦</span> {{ device.hostname or device.mac }}</span>
     <span class="badge {{ 'b-online' if device.is_online else 'b-offline' }}">{{ _('Online') if device.is_online else _('Offline') }}</span>
   </div>
   <div class="detail-grid">

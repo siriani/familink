@@ -11,7 +11,7 @@
   <tbody>
     {% for u in users %}
     <tr>
-      <td><strong>{{ u.name }}</strong></td>
+      <td><span class="avatar avatar-{{ (loop.index0 % 4) + 1 }}">{{ u.name[0] | upper }}</span> <strong>{{ u.name }}</strong></td>
       <td class="small">
         {% if u.daily_limit_weekday_s or u.daily_limit_weekend_s %}
           {{ (u.daily_limit_weekday_s / 3600) | localnumber(1) if u.daily_limit_weekday_s else '—' }}h /

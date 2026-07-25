@@ -1,60 +1,123 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);min-height:100vh;color:#333}
-.topbar{background:rgba(0,0,0,.3);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
-.logo{color:#fff;font-size:16px;font-weight:700}
-.nav{display:flex;gap:6px}
-.nav-btn{padding:7px 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;transition:background .2s}
-.nav-btn:hover{background:rgba(255,255,255,.2)}
+
+/* Design tokens -- one minimal mobile-first system shared by the whole
+   app (admin panel + /captive): off-white cream, near-black ink, four
+   pastel accents used only as solid fill blocks (chips, cards, avatars),
+   never as body text. Bold geometric display type for headlines vs.
+   regular body/caption weight elsewhere. Responsive down to a 375px-wide
+   screen (iPhone 13 mini) -- every layout here is already single-column/
+   fluid-width at that floor; wrapper max-widths are what scale up on
+   larger screens. */
+:root{
+  --cream:#F6F4F0;
+  --ink:#1D1C1B;
+  --blush:#F6D0EF;
+  --lavender:#C1C8FF;
+  --sky:#C3E4EE;
+  --gold:#D8D1AF;
+  --font-display:Futura,'Century Gothic','Segoe UI',ui-rounded,-apple-system,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+
+body{font-family:var(--font-body);background:var(--cream);color:var(--ink);min-height:100vh;position:relative;overflow-x:hidden}
+/* Simple geometric shapes as compositional base -- fixed/decorative
+   only, low-opacity so they never compete with page content, never
+   affects document flow or the 375px-floor layout. */
+body::before,body::after{content:'';position:fixed;z-index:0;pointer-events:none}
+body::before{width:140px;height:140px;border-radius:50%;background:var(--sky);top:-50px;right:-50px;opacity:.35}
+body::after{width:90px;height:90px;border-radius:22px;background:var(--gold);bottom:20px;left:-30px;opacity:.3;transform:rotate(12deg)}
+
+a{color:inherit}
+
+/* Topbar / nav */
+.topbar{background:var(--ink);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap}
+.logo{color:var(--cream);font-family:var(--font-display);font-size:17px;font-weight:800;letter-spacing:-.01em}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav-btn{padding:8px 16px;border:none;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:rgba(246,244,240,.12);color:var(--cream);text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:rgba(246,244,240,.22)}
 .lang-switcher{display:flex;gap:4px}
-.lang-switcher a{padding:5px 8px;border-radius:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);text-decoration:none;transition:background .2s,color .2s}
-.lang-switcher a:hover{background:rgba(255,255,255,.15);color:#fff}
-.lang-switcher a.active{background:rgba(255,255,255,.2);color:#fff}
-.content{padding:20px;max-width:1100px;margin:0 auto}
+.lang-switcher a{padding:5px 10px;border-radius:999px;font-size:11px;font-weight:700;color:rgba(246,244,240,.6);text-decoration:none;transition:background .2s,color .2s}
+.lang-switcher a:hover{background:rgba(246,244,240,.15);color:var(--cream)}
+.lang-switcher a.active{background:var(--lavender);color:var(--ink)}
+
+.content{padding:20px;max-width:1100px;margin:0 auto;position:relative;z-index:1}
 .topbar2{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-.search{flex:1;min-width:200px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none}
-.search:focus{border-color:#0f3460}
-select{padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px}
-.rbtn{padding:10px 18px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-size:13px;cursor:pointer}
-.rbtn:hover{background:rgba(255,255,255,.25)}
-.tcard{background:#fff;border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+
+/* Inputs */
+.search{flex:1;min-width:200px;padding:10px 14px;border:1.5px solid #e6e2da;border-radius:14px;font-size:14px;font-family:var(--font-body);background:#fff;color:var(--ink);outline:none}
+.search:focus{border-color:var(--lavender);outline:2px solid var(--lavender);outline-offset:1px}
+select{padding:10px 12px;border:1.5px solid #e6e2da;border-radius:14px;font-size:13px;font-family:var(--font-body);background:#fff;color:var(--ink)}
+textarea{border:1.5px solid #e6e2da;border-radius:14px;padding:10px;font-family:inherit;font-size:13px;width:100%;background:#fff;color:var(--ink)}
+
+/* Buttons -- full-width-capable pill shape, solid dark fill + light
+   centered text for primary actions; a lighter outline pill for
+   secondary/navigational ones; gold fill flags an action that writes
+   to the real MikroTik router, not just the database. */
+.rbtn{padding:10px 20px;background:var(--ink);color:var(--cream);border:none;border-radius:999px;font-size:13px;font-weight:700;font-family:var(--font-display);cursor:pointer;text-decoration:none;display:inline-block}
+.rbtn:hover{opacity:.88}
+.save-btn{padding:11px 24px;background:var(--ink);color:var(--cream);border:none;border-radius:999px;font-size:13px;font-weight:700;font-family:var(--font-display);cursor:pointer}
+.save-btn:hover{opacity:.88}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#fff;color:var(--ink);border:1.5px solid var(--ink);border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:18px}
+.back-btn:hover{background:var(--cream)}
+.apply-btn{padding:7px 16px;font-size:12px;background:var(--gold);color:var(--ink)}
+
+/* Cards */
+.tcard{background:#fff;border-radius:20px;padding:18px;box-shadow:0 8px 30px rgba(29,28,27,.08)}
+.detail-card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 8px 30px rgba(29,28,27,.08)}
+.tcard-compact{margin-top:10px;box-shadow:none;border:1.5px solid #ece7de;padding:10px}
+
+/* Tables */
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:8px 10px;color:#888;font-size:11px;font-weight:700;border-bottom:2px solid #e2e8f0;white-space:nowrap}
-td{padding:9px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
+th{text-align:left;padding:8px 10px;color:#8c887f;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid #ece7de;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid #f2efe9;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr.clickable{cursor:pointer;transition:background .15s}
-tr.clickable:hover{background:#f8f9ff}
-.mono{font-family:monospace}
-.small{font-size:11px;color:#888}
-.empty{text-align:center;padding:24px;color:#888}
+tr.clickable:hover{background:var(--cream)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.small{font-size:11px;color:#8c887f}
+.empty{text-align:center;padding:24px;color:#8c887f}
+
+/* Status dots + chips. Chips (badges) use the pastel accents as solid
+   fill blocks: sky = good/free, gold = needs attention, blush =
+   restricted/blocked, cream-gray = neutral/offline. */
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
-.dot.on{background:#38a169}.dot.off{background:#cbd5e0}
-.badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
-.b-online{background:#c6f6d5;color:#276749}.b-offline{background:#e2e8f0;color:#718096}
-.b-free{background:#c6f6d5;color:#276749}.b-hotspot{background:#fed7d7;color:#c53030}
-.back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;font-size:13px;cursor:pointer;text-decoration:none;margin-bottom:18px}
-.back-btn:hover{background:rgba(255,255,255,.25)}
-.detail-card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.kname{font-size:18px;font-weight:700;color:#1a1a2e}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:8px}
-.detail-label{font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.detail-value{font-size:15px;color:#1a1a2e;font-weight:600;word-break:break-all}
-.assoc-section{margin-top:20px;padding-top:18px;border-top:1px solid #f0f0f0}
-.assoc-section h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px}
+.dot.on{background:var(--ink)}.dot.off{background:#d8d3c8}
+.badge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px}
+.b-online{background:var(--sky);color:var(--ink)}.b-offline{background:#ece7de;color:#8c887f}
+.b-free{background:var(--sky);color:var(--ink)}.b-hotspot{background:var(--blush);color:#8a2f6b}
+.port-badge{display:inline-block;font-size:10px;font-weight:700;color:var(--ink);background:var(--lavender);border-radius:999px;padding:2px 8px;vertical-align:middle}
+
+/* Device/user detail pages */
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+.kname{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-bottom:8px}
+.detail-label{font-size:11px;color:#8c887f;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.detail-value{font-size:15px;color:var(--ink);font-weight:700;word-break:break-all}
+.assoc-section{margin-top:24px;padding-top:20px;border-top:1.5px solid #ece7de}
+.assoc-section h3{font-family:var(--font-display);font-size:15px;font-weight:800;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .inline-form{display:flex;gap:8px;align-items:flex-start}
-.save-btn{padding:10px 22px;background:linear-gradient(135deg,#0f3460,#1a5276);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
-.save-btn:hover{opacity:.9}
-.hint{color:#cbd5e0;font-size:12px;margin-top:12px}
-textarea{border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:inherit;font-size:13px}
-.mikrotik-status{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.mikrotik-status.in-sync{background:#f0fff4;color:#276749}
-.mikrotik-status.out-of-sync{background:#fffaf0;color:#975a16}
-.apply-btn{padding:6px 14px;font-size:12px;background:linear-gradient(135deg,#c05621,#dd6b20)}
+.hint{color:#8c887f;font-size:13px;margin-top:12px;line-height:1.5}
+
+.mikrotik-status{margin-top:12px;padding:11px 16px;border-radius:14px;font-size:13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mikrotik-status.in-sync{background:var(--sky);color:var(--ink)}
+.mikrotik-status.out-of-sync{background:var(--gold);color:var(--ink)}
 .log-list{margin-top:12px}
-.log-row{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid #f5f5f5}
-.log-row.fail{color:#c53030}
-.log-row.ok{color:#555}
-.port-badge{display:inline-block;font-size:10px;font-weight:700;color:#2b6cb0;background:#ebf4ff;border-radius:10px;padding:1px 6px;vertical-align:middle}
+.log-row{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid #f2efe9}
+.log-row.fail{color:#a3315c}
+.log-row.ok{color:#6b6a68}
+
+/* Circular initial avatars -- shared by the admin lists (devices/users)
+   and /captive's person picker. Color cycles through the four pastel
+   accents via an explicit modifier class (loop.index0 % 4 in the
+   templates), since table rows don't share a same-tag sibling context
+   the way /captive's <details> stack does. */
+.avatar{flex:none;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--cream);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:12px;vertical-align:middle}
+.avatar-lg{width:36px;height:36px;font-size:14px}
+.avatar-1{background:var(--blush);color:var(--ink)}
+.avatar-2{background:var(--lavender);color:var(--ink)}
+.avatar-3{background:var(--sky);color:var(--ink)}
+.avatar-4{background:var(--gold);color:var(--ink)}
+.sparkle{color:var(--lavender);font-size:.85em;-webkit-text-stroke:.5px var(--ink)}
 
 /* Form layout: structural selectors instead of repeating the same
    inline style on every matching element (a first assoc-section sitting
@@ -68,61 +131,35 @@ textarea{border:2px solid #e2e8f0;border-radius:8px;padding:8px;font-family:inhe
 h3+p.hint{margin-top:0}
 .search+p.hint{margin-top:4px}
 .detail-grid+form{margin-top:10px}
-textarea{width:100%}
 .form-inline{display:inline}
-.tcard-compact{margin-top:10px;box-shadow:none;border:1px solid #eee;padding:10px}
 
-/* /captive -- the one unauthenticated page, on its own minimal
-   mobile-first design system (cream/near-black/pastel, geometric-bold
-   display type, pill buttons, rounded pastel cards) instead of the
-   dashboard's dark gradient above. Scoped under body.captive (and its
-   own .captive-btn/.captive-hint instead of reusing .save-btn/.hint)
-   so this section can share the same global stylesheet as the admin
-   panel without the two colliding. Responsive down to a 375px-wide
-   screen (iPhone 13 mini) -- everything here is already single-column
-   and fluid-width, so no extra breakpoint is needed at that floor;
-   .card's max-width is what does the scaling-up on larger screens. */
-:root{
-  --cap-cream:#F6F4F0;
-  --cap-ink:#1D1C1B;
-  --cap-blush:#F6D0EF;
-  --cap-lavender:#C1C8FF;
-  --cap-sky:#C3E4EE;
-  --cap-gold:#D8D1AF;
-  --cap-display-font:Futura,'Century Gothic','Segoe UI',ui-rounded,-apple-system,sans-serif;
-  --cap-body-font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-}
-body.captive{font-family:var(--cap-body-font);background:var(--cap-cream);color:var(--cap-ink);position:relative;overflow-x:hidden}
-/* Simple geometric shapes as background composition -- fixed/decorative
-   only, never affects document flow or the 375px-floor layout. */
-body.captive::before,body.captive::after{content:'';position:fixed;z-index:0;pointer-events:none}
-body.captive::before{width:120px;height:120px;border-radius:50%;background:var(--cap-sky);top:-40px;right:-40px;opacity:.7}
-body.captive::after{width:70px;height:70px;border-radius:18px;background:var(--cap-gold);bottom:30px;left:-24px;opacity:.6;transform:rotate(12deg)}
+/* /captive -- the one unauthenticated page. Same tokens/components as
+   above; only the layout below is specific to its single-column,
+   narrow-card composition. */
+body.captive{overflow-x:hidden}
 .captive .card{position:relative;z-index:1;max-width:420px;margin:0 auto;background:#fff;border-radius:20px;padding:28px 24px;box-shadow:0 8px 30px rgba(29,28,27,.08)}
-.captive h1{font-family:var(--cap-display-font);font-weight:800;font-size:1.5rem;letter-spacing:-.01em;line-height:1.15;margin:0 0 20px;display:flex;align-items:center;gap:8px}
-.captive .sparkle{color:var(--cap-lavender);font-size:1rem;-webkit-text-stroke:.5px var(--cap-ink)}
-.captive .captive-hint{color:#6b6a68;font-size:.9rem;line-height:1.5}
-.captive input[type=text],.captive input[type=email],.captive input[type=date],.captive input[type=password]{width:100%;padding:12px 14px;margin:6px 0 14px;border:1.5px solid #e6e2da;border-radius:14px;background:var(--cap-cream);font-size:1rem;font-family:var(--cap-body-font);color:var(--cap-ink)}
-.captive input:focus{outline:2px solid var(--cap-lavender);outline-offset:1px}
-.captive label{font-size:.8rem;font-weight:700;color:var(--cap-ink);text-transform:uppercase;letter-spacing:.03em}
-.captive .captive-btn{width:100%;padding:14px;background:var(--cap-ink);color:var(--cap-cream);border:none;border-radius:999px;font-size:1rem;font-weight:700;font-family:var(--cap-display-font);cursor:pointer}
-.captive .captive-btn:active{opacity:.85}
-.captive .error{color:#a3315c;background:var(--cap-blush);border-radius:12px;padding:10px 14px;font-size:.9rem;margin-bottom:14px;font-weight:600}
-.captive .continue-link{display:block;margin-top:16px;text-align:center;color:var(--cap-ink);font-weight:700}
+.captive h1{font-family:var(--font-display);font-weight:800;font-size:1.5rem;letter-spacing:-.01em;line-height:1.15;margin:0 0 20px;display:flex;align-items:center;gap:8px}
+.captive input[type=text],.captive input[type=email],.captive input[type=date],.captive input[type=password]{width:100%;padding:12px 14px;margin:6px 0 14px;border:1.5px solid #e6e2da;border-radius:14px;background:var(--cream);font-size:1rem;font-family:var(--font-body);color:var(--ink)}
+.captive input:focus{outline:2px solid var(--lavender);outline-offset:1px}
+.captive label{font-size:.8rem;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.03em}
+.captive .save-btn{width:100%;padding:14px;font-size:1rem}
+.captive .save-btn:active{opacity:.85}
+.captive .error{color:#a3315c;background:var(--blush);border-radius:12px;padding:10px 14px;font-size:.9rem;margin-bottom:14px;font-weight:600}
+.captive .continue-link{display:block;margin-top:16px;text-align:center;color:var(--ink);font-weight:700}
 .captive .person-list{margin-bottom:18px;display:flex;flex-direction:column;gap:10px}
-.captive .person-card{border:none;border-radius:18px;background:var(--cap-pastel,var(--cap-sky));overflow:hidden}
-.captive .person-card:nth-of-type(4n+1){--cap-pastel:var(--cap-blush)}
-.captive .person-card:nth-of-type(4n+2){--cap-pastel:var(--cap-lavender)}
-.captive .person-card:nth-of-type(4n+3){--cap-pastel:var(--cap-sky)}
-.captive .person-card:nth-of-type(4n+4){--cap-pastel:var(--cap-gold)}
-.captive .person-card[open]{box-shadow:inset 0 0 0 2px var(--cap-ink)}
+.captive .person-card{border:none;border-radius:18px;background:var(--pastel,var(--sky));overflow:hidden}
+.captive .person-card:nth-of-type(4n+1){--pastel:var(--blush)}
+.captive .person-card:nth-of-type(4n+2){--pastel:var(--lavender)}
+.captive .person-card:nth-of-type(4n+3){--pastel:var(--sky)}
+.captive .person-card:nth-of-type(4n+4){--pastel:var(--gold)}
+.captive .person-card[open]{box-shadow:inset 0 0 0 2px var(--ink)}
 .captive .person-card summary{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;font-size:1rem;list-style:none}
 .captive .person-card summary::-webkit-details-marker{display:none}
-.captive .avatar{flex:none;width:36px;height:36px;border-radius:50%;background:var(--cap-ink);color:var(--cap-cream);display:flex;align-items:center;justify-content:center;font-family:var(--cap-display-font);font-weight:800;font-size:.9rem}
+.captive .avatar{width:36px;height:36px;font-size:14px}
 .captive .person-name{font-weight:700;flex:1}
-.captive .person-meta{font-size:.7rem;font-weight:700;color:var(--cap-ink);background:rgba(29,28,27,.08);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.captive .person-meta{font-size:.7rem;font-weight:700;color:var(--ink);background:rgba(29,28,27,.08);border-radius:999px;padding:4px 10px;white-space:nowrap}
 .captive .pin-form{padding:0 14px 14px}
 .captive .pin-form input[type=password]{text-align:center;letter-spacing:.4em;font-size:1.2rem;margin:0 0 8px;background:#fff}
-.captive .pin-form .captive-btn{padding:11px;font-size:.95rem}
+.captive .pin-form .save-btn{padding:11px;font-size:.95rem}
 .captive .switch-links{text-align:center;margin-top:8px}
-.captive .switch-links a{display:block;padding:10px;color:var(--cap-ink);font-weight:700;font-size:.9rem;text-decoration:none}
+.captive .switch-links a{display:block;padding:10px;color:var(--ink);font-weight:700;font-size:.9rem;text-decoration:none}
